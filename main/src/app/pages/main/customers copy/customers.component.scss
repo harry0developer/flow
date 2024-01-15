@@ -1,0 +1,36 @@
+.company-document {
+    padding: 40px;
+    .company-from-logo {
+
+        text-align: right;
+        img {
+            width: 300px;
+        }
+    }
+
+    .qoute-info {
+        margin-top: 40px;
+    }
+ 
+    .table {
+        thead {
+            background-color: #ddd;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            height: 30px;
+        }
+
+        th {
+            text-align: left;
+        }  
+    }
+
+    .clear-white-space {
+        height: 700px;
+    }
+
+}
+
+#contentToConvert {
+    display: none;
+}

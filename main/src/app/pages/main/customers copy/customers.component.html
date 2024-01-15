@@ -1,0 +1,125 @@
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header>
+    <mat-card-title class="m-b-0">Document</mat-card-title>
+  </mat-card-header>
+
+  <button mat-menu-item (click)="convetToPDF()">
+    <mat-icon class="d-flex align-items-center"
+      ><i-tabler name="user" class="icon-18 d-flex"></i-tabler></mat-icon
+    >Download PDF
+  </button>
+
+
+  <div id="contentToConvert" class="company-document">
+    <div class="row">
+      <div class="col-lg-6 company-from">
+        <h2 class="name">
+          Matswelepele Trading (PTY) Ltd.
+        </h2>
+
+        <div class="address">
+          1197A Chrome Street <br>
+          Steelport Industrial Park<br>
+          Limpopo <br>
+          <br>
+          <b>Phone:</b> +27 15 880 0509<br>
+          <b>Email:</b> admin@matswelapele.co.za<br>
+          <b>Website:</b> www.matswelapele.co.za <br>
+          <b>VAT Registration No:</b> 4550288452<br>
+          <b>Business ID No:</b> 2016/226953/07<br>
+
+        </div>
+      </div>
+
+      <div class="col-lg-6 company-from-logo" >
+        <img src="assets/images/logos/matswelapele.png" alt="">
+      </div> 
+    </div>
+
+    <hr>
+    <!-- Bill To -->
+    <h1>Qoute</h1>
+    <h3 class="bill-to">Bill to:</h3>
+    <div class="row">
+      <div class="col-lg-6 company-to">
+          <h3 class="name">
+            Morale Media (PTY) Ltd.
+          </h3>
+          
+          <div class="address">
+            123 Main Street <br>
+            Moletjie Ga-Mamadila<br>
+            Limpopo <br>
+            2100<br>
+          </div>
+          <h3 class="vat-no">Customer VAT No. 410000000</h3>
+      </div>
+
+      <div class="col-lg-6 qoute-info" >
+         <b>QOUTE NO: MPTQ100000</b><br>
+         <b>DATE: 2024/01/25</b><br>
+         <b>TERMS: 30 days</b><br>
+         <b>DUE DATE: 2024/02/26</b>
+      </div> 
+    </div>
+
+    <!-- table  -->
+
+    <div class="row">
+      <div class="col-lg-12">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col" class="col-3">Stock Code</th>
+              <th scope="col" class="col-3">Description</th>
+              <th scope="col" class="col-1">Qty</th>
+              <th scope="col">Unit Price</th>
+              <th scope="col">VAT</th>
+              <th scope="col">Total Price Excl</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of tableInvoiceData"> 
+              <td class="col-3">{{item.stockCode}}</td> 
+              <td class="col-3">{{item.description}}</td> 
+              <td class="col-1">{{item.qty}}</td> 
+              <td>{{item.unitPrice}}</td> 
+              <td>{{item.vat}}</td> 
+              <td>{{item.totalPrice | currency:'R':'symbol':'4.2-2'}}</td> 
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="clear-white-space"></div>
+      <div class="col-8"></div>
+      <div class="col-4 bottom-prices">
+        <table class="table table-striped"> 
+          <tbody>
+            <tr > 
+              <td scope="col" class="col-6">Total Price Exclusive</td>
+              <td scope="col" class="col-6">{{total.totalPriceExcl | currency:'R':'symbol':'4.2-2'}}</td>
+            </tr>
+            <tr>
+              <td scope="col" class="col-6">Total VAT</td>
+               <td scope="col" class="col-6">{{total.totalVat | currency:'R':'symbol':'4.2-2'}}</td>
+            </tr>
+            <tr>
+              <td scope="col" class="col-6">Total Price Discount</td>
+               <td scope="col" class="col-6">{{total.totalPriceDiscount | currency:'R':'symbol':'4.2-2'}}</td>
+            </tr>
+            <tr>
+              <td scope="col" class="col-6"><b>Total Price Inclusive</b></td>
+               <td scope="col" class="col-6"><b>{{total.totalPriceInclusive | currency:'R':'symbol':'4.2-2'}}</b></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr>
+
+        
+      </div>
+      <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos optio quo accusamus ex, qui nostrum delectus iure in quibusdam eligendi molestias modi quaerat odio temporibus, ducimus, dicta cum quidem ea!</p>
+    </div>
+  </div>
+</mat-card>
