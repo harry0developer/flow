@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core'; 
+ 
 
 export interface Customer {
   id: number;
@@ -66,11 +67,4 @@ const ELEMENT_DATA: Customer[] = [
   encapsulation: ViewEncapsulation.None,
 })
 export class AppQoutesComponent {
-  displayedColumns: string[] = ['name', 'role', 'email', 'phone'];
-  dataSource = ELEMENT_DATA;
-  
-  constructor() {
-    // sales overview chart
-     
-  }
 }

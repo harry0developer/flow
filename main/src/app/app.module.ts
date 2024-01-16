@@ -23,6 +23,7 @@ import { SidebarComponent } from './layouts/full/sidebar/sidebar.component';
 import { HeaderComponent } from './layouts/full/header/header.component';
 import { BrandingComponent } from './layouts/full/sidebar/branding.component';
 import { AppNavItemComponent } from './layouts/full/sidebar/nav-item/nav-item.component';
+import { DataService } from './services/data.service';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,7 @@ import { AppNavItemComponent } from './layouts/full/sidebar/nav-item/nav-item.co
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    TablerIconsModule.pick(TablerIcons),
+    TablerIconsModule.pick(TablerIcons)
   ],
   exports: [TablerIconsModule],
   bootstrap: [AppComponent],

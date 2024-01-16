@@ -21,6 +21,7 @@ export const MainRoutes: Routes = [
         path: 'customers',
         component: AppCustomersComponent,
       },
+     
       {
         path: 'qoutes',
         component: AppQoutesComponent,

@@ -4,6 +4,9 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http
 import {  Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Product } from '../models/product';
+import { User } from '../models/user';
+import { Inventory } from '../models/inventory';
+import { Customer } from '../models/customer';
 
 
 @Injectable({
@@ -11,7 +14,7 @@ import { Product } from '../models/product';
 })
 export class DataService {
 
-  private apiServer = "http://localhost:3000";
+  private apiServer = "http://localhost:5000/api/flow/";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -19,39 +22,29 @@ export class DataService {
   }
   constructor(private httpClient: HttpClient) { }
 
-  create(product: any): Observable<Product> {
-    return this.httpClient.post<Product>(this.apiServer + '/products/', JSON.stringify(product), this.httpOptions)
+
+  getAll(collection: string): Observable<User | Inventory | Customer> {
+    return this.httpClient.get<User | Inventory | Customer>(this.apiServer + collection)
+    .pipe(
+      catchError(this.errorHandler)
+    );
+  }
+
+  addItem(item: User | Inventory | Customer, collection: string): Observable<User | Inventory | Customer> {
+    return this.httpClient.post<User | Inventory | Customer>(this.apiServer + collection , item, this.httpOptions)
+    .pipe(
+      catchError(this.errorHandler)
+    )
+  }   
+
+  updateItem(item: User | Inventory | Customer, collection: string): Observable<User | Inventory | Customer> {
+    return this.httpClient.put<User | Inventory | Customer>(this.apiServer + collection , item, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )
   }  
-  getById(id: any): Observable<Product> {
-    return this.httpClient.get<Product>(this.apiServer + '/products/' + id)
-    .pipe(
-      catchError(this.errorHandler)
-    )
-  }
 
-  getAll(): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(this.apiServer + '/products/')
-    .pipe(
-      catchError(this.errorHandler)
-    )
-  }
-
-  update(id: any, product: any): Observable<Product> {
-    return this.httpClient.put<Product>(this.apiServer + '/products/' + id, JSON.stringify(product), this.httpOptions)
-    .pipe(
-      catchError(this.errorHandler)
-    )
-  }
-
-  delete(id: any){
-    return this.httpClient.delete<Product>(this.apiServer + '/products/' + id, this.httpOptions)
-    .pipe(
-      catchError(this.errorHandler)
-    )
-  }
+  
   errorHandler(error: any) {
      let errorMessage = '';
      if(error.error instanceof ErrorEvent) {

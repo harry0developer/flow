@@ -1,7 +1,26 @@
-.container {
-    .center {
+.customer-edit-mode {
+    .tab-min-height {
+        min-height: 300px;
+    }
+     
+    .title {
+        margin-top: 16px;
+    } 
 
-        text-align: center;
-        margin: 100px 0;
+   
+}
+ 
+.align-end {
+    text-align: right;
+}
+
+.cancel-btn {
+    margin-left: 10px;
+}
+
+.btn-group {
+    button {
+        width: 120px;
+        margin: auto 4px
     }
 }

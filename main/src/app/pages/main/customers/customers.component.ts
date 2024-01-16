@@ -2,24 +2,16 @@ import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
 
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
+import { Customer } from 'src/app/models/customer';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DataService } from 'src/app/services/data.service';
+import { COLLECTION } from 'src/app/const/util';
  
 
-export interface Customer {
-  id: number;
-  imagePath: string;
-  customerName: string;
-  customerEmail: string;
-  customerPhoneNumber: string;
-  companyName: string;
-  companyVATNumber: string;
-  companyPhysicalAddress: string;
-  customerType: string; // "Business | Individual";
-} 
-
-const ELEMENT_DATA: Customer[] = [
+const ELEMENT_DATA: any[] = [
   {
     id: 1,
-    imagePath: 'assets/images/customers/customer-1.svg',
+    url: 'assets/images/customers/customer-1.svg',
     customerName: "Nkanyesi Shobe",
     customerEmail: "nkanyi@beamlight.com",
     customerPhoneNumber: "0112004000",
@@ -30,7 +22,7 @@ const ELEMENT_DATA: Customer[] = [
   },
   {
     id: 2,
-    imagePath: 'assets/images/customers/customer-2.svg',
+    url: 'assets/images/customers/customer-2.svg',
     customerName: "Linah Kgomo",
     customerEmail: "linah@ballnet.com",
     customerPhoneNumber: "0215557000",
@@ -41,7 +33,7 @@ const ELEMENT_DATA: Customer[] = [
   },
   {
     id: 3,
-    imagePath: 'assets/images/customers/customer-3.svg',
+    url: 'assets/images/customers/customer-3.svg',
     customerName: "Donald Cow",
     customerEmail: "donald@sqrm.com",
     customerPhoneNumber: "0120005555",
@@ -52,7 +44,7 @@ const ELEMENT_DATA: Customer[] = [
   },
   {
     id: 4,
-    imagePath: 'assets/images/customers/customer-4.svg',
+    url: 'assets/images/customers/customer-4.svg',
     customerName: "Thiko Stati",
     customerEmail: "thiko@stonecorp.com",
     customerPhoneNumber: "0119997000",
@@ -76,21 +68,25 @@ export interface Item {
 @Component({
   selector: 'app-customers',
   templateUrl: './customers.component.html',
-  styleUrls: ['./customers.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./customers.component.scss']
 })
 export class AppCustomersComponent {
   displayedColumns: string[] = ['companyLogo','customerName', 'companyName', 'customerEmail', 
-  'customerPhoneNumber', 'companyVATNumber', 'companyPhysicalAddress', 'actionButton'];
+  'customerPhoneNumber', 'companyVATNumber', 'companyBillingAddress', 'actionButton'];
   dataSource = ELEMENT_DATA;
- 
+  editMode: boolean = false;
+  editCustomer: Customer;
   total = {
     totalPriceExcl: "120000",
     totalVat: "1200",
     totalPriceDiscount: "0",
     totalPriceInclusive: "121200"
   };
-
+  
+  
+  titles = [
+    "Mr.", "Mrs.", "Miss", "Ms.", "Dr.", "Prof." 
+  ];
   tableInvoiceData: Item[] = [
     {
       stockCode: "SPT-1099",
@@ -190,10 +186,32 @@ export class AppCustomersComponent {
     }, 
   ];
 
-  constructor() {
-    // sales overview chart
+  customers: Customer[];
+
+  constructor(private router: Router,
+     private activeRoute: ActivatedRoute,
+     private dataService: DataService) {
+    // sales overview chart 
+  }
+
+  ngOnInit(): void {
+    this.getCustomers();
+  }
+ 
+  getCustomers() {
+    this.dataService.getAll(COLLECTION.CUSTOMERS).subscribe((customers: any) => {
+      console.log("customers ", customers);
+      this.customers = customers;
+    })
   }
   
+  editCustomerDetails(customer: Customer){
+
+    this.editMode = true;
+    this.editCustomer = customer;
+   // await this.router.navigate(['details', customer.id], { relativeTo: this.activeRoute });
+  }
+
   convetToPDF() {
     var data = document.getElementById('contentToConvert');
       html2canvas((data as any)).then(canvas => {

@@ -1,12 +1,12 @@
-<div class="row"> 
-  <div class="col-lg-12">
-    
-    <mat-card class="cardWithShadow">
+ 
+    <mat-card *ngIf="!editMode" class="cardWithShadow">
       <mat-card-content class="p-24">
-        <mat-card-title>Customers</mat-card-title>
+        <mat-card-title >
+          <h3>Customers</h3>
+        </mat-card-title>
         
         <div class="table-responsive m-t-16">
-          <table mat-table [dataSource]="dataSource" class="w-100">
+          <table mat-table [dataSource]="customers" class="w-100">
             <!-- Logo Column -->
             <ng-container matColumnDef="companyLogo">
               <th
@@ -19,7 +19,7 @@
               <td mat-cell *matCellDef="let element">
                 <div class="d-flex align-items-center">
                   <img
-                    [src]="element.imagePath"
+                    [src]="element.url"
                     alt="users"
                     width="60"
                   />
@@ -98,16 +98,16 @@
             </ng-container>
 
             <!-- Company Physical Address Column -->
-            <ng-container matColumnDef="companyPhysicalAddress">
+            <ng-container matColumnDef="companyBillingAddress">
               <th
                 mat-header-cell
                 *matHeaderCellDef
                 class="f-w-600 mat-subtitle-1 f-s-14"
               >
-              Physical Address
+              Address
               </th>
               <td mat-cell *matCellDef="let element" class="mat-body-1">
-                {{ element.companyPhysicalAddress }}
+                {{ element.companyBillingAddress }}
               </td>
             </ng-container>
 
@@ -119,9 +119,8 @@
                 class="f-w-600 mat-subtitle-1 f-s-14"
               > </th>
               <td mat-cell *matCellDef="let element" class="mat-body-1">
-                <button color="primary"  mat-mini-fab>
+                <button color="primary" (click)="editCustomerDetails(element)" mat-mini-fab>
                   <mat-icon>edit_square</mat-icon>
-                  
                 </button>
               </td>
             </ng-container>
@@ -131,7 +130,288 @@
           </table>
         </div>
       </mat-card-content>
-     
     </mat-card>
-  </div>
-</div> 
+
+
+    <mat-card class="customer-edit-mode" *ngIf="editMode"  class="cardWithShadow">
+      <mat-card-content class="p-l-32 p-r-32">
+        <mat-card-title class=" b-b-1">
+          <div class="row">
+            <div class="col-8 title"> <h3>Edit Customers</h3></div>
+            <div class="col-4 align-end btn-group">
+              <button mat-raised-button color="primary" class="m-t-12 m-b-12 m-r-3">Save</button>
+              <button mat-raised-button  color="warn" class="m-t-12 m-b-12">Cancel</button>
+            </div>
+          </div>
+        </mat-card-title>
+        <mat-tab-group dynamicHeight class="m-t-16 m-b-16">
+          <!-- Contact Persons-->
+          <mat-tab label="Contact Person(s)">    
+             
+            <div class="row m-t-32">
+              <div class="col-md-3">
+                  <h4 class="w-100">Contact Person</h4>
+              </div> 
+    
+              <div class="col-md-4">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Name</mat-label>
+                    <input matInput type="text" >
+                </mat-form-field>
+              </div>
+              <div class="col-md-5">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Surname</mat-label>
+                  <input matInput type="text" >
+                </mat-form-field>
+              </div>
+            </div>
+    
+            <div class="row m-t-12">
+              <div class="col-md-3">
+                <h4 class="w-100">Roles</h4>
+              </div>
+    
+              <div class="col-md-9">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Role</mat-label>
+                  <input matInput type="text" >
+                </mat-form-field>
+              </div>
+            </div>
+    
+            <div class="row m-t-12">
+              <div class="col-md-3">
+                <h4 class="w-100">Phone Number</h4>
+              </div>
+    
+              <div class="col-md-9">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Phone Number</mat-label>
+                  <input matInput type="text" >
+                </mat-form-field>
+              </div>
+            </div>
+    
+            <div class="row m-t-12">
+              <div class="col-md-3">
+                <h4 class="w-100">Email Address</h4>
+              </div>
+    
+              <div class="col-md-9">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Email Address</mat-label>
+                  <input matInput type="email" >
+                </mat-form-field>
+              </div>
+            </div>
+
+             
+          </mat-tab>
+
+          <!-- Company Details -->
+          <mat-tab label="Company Details">
+            <div class="row m-t-32" >
+              <div class="col-md-3">
+                <h4 class="w-100">Customer Type</h4>
+              </div>
+              <div class="col-md-9">
+                <mat-radio-group aria-label="Select an option">
+                  <mat-radio-button value="business">Business</mat-radio-button>
+                  <mat-radio-button value="individual">Individual</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div> 
+
+            <div class="row m-t-12">
+              <div class="col-md-3">
+                <h4 class="w-100">Company Name</h4>
+              </div>
+              <div class="col-md-9">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Company Name</mat-label>
+                  <input matInput type="text" >
+                </mat-form-field>
+              </div>
+            </div>
+    
+           
+            <div class="row m-t-12">
+              <div class="col-md-3">
+                <h4 class="w-100">VAT Number</h4>
+              </div>
+              <div class="col-md-9">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>VAT Number</mat-label>
+                  <input matInput type="text" >
+                </mat-form-field>
+              </div>
+            </div>
+    
+          </mat-tab>
+
+          <!-- Company Address -->
+          <mat-tab label="Company Address">
+            <div class="row m-t-32" >
+              <!-- billing address column  -->
+              <div class="col-6">
+                <h3>Billing Address</h3>
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">Attention</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>Attention</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">Street Address</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>Street Address</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">Complex / Building</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>Complex / Building</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">Surbub</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>Surbub</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">City/Town</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>City / Town</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">State/Province</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>State/Province</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">Zip/Postal Code</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>Zip/Postal Code</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+              </div>
+
+               <!-- Shipping address column  -->
+              <div class="col-6">
+                <h3>Shipping Address
+                  <section class="example-section">
+                    <mat-checkbox class="example-margin">Same as Biling Address</mat-checkbox>
+                  </section>
+                </h3> 
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">Attention</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>Attention</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">Street Address</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>Street Address</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">Complex / Building</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>Complex / Building</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">Surbub</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>Surbub</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">City/Town</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>City / Town</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">State/Province</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>State/Province</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+
+                <div class="row m-t-12 m-b-32">
+                  <div class="col-3">Zip/Postal Code</div>
+                  <div class="col-9">
+                    <mat-form-field class="w-100 class="  appearance="outline">
+                      <mat-label>Zip/Postal Code</mat-label>
+                      <input matInput type="text" >
+                    </mat-form-field>
+                  </div>
+                </div> 
+              </div>
+               
+            </div> 
+
+          </mat-tab>
+        </mat-tab-group>
+
+      </mat-card-content>
+    </mat-card>
+ 

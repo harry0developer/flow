@@ -21,9 +21,7 @@ const routes: Routes = [
       {
         path: 'main',
         loadChildren: () =>
-          import('./pages/main/main.module').then(
-            (m) => m.MainModule
-          ),
+          import('./pages/main/main.module').then((m) => m.MainModule),
       }, 
       {
         path: 'extra',
