@@ -3,10 +3,13 @@ import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Customer } from 'src/app/models/customer';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { COLLECTION } from 'src/app/const/util';
- 
+import { FormBuilder, Validators } from '@angular/forms';
+import { v4 as uuid} from 'uuid';
+import { ToastrService } from 'ngx-toastr';
+
 
 const ELEMENT_DATA: any[] = [
   {
@@ -71,8 +74,8 @@ export interface Item {
   styleUrls: ['./customers.component.scss']
 })
 export class AppCustomersComponent {
-  displayedColumns: string[] = ['companyLogo','customerName', 'companyName', 'customerEmail', 
-  'customerPhoneNumber', 'companyVATNumber', 'companyBillingAddress', 'actionButton'];
+  displayedColumns: string[] = ['companyLogo', 'contactPersonName', 
+  'contactPersonPhoneNumber', 'contactPersonEmail', 'companyName', 'companyVATNumber', 'companyBillingAddress' ,'actionButton'];
   dataSource = ELEMENT_DATA;
   editMode: boolean = false;
   editCustomer: Customer;
@@ -185,19 +188,72 @@ export class AppCustomersComponent {
       totalPrice: "45000",
     }, 
   ];
-
+  customerForm: any;
   customers: Customer[];
 
   constructor(private router: Router,
-     private activeRoute: ActivatedRoute,
-     private dataService: DataService) {
+     private formBuilder: FormBuilder,
+     private dataService: DataService,
+     private toastr: ToastrService) {
     // sales overview chart 
   }
 
-  ngOnInit(): void {
-    this.getCustomers();
+  showSuccess() {
+    this.toastr.success('Hello world!', 'Toastr fun!');
   }
  
+  ngOnInit(): void {
+    this.getCustomers();
+    this.customerForm = this.formBuilder.group({
+      companyName: ['', Validators.required],
+      companyVATNumber: ['', [Validators.required]],
+      contactPersonFirstName: ['', Validators.required],
+      contactPersonLastName: ['', Validators.required],
+      contactPersonEmail: ['', [Validators.required,  Validators.email]],
+      contactPersonPhoneNumber: ['', Validators.required],
+      contactPersonTitle: ['', Validators.required],
+      companyBillingAddress: ['', Validators.required],
+      companyShippingAddress: ['', Validators.required],
+    });
+  }
+
+  copyShippingAddress(checked: any) {
+    if(checked) {
+      this.customerForm.controls['companyShippingAddress'].setValue(this.customerForm.get('companyBillingAddress').value);
+    }
+  }
+  
+
+  saveCustomer() { 
+
+    const form = this.customerForm.value;
+    const customer: Customer = {
+      id: this.editCustomer.id,
+      url: form.url,
+      companyName: form.companyName,
+      companyVATNumber: form.companyVATNumber,
+      companyBillingAddress: form.companyBillingAddress,
+      companyShippingAddress: form.companyShippingAddress,
+      contactPersonFirstName: form.contactPersonFirstName,
+      contactPersonLastName: form.contactPersonLastName,
+      contactPersonEmail: form.contactPersonEmail,
+      contactPersonPhoneNumber: form.contactPersonPhoneNumber,
+      contactPersonTitle: form.contactPersonTitle,
+      dateCreated: "" + new Date().getTime(),
+      createdBy: "Donald Kgomo", 
+      updatedOn: "" + new Date().getTime(),
+      updatedBy: "Donald Kgomo"
+    }
+    this.dataService.updateItem(customer, COLLECTION.CUSTOMERS).forEach((res: any) => {
+      console.log("Customer ", res);
+      
+    })
+  }
+ 
+  cancelEditCustomer() {
+    this.editMode = false;
+  }
+
   getCustomers() {
     this.dataService.getAll(COLLECTION.CUSTOMERS).subscribe((customers: any) => {
       console.log("customers ", customers);
@@ -206,10 +262,20 @@ export class AppCustomersComponent {
   }
   
   editCustomerDetails(customer: Customer){
-
     this.editMode = true;
     this.editCustomer = customer;
-   // await this.router.navigate(['details', customer.id], { relativeTo: this.activeRoute });
+    console.log("Edit ", customer);
+ 
+    this.customerForm.controls['contactPersonTitle'].setValue(customer.contactPersonPhoneNumber);
+    this.customerForm.controls['contactPersonFirstName'].setValue(customer.contactPersonFirstName);
+    this.customerForm.controls['contactPersonLastName'].setValue(customer.contactPersonLastName);
+    this.customerForm.controls['contactPersonEmail'].setValue(customer.contactPersonEmail);
+    this.customerForm.controls['contactPersonPhoneNumber'].setValue(customer.contactPersonPhoneNumber);
+    this.customerForm.controls['companyName'].setValue(customer.companyName);
+    this.customerForm.controls['companyVATNumber'].setValue(customer.companyVATNumber);
+    this.customerForm.controls['companyBillingAddress'].setValue(customer.companyBillingAddress);
+    this.customerForm.controls['companyShippingAddress'].setValue(customer.companyShippingAddress);
+
   }
 
   convetToPDF() {

@@ -36,6 +36,7 @@ export class AppUsersComponent implements OnInit {
   
  
   constructor(private dataService: DataService) { }
+  
   ngOnInit(): void {
     this.getUsers();
   }

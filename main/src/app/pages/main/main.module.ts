@@ -32,7 +32,7 @@ import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved
     FormsModule,
     ReactiveFormsModule,
     TablerIconsModule.pick(TablerIcons),
-    MatNativeDateModule
+    MatNativeDateModule,
   ],
   declarations: [
     AppCustomersComponent,

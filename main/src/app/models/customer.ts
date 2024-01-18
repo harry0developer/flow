@@ -1,13 +1,18 @@
 export interface Customer {
-    id: number;
+    id: string;
     url: string;
-    customerName: string;
-    customerEmail: string;
-    customerPhoneNumber: string;
     companyName: string;
     companyVATNumber: string;
     companyBillingAddress: string;
     companyShippingAddress: string;
-    customerType: string; // "Business | Individual";
+    contactPersonFirstName: string;
+    contactPersonLastName: string;
+    contactPersonEmail: string;
+    contactPersonPhoneNumber: string;
+    contactPersonTitle: string;
+    dateCreated: string;
+    createdBy: string; 
+    updatedOn: string;
+    updatedBy: string;
   } 
   
