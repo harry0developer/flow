@@ -8,8 +8,6 @@ import { DataService } from 'src/app/services/data.service';
 import { COLLECTION } from 'src/app/const/util';
 import { FormBuilder, Validators } from '@angular/forms';
 import { v4 as uuid} from 'uuid';
-import { ToastrService } from 'ngx-toastr';
-
 
 const ELEMENT_DATA: any[] = [
   {
@@ -78,6 +76,8 @@ export class AppCustomersComponent {
   'contactPersonPhoneNumber', 'contactPersonEmail', 'companyName', 'companyVATNumber', 'companyBillingAddress' ,'actionButton'];
   dataSource = ELEMENT_DATA;
   editMode: boolean = false;
+  newCustomer: boolean = false;
+
   editCustomer: Customer;
   total = {
     totalPriceExcl: "120000",
@@ -193,14 +193,10 @@ export class AppCustomersComponent {
 
   constructor(private router: Router,
      private formBuilder: FormBuilder,
-     private dataService: DataService,
-     private toastr: ToastrService) {
+     private dataService: DataService) {
     // sales overview chart 
   }
 
-  showSuccess() {
-    this.toastr.success('Hello world!', 'Toastr fun!');
-  }
  
   ngOnInit(): void {
     this.getCustomers();
@@ -224,11 +220,10 @@ export class AppCustomersComponent {
   }
   
 
-  saveCustomer() { 
-
+  addCustomer() { 
     const form = this.customerForm.value;
     const customer: Customer = {
-      id: this.editCustomer.id,
+      id: "",
       url: form.url,
       companyName: form.companyName,
       companyVATNumber: form.companyVATNumber,
@@ -244,10 +239,27 @@ export class AppCustomersComponent {
       updatedOn: "" + new Date().getTime(),
       updatedBy: "Donald Kgomo"
     }
-    this.dataService.updateItem(customer, COLLECTION.CUSTOMERS).forEach((res: any) => {
-      console.log("Customer ", res);
-      
-    })
+
+    if(this.newCustomer) {
+      customer.id = uuid();
+      this.dataService.addItem(customer, COLLECTION.CUSTOMERS).forEach((res: any) => {
+        console.log("Customer added successfully ", res);
+        this.editMode = false;
+        this.getCustomers();
+      });
+    } else {
+      customer.id = this.editCustomer.id,
+      this.dataService.updateItem(customer, COLLECTION.CUSTOMERS).forEach((res: any) => {
+        console.log("Customer updated successfully ", res);
+        this.editMode = false;
+        this.getCustomers();
+      }); 
+    }
+  }
+
+  addNewCustomer() {
+    this.editMode = true;
+    this.newCustomer = true;
   }
  
   cancelEditCustomer() {
@@ -255,10 +267,10 @@ export class AppCustomersComponent {
   }
 
   getCustomers() {
-    this.dataService.getAll(COLLECTION.CUSTOMERS).subscribe((customers: any) => {
+    this.dataService.getAll(COLLECTION.CUSTOMERS).forEach((customers: any) => {
       console.log("customers ", customers);
       this.customers = customers;
-    })
+    });
   }
   
   editCustomerDetails(customer: Customer){
@@ -266,7 +278,7 @@ export class AppCustomersComponent {
     this.editCustomer = customer;
     console.log("Edit ", customer);
  
-    this.customerForm.controls['contactPersonTitle'].setValue(customer.contactPersonPhoneNumber);
+    this.customerForm.controls['contactPersonTitle'].setValue(customer.contactPersonTitle);
     this.customerForm.controls['contactPersonFirstName'].setValue(customer.contactPersonFirstName);
     this.customerForm.controls['contactPersonLastName'].setValue(customer.contactPersonLastName);
     this.customerForm.controls['contactPersonEmail'].setValue(customer.contactPersonEmail);

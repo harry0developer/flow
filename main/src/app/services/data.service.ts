@@ -38,7 +38,7 @@ export class DataService {
   }   
 
   updateItem(item: User | Inventory | Customer, collection: string): Observable<User | Inventory | Customer> {
-    return this.httpClient.put<User | Inventory | Customer>(this.apiServer + collection , item, this.httpOptions)
+    return this.httpClient.put<User | Inventory | Customer>(this.apiServer + collection, item, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )

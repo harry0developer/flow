@@ -1,16 +1,17 @@
  
   
 <mat-card *ngIf="editMode" class="cardWithShadow">
-  
   <mat-card-content class="p-24">
     <mat-card-title class=" b-b-1">
       <div class="row">
-        <div class="col-8 col-md-6 title"> <h3>Edit Customers</h3></div>
+        <div class="col-8 col-md-6 title"> 
+          <h3>Edit Customers</h3>
+        </div>
         <div class="col-4 col-md-6 align-end btn-group">
-          <button mat-raised-button color="primary" 
-            class="m-t-12 m-b-12 m-r-3" 
-            [disabled]="!customerForm?.valid"
-            (click)="saveCustomer()">Save</button>
+            <button mat-raised-button color="primary" 
+              class="m-t-12 m-b-12 m-r-3" 
+              [disabled]="!customerForm?.valid"
+              (click)="addCustomer()">Save</button>
           <button mat-raised-button  color="warn" class="m-t-12 m-b-12" (click)="cancelEditCustomer()">Cancel</button>
         </div>
       </div>
@@ -149,8 +150,13 @@
 
 <mat-card *ngIf="!editMode" class="cardWithShadow">
   <mat-card-content class="p-24">
-    <mat-card-title >
-      <h3>Customers</h3>
+    <mat-card-title class=" b-b-1">
+      <div class="row">
+        <div class="col-md-9 col-sm-6 title"> <h3>Edit Customers</h3></div>
+        <div class="col-md-3 col-sm-6 align-end">
+          <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="addNewCustomer()">Add Customer</button>
+        </div>
+      </div>
     </mat-card-title>
     
     <div class="table-responsive m-t-16">
@@ -167,7 +173,7 @@
           <td mat-cell *matCellDef="let element">
             <div class="d-flex align-items-center">
               <img
-                [src]="element.url"
+                src="../../../../assets/images/customers/customer-1.svg"
                 alt="users"
                 width="60"
               />
@@ -241,7 +247,7 @@
           VAT Number
           </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
-            {{ element.customerPhoneNumber }}
+            {{ element.companyVATNumber }}
           </td>
         </ng-container>
 
