@@ -23,6 +23,7 @@ import { AppInvoicesComponent } from './invoices/invoices.component';
 import { AppQoutesComponent } from './qoutes/qoutes.component';
 import { AppSalesOrderComponent } from './sales-order/sales-order.component';
 import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved.component';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved
     ReactiveFormsModule,
     TablerIconsModule.pick(TablerIcons),
     MatNativeDateModule,
+    NgxSpinnerModule
   ],
   declarations: [
     AppCustomersComponent,
@@ -45,7 +47,7 @@ import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved
     AppChipsComponent,
     AppListsComponent,
     AppMenuComponent,
-    AppTooltipsComponent,
+    AppTooltipsComponent
   ],
 })
 export class MainModule {}

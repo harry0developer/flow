@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ViewChild } from '@angular/core'; 
+import { Component, ViewEncapsulation, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; 
 
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -8,6 +8,8 @@ import { DataService } from 'src/app/services/data.service';
 import { COLLECTION } from 'src/app/const/util';
 import { FormBuilder, Validators } from '@angular/forms';
 import { v4 as uuid} from 'uuid';
+import { NgxSpinnerService } from "ngx-spinner";
+
 
 const ELEMENT_DATA: any[] = [
   {
@@ -90,6 +92,7 @@ export class AppCustomersComponent {
   titles = [
     "Mr.", "Mrs.", "Miss", "Ms.", "Dr.", "Prof." 
   ];
+
   tableInvoiceData: Item[] = [
     {
       stockCode: "SPT-1099",
@@ -188,17 +191,27 @@ export class AppCustomersComponent {
       totalPrice: "45000",
     }, 
   ];
+
   customerForm: any;
   customers: Customer[];
 
   constructor(private router: Router,
      private formBuilder: FormBuilder,
+     private spinner: NgxSpinnerService,
      private dataService: DataService) {
     // sales overview chart 
   }
 
  
   ngOnInit(): void {
+
+    this.spinner.show();
+
+    setTimeout(() => {
+      /** spinner ends after 5 seconds */
+      this.spinner.hide();
+    }, 5000);
+
     this.getCustomers();
     this.customerForm = this.formBuilder.group({
       companyName: ['', Validators.required],

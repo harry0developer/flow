@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PagesRoutes } from './pages.routing.module';
@@ -18,8 +18,8 @@ import { AppDashboardComponent } from './dashboard/dashboard.component';
     FormsModule,
     NgApexchartsModule,
     RouterModule.forChild(PagesRoutes),
-    TablerIconsModule.pick(TablerIcons),
+    TablerIconsModule.pick(TablerIcons)
   ],
-  exports: [TablerIconsModule],
+  exports: [TablerIconsModule]
 })
 export class PagesModule {}
