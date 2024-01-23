@@ -20,11 +20,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { AppUsersComponent } from './users/users.component'; 
 import { AppCustomersComponent } from './customers/customers.component';
 import { AppInvoicesComponent } from './invoices/invoices.component';
-import { AppQoutesComponent } from './qoutes/qoutes.component';
 import { AppSalesOrderComponent } from './sales-order/sales-order.component';
 import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved.component';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { AppInventoryComponent } from './inventory/inventory.component';
+import { AppQuotesComponent } from './quotes/quotes.component';
 
 @NgModule({
   imports: [
@@ -41,7 +41,7 @@ import { AppInventoryComponent } from './inventory/inventory.component';
     AppCustomersComponent,
     AppInventoryComponent,
     AppInvoicesComponent,
-    AppQoutesComponent,
+    AppQuotesComponent,
     AppSalesOrderComponent,
     AppPaymentRecievedComponent,
     AppUsersComponent,

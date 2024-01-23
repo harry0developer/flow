@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { AppUsersComponent } from './users/users.component';
 import { AppCustomersComponent } from './customers/customers.component';
-import { AppQoutesComponent } from './qoutes/qoutes.component';
 import { AppInvoicesComponent } from './invoices/invoices.component';
 import { AppSalesOrderComponent } from './sales-order/sales-order.component';
 import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved.component';
 import { AppInventoryComponent } from './inventory/inventory.component';
+import { AppQuotesComponent } from './quotes/quotes.component';
 
 export const MainRoutes: Routes = [
   {
@@ -21,7 +21,7 @@ export const MainRoutes: Routes = [
       },
       {
         path: 'qoutes',
-        component: AppQoutesComponent,
+        component: AppQuotesComponent,
       },
       {
         path: 'invoices',

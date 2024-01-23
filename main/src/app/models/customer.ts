@@ -10,9 +10,9 @@ export interface Customer {
     contactPersonEmail: string;
     contactPersonPhoneNumber: string;
     contactPersonTitle: string;
-    dateCreated: string;
-    createdBy: string; 
-    updatedOn: string;
-    updatedBy: string;
+    dateCreated?: string;
+    createdBy?: string; 
+    updatedOn?: string;
+    updatedBy?: string;
   } 
   

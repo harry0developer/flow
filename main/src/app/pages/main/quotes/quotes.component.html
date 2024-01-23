@@ -1,0 +1,234 @@
+ 
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header>
+    <mat-card-title class="m-b-0">Document</mat-card-title>
+  </mat-card-header>
+
+  <button mat-menu-item (click)="convetToPDF()">
+    <mat-icon class="d-flex align-items-center"
+      ><i-tabler name="user" class="icon-18 d-flex"></i-tabler></mat-icon
+    >Download PDF
+  </button>
+
+
+  <div id="contentToConvert" class="company-document">
+    <div class="row">
+      <div class="col-lg-6 company-from">
+        <h2 class="name">
+          Matswelepele Trading (PTY) Ltd.
+        </h2>
+
+        <div class="address">
+          1197A Chrome Street <br>
+          Steelport Industrial Park<br>
+          Limpopo <br>
+          <br>
+          <b>Phone:</b> +27 15 880 0509<br>
+          <b>Email:</b> admin@matswelapele.co.za<br>
+          <b>Website:</b> www.matswelapele.co.za <br>
+          <b>VAT Registration No:</b> 4550288452<br>
+          <b>Business ID No:</b> 2016/226953/07<br>
+          <br>
+        </div>
+      </div>
+
+      <div class="col-lg-6 company-from-logo" >
+        <img src="assets/images/logos/matswelapele.png" alt="">
+      </div> 
+    </div>
+
+    <hr>
+    <!-- Bill To -->
+    <h1>Qoute</h1>
+    <h3 class="bill-to">Bill to:</h3>
+    <div class="row">
+      <div class="col-md-6 company-to">
+        <h3 class="name">
+          {{selectedQuote.customer.companyName}}
+        </h3>
+        
+        <div class="address">
+          <p *ngFor='let address of selectedQuote.customer.companyBillingAddress.split(",")'>
+            {{address}}
+          </p>
+        </div>
+        <h3 class="vat-no">Customer VAT No. {{selectedQuote.customer.companyVATNumber}}</h3>
+      </div>
+
+      <div class="col-md-6 qoute-info" >
+         <b>QOUTE NO: {{selectedQuote.quoteNo}}</b><br>
+         <b>DATE: {{selectedQuote.quoteDate}}</b><br>
+         <b>TERMS: {{selectedQuote.quoteTerm}}</b><br>
+         <b>DUE DATE: {{selectedQuote.quoteDueDate}}</b>
+      </div> 
+    </div>
+
+    <!-- table  -->
+
+    <div class="row">
+      <div class="col-lg-12">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col" class="col-3">Stock Code</th>
+              <th scope="col" class="col-3">Description</th>
+              <th scope="col" class="col-1">Qty</th>
+              <th scope="col">Unit Price</th>
+              <th scope="col">VAT</th>
+              <th scope="col">Total Price Excl</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of selectedQuote.items"> 
+              <td class="col-3">{{item.stockCode}}</td> 
+              <td class="col-3">{{item.description}}</td> 
+              <td class="col-1">{{item.quantity}}</td> 
+              <td>{{item.unitPrice}}</td> 
+              <td>{{item.VAT}}</td> 
+              <td>{{ +item.unitPrice * +item.quantity | currency:'R'}}</td> 
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="clear-white-space"></div>
+      <div class="col-8"></div>
+      <div class="col-4 bottom-prices">
+        <table class="table table-striped"> 
+          <!-- <tbody>
+            <tr > 
+              <td scope="col" class="col-6">Total Price Exclusive</td>
+              <td scope="col" class="col-6">{{total.totalPriceExcl | currency:'R':'symbol':'4.2-2'}}</td>
+            </tr>
+            <tr>
+              <td scope="col" class="col-6">Total VAT</td>
+               <td scope="col" class="col-6">{{total.totalVat | currency:'R':'symbol':'4.2-2'}}</td>
+            </tr>
+            <tr>
+              <td scope="col" class="col-6">Total Price Discount</td>
+               <td scope="col" class="col-6">{{total.totalPriceDiscount | currency:'R':'symbol':'4.2-2'}}</td>
+            </tr>
+            <tr>
+              <td scope="col" class="col-6"><b>Total Price Inclusive</b></td>
+               <td scope="col" class="col-6"><b>{{total.totalPriceInclusive | currency:'R':'symbol':'4.2-2'}}</b></td>
+            </tr>
+          </tbody> -->
+        </table>
+
+        <hr>
+
+        
+      </div>
+      <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos optio quo accusamus ex, qui nostrum delectus iure in quibusdam eligendi molestias modi quaerat odio temporibus, ducimus, dicta cum quidem ea!</p>
+    </div>
+  </div>
+</mat-card>
+
+<mat-card *ngIf="!editMode" class="cardWithShadow">
+  <mat-card-content class="p-24">
+    <mat-card-title class=" b-b-1">
+      <div class="row">
+        <div class="col-md-9 col-sm-6 title"> <h3>Quote History</h3></div>
+        <div class="col-md-3 col-sm-6 align-end">
+          <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="addNewQuote()">Create New Quote</button>
+        </div>
+      </div>
+    </mat-card-title>
+    
+
+    <div class="table-responsive m-t-16">
+      <table mat-table [dataSource]="dataSource" class="w-100">
+        <!-- quoteNo Column -->
+        <ng-container matColumnDef="quoteNo">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Quote No
+          </th>
+          <td mat-cell *matCellDef="let element">
+             {{element.quoteNo}}
+          </td>
+        </ng-container>
+
+         <!-- quoteDate Column -->
+         <ng-container matColumnDef="quoteDate">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Quote Date
+          </th>
+          <td mat-cell *matCellDef="let element">
+             {{element.quoteDate}}
+          </td>
+        </ng-container>
+
+         <!-- companyName Column -->
+         <ng-container matColumnDef="companyName">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Company Name
+          </th>
+          <td mat-cell *matCellDef="let element">
+             {{element.customer?.companyName}}
+          </td>
+        </ng-container>
+
+        <!-- contactPerson Column -->
+        <ng-container matColumnDef="contactPerson">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Contact Person
+          </th>
+          <td mat-cell *matCellDef="let element">
+             {{element.customer?.contactPersonTitle}} {{element.customer?.contactPersonFirstName}} {{element.customer?.contactPersonLastName}}
+          </td>
+        </ng-container>
+ 
+        <!-- totalPriceInclusive Column -->
+        <ng-container matColumnDef="totalPriceInclusive">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Total Price Inclusive
+          </th>
+          <td mat-cell *matCellDef="let element">
+             {{element.totalPriceInclusive | currency:'R'}}
+          </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="actionButton">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          > </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            <button color="primary" (click)="downloadQuote(element)" mat-mini-fab>
+              <mat-icon>download</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+
+ 

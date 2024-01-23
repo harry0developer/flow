@@ -1,11 +1,12 @@
 export interface Inventory {
     id: string; 
+    name: string; 
     photo: string;
     stockCode: string; 
     description: string;
     quantity: string;
     unitPrice: string;
-    name: string;
+    VAT?: string;
     createdOn?: string;
     createdBy?: string; 
     updatedOn?: string;

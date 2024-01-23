@@ -7,6 +7,7 @@ import { Product } from '../models/product';
 import { User } from '../models/user';
 import { Inventory } from '../models/inventory';
 import { Customer } from '../models/customer';
+import { Quote } from '../models/quote';
 
 
 @Injectable({
@@ -23,22 +24,22 @@ export class DataService {
   constructor(private httpClient: HttpClient) { }
 
 
-  getAll(collection: string): Observable<User | Inventory | Customer> {
-    return this.httpClient.get<User | Inventory | Customer>(this.apiServer + collection)
+  getAll(collection: string): Observable<User | Inventory | Quote | Customer> {
+    return this.httpClient.get<User | Inventory | Quote | Customer>(this.apiServer + collection)
     .pipe(
       catchError(this.errorHandler)
     );
   }
 
-  addItem(item: User | Inventory | Customer, collection: string): Observable<User | Inventory | Customer> {
-    return this.httpClient.post<User | Inventory | Customer>(this.apiServer + collection , item, this.httpOptions)
+  addItem(item: User | Inventory | Quote | Customer, collection: string): Observable<User | Inventory | Quote | Customer> {
+    return this.httpClient.post<User | Inventory | Quote | Customer>(this.apiServer + collection , item, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )
   }   
 
-  updateItem(item: User | Inventory | Customer, collection: string): Observable<User | Inventory | Customer> {
-    return this.httpClient.put<User | Inventory | Customer>(this.apiServer + collection, item, this.httpOptions)
+  updateItem(item: User | Inventory | Quote | Customer, collection: string): Observable<User | Inventory | Quote | Customer> {
+    return this.httpClient.put<User | Inventory | Quote | Customer>(this.apiServer + collection, item, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )

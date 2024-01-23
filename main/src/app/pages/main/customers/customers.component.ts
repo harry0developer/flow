@@ -58,15 +58,7 @@ const ELEMENT_DATA: any[] = [
   },
   
 ];
-
-export interface Item {
-  stockCode: string;
-  description: string;
-  qty: string;
-  unitPrice: string;
-  vat: string;
-  totalPrice: string;
-}
+ 
 
 @Component({
   selector: 'app-customers',
@@ -92,105 +84,7 @@ export class AppCustomersComponent {
   titles = [
     "Mr.", "Mrs.", "Miss", "Ms.", "Dr.", "Prof." 
   ];
-
-  tableInvoiceData: Item[] = [
-    {
-      stockCode: "SPT-1099",
-      description: "Float plant velve",
-      qty: "10",
-      unitPrice: "120000",
-      vat: "0",
-      totalPrice: "1200000",
-    },
-    {
-      stockCode: "DTG-1099",
-      description: "Water pump",
-      qty: "1",
-      unitPrice: "660000",
-      vat: "0",
-      totalPrice: "660000",
-    },
-    {
-      stockCode: "HDH-1099",
-      description: "Saculent hinge for water pump holder",
-      qty: "1",
-      unitPrice: "4500",
-      vat: "0",
-      totalPrice: "45000",
-    },
-    {
-      stockCode: "SPT-1099",
-      description: "Float plant velve",
-      qty: "10",
-      unitPrice: "120000",
-      vat: "0",
-      totalPrice: "1200000",
-    },
-    {
-      stockCode: "DTG-1099",
-      description: "Water pump",
-      qty: "1",
-      unitPrice: "660000",
-      vat: "0",
-      totalPrice: "660000",
-    },
-    {
-      stockCode: "HDH-1099",
-      description: "Saculent hinge for water pump holder",
-      qty: "1",
-      unitPrice: "4500",
-      vat: "0",
-      totalPrice: "45000",
-    },
-    {
-      stockCode: "SPT-1099",
-      description: "Float plant velve",
-      qty: "10",
-      unitPrice: "120000",
-      vat: "0",
-      totalPrice: "1200000",
-    },
-    {
-      stockCode: "DTG-1099",
-      description: "Water pump",
-      qty: "1",
-      unitPrice: "660000",
-      vat: "0",
-      totalPrice: "660000",
-    },
-    {
-      stockCode: "HDH-1099",
-      description: "Saculent hinge for water pump holder",
-      qty: "1",
-      unitPrice: "4500",
-      vat: "0",
-      totalPrice: "45000",
-    },
-    {
-      stockCode: "SPT-1099",
-      description: "Float plant velve",
-      qty: "10",
-      unitPrice: "120000",
-      vat: "0",
-      totalPrice: "1200000",
-    },
-    {
-      stockCode: "DTG-1099",
-      description: "Water pump",
-      qty: "1",
-      unitPrice: "660000",
-      vat: "0",
-      totalPrice: "660000",
-    },
-    {
-      stockCode: "HDH-1099",
-      description: "Saculent hinge for water pump holder",
-      qty: "1",
-      unitPrice: "4500",
-      vat: "0",
-      totalPrice: "45000",
-    }, 
-  ];
+ 
 
   customerForm: any;
   customers: Customer[];

@@ -1,0 +1,75 @@
+.customer-edit-mode {
+    .tab-min-height {
+        min-height: 300px;
+    }
+     
+    .title {
+        margin-top: 16px;
+    } 
+
+   
+}
+ 
+.align-end {
+    text-align: right;
+}
+
+.cancel-btn {
+    margin-left: 10px;
+}
+
+.btn-group {
+    button {
+        width: 120px;
+        margin: auto 4px
+    }
+}
+
+.error {
+    color: #fa896b;
+}
+
+
+
+.company-document {
+    padding: 40px;
+    .company-from-logo {
+
+        text-align: right;
+        img {
+            width: 300px;
+        }
+    }
+
+    .qoute-info {
+        margin-top: 40px;
+    }
+ 
+    .table {
+        width: 100%;
+        text-align: left;
+        thead {
+            background-color: #ddd;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            height: 30px;
+        }
+
+        th {
+            text-align: left;
+        }  
+    }
+
+    .clear-white-space {
+        height: 700px;
+    }
+
+}
+
+#contentToConvert {
+    // display: none;
+}
+
+.address p{
+    margin: 0;
+}
