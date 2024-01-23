@@ -19,6 +19,11 @@ export const navItems: NavItem[] = [
     route: '/main/customers',
   },
   {
+    displayName: 'Inventory',
+    iconName: 'file-dollar',
+    route: '/main/inventory',
+  },
+  {
     displayName: 'Qoutes',
     iconName: 'file-dollar',
     route: '/main/qoutes',
@@ -43,26 +48,7 @@ export const navItems: NavItem[] = [
   //   iconName: 'rosette',
   //   route: '/main/badge',
   // },
-  {
-    displayName: 'Chips',
-    iconName: 'poker-chip',
-    route: '/main/chips',
-  },
-  {
-    displayName: 'Lists',
-    iconName: 'list',
-    route: '/main/lists',
-  },
-  {
-    displayName: 'Menu',
-    iconName: 'layout-navbar-expand',
-    route: '/main/menu',
-  },
-  {
-    displayName: 'Tooltips',
-    iconName: 'tooltip',
-    route: '/main/tooltips',
-  },
+  
 
   {
     navCap: "Admin"
@@ -93,10 +79,5 @@ export const navItems: NavItem[] = [
     displayName: 'Icons',
     iconName: 'mood-smile',
     route: '/extra/icons',
-  },
-  {
-    displayName: 'Sample Page',
-    iconName: 'aperture',
-    route: '/extra/sample-page',
-  },
+  }
 ];

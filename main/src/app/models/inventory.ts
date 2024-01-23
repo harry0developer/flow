@@ -1,9 +1,13 @@
 export interface Inventory {
-    _id: string; 
+    id: string; 
+    photo: string;
     stockCode: string; 
     description: string;
     quantity: string;
     unitPrice: string;
-    url: string;
     name: string;
+    createdOn?: string;
+    createdBy?: string; 
+    updatedOn?: string;
+    updatedBy?: string;
 }

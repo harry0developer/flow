@@ -24,6 +24,7 @@ import { AppQoutesComponent } from './qoutes/qoutes.component';
 import { AppSalesOrderComponent } from './sales-order/sales-order.component';
 import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved.component';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { AppInventoryComponent } from './inventory/inventory.component';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
   ],
   declarations: [
     AppCustomersComponent,
+    AppInventoryComponent,
     AppInvoicesComponent,
     AppQoutesComponent,
     AppSalesOrderComponent,

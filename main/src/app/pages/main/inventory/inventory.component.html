@@ -1,0 +1,248 @@
+<mat-card *ngIf="editMode" class="cardWithShadow">
+  <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-atom" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+  <mat-card-content class="p-24">
+    <mat-card-title class=" b-b-1">
+      <div class="row">
+        <div class="col-8 col-md-6 title"> 
+          <h3>Edit Item</h3>
+        </div>
+        <div class="col-4 col-md-6 align-end btn-group">
+            <button mat-raised-button color="primary" 
+              class="m-t-12 m-b-12 m-r-3" 
+              [disabled]="!inventoryForm?.valid"
+              (click)="addInventoryItem()">Save</button>
+          <button mat-raised-button  color="warn" class="m-t-12 m-b-12" (click)="cancelEditInventory()">Cancel</button>
+        </div>
+      </div>
+    </mat-card-title>
+
+  
+    <form [formGroup]="inventoryForm"> 
+      <div class="row m-t-32">
+        <div class="col-md-3">
+          <h4 class="w-100">Inventory Info</h4>
+        </div>
+        <div class="col-md-9">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" formControlName="name">
+            <mat-hint class="error" *ngIf="inventoryForm?.get('name')?.invalid && inventoryForm?.get('name')?.touched">
+              *Name is required
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div> 
+      
+      <div class="row m-t-12">
+        <div class="col-md-3">
+          <h4 class="w-100">Description</h4>
+        </div>
+
+        <div class="col-md-9">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput rows="5" formControlName="description"></textarea>
+            <mat-hint class="error" *ngIf="inventoryForm?.get('description')?.invalid && inventoryForm?.get('description')?.touched">
+              *Description is required
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+
+
+      <div class="row m-t-12">
+        <div class="col-md-3">
+          <h4 class="w-100">Stock Code</h4>
+        </div>
+
+        <div class="col-md-9">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Stock Code</mat-label>
+            <input matInput type="text" formControlName="stockCode">
+            <mat-hint class="error" *ngIf="inventoryForm?.get('stockCode')?.invalid && inventoryForm?.get('stockCode')?.touched">
+              *Stock Code is required
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row m-t-12">
+        <div class="col-md-3">
+          <h4 class="w-100">Quantity</h4>
+        </div>
+
+        <div class="col-md-9">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Quantity</mat-label>
+            <input matInput type="text" formControlName="quantity">
+            <mat-hint class="error" *ngIf="inventoryForm?.get('quantity')?.invalid && inventoryForm?.get('quantity')?.touched">
+              *Quantity is required
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row m-t-12">
+        <div class="col-md-3">
+          <h4 class="w-100">Unit price</h4>
+        </div>
+
+        <div class="col-md-9">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Unit Price</mat-label>
+            <input matInput type="text" formControlName="unitPrice">
+            <mat-hint class="error" *ngIf="inventoryForm?.get('unitPrice')?.invalid && inventoryForm?.get('unitPrice')?.touched">
+              *Unit price is required
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </form> 
+
+  </mat-card-content>
+</mat-card>
+
+
+<mat-card *ngIf="!editMode" class="cardWithShadow">
+  <mat-card-content class="p-24">
+    <mat-card-title class=" b-b-1">
+      <div class="row">
+        <div class="col-md-9 col-sm-6 title"> <h3>Manage Inventory</h3></div>
+        <div class="col-md-3 col-sm-6 align-end">
+          <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="addNewInventoryItem()">Add Item</button>
+        </div>
+      </div>
+    </mat-card-title>
+    
+    <div class="table-responsive m-t-16">
+      <table mat-table [dataSource]="inventoryItems" class="w-100">
+        <!-- ID Column -->
+        <ng-container matColumnDef="photo">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            Photo
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="d-flex align-items-center">
+              <img
+                [src]="element.photo"
+                alt="users"
+                width="60"
+              />
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- name Column --> 
+        <ng-container matColumnDef="name">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Name
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            {{ element.name }}  
+          </td>
+        </ng-container>
+
+        <!-- description Column --> 
+        <ng-container matColumnDef="description">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Description
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            {{ element.description }}  
+          </td>
+        </ng-container>
+
+        <!-- stockCode Column --> 
+        <ng-container matColumnDef="stockCode">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Stock Code
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            {{ element.stockCode }}  
+          </td>
+        </ng-container>
+
+        <!-- quantity Column --> 
+        <ng-container matColumnDef="quantity">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Quantity
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            {{ element.quantity }}  
+          </td>
+        </ng-container>
+
+        <!-- unitPrice Column --> 
+        <ng-container matColumnDef="unitPrice">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Unit Price
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            {{ element.unitPrice | currency:'R'}}  
+          </td>
+        </ng-container>
+ 
+
+        <!-- Total Price Column --> 
+        <ng-container matColumnDef="totalPrice">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Total Price
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            {{ element.quantity * element.unitPrice | currency:'R'}}  
+          </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="actionButton">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          > </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            <button color="primary" (click)="editInventoryItemDetails(element)" mat-mini-fab>
+              <mat-icon>edit_square</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+
+ 
