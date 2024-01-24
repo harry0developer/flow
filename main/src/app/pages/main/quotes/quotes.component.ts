@@ -51,7 +51,8 @@ export class AppQuotesComponent {
           description: "A very nice spoon",
           quantity: "10",
           unitPrice: "100",
-          VAT: "0"
+          VAT: "0",
+          discount: "0"
         },
         {
           id: "f0dfdd81-a2d1-4b46-c7a8a-3f546b2386f1", 
@@ -61,6 +62,7 @@ export class AppQuotesComponent {
           description: "A silcer fork",
           quantity: "5",
           unitPrice: "550",
+          discount: "0",
           VAT: "0"
         },
         {
@@ -70,6 +72,7 @@ export class AppQuotesComponent {
           stockCode: "CHB-100", 
           description: "A Plastic chopping board",
           quantity: "10",
+          discount: "0",
           unitPrice: "270",
           VAT: "0"
         }
@@ -107,6 +110,7 @@ export class AppQuotesComponent {
           description: "designer ports",
           quantity: "40",
           unitPrice: "2400",
+          discount: "0",
           VAT: "0"
         },
         {
@@ -117,6 +121,7 @@ export class AppQuotesComponent {
           description: "A non sticky frying pan",
           quantity: "2",
           unitPrice: "7500",
+          discount: "0",
           VAT: "0"
         }
       ],
@@ -128,7 +133,8 @@ export class AppQuotesComponent {
 
   ];
 
-  customers: Customer[] = []
+  customers: Customer[] = [];
+  inventoryItems: Inventory[] = [];
 
   selectedQuote: Quote = this.dataSource[0];
   editMode: boolean = true;
@@ -143,59 +149,29 @@ export class AppQuotesComponent {
   filteredCustomers: Observable<Customer[]>;
   customerFormControl = new FormControl<string | Customer>('');
 
+  filteredInventoryItems: Observable<Inventory[] | any[]>;
+  inventoryFormControl = new FormControl<string | Inventory>('');
+  dynamicArray: any[] = [];
+ 
   constructor(private router: Router,
      private formBuilder: FormBuilder,
      private spinner: NgxSpinnerService,
      private dataService: DataService) {
   }
  
-  dynamicArray: any[] = [
-    {
-      id: "g9dfdd81-a2d1-4b46-c7a8a-3f546b2386f1", 
-      name: "Pots", 
-      photo: "https://placehold.co/100",
-      stockCode: "LAB-200", 
-      description: "designer ports",
-      quantity: "40",
-      unitPrice: "2400",
-      VAT: "0"
-    },
-    {
-      id: "f0dfdd81-a2d1-4b46-c7a8a-3f546b2386f1", 
-      name: "Frying Pan", 
-      photo: "https://placehold.co/100",
-      stockCode: "FPN-09100", 
-      description: "A non sticky frying pan",
-      quantity: "2",
-      unitPrice: "7500",
-      VAT: "0"
-    }
-  ];
-  newDynamic: any;
-  addRow() {
-      this.dynamicArray.push({ stockCode: '', name: '', description: '', quantity: '', unitPrice:'', VAT: '' });
-      console.log('New row added successfully', 'New Row');
-    
-  }
-  deleteRow(index: number) {
-    this.dynamicArray.splice(index, 1);
-  }
-  getValues() {
-    console.log(this.dynamicArray);
-  }
-  
+
+
  
   ngOnInit(): void {
     // this.getQuotes();
+    //FIlter customer by name
     this.getCustomers(); 
+    this.filterCustomers();
 
-    this.filteredCustomers = this.customerFormControl.valueChanges.pipe(
-      startWith(''),
-      map((value: any) => {
-        const companyName = typeof value === 'string' ? value : value.companyName;
-        return companyName ? this._filter(companyName as string) : this.customers.slice();
-      }),
-    );
+    
+    // this.getQuotes();
+    this.getInventoryItems(); 
+    this.filterInventoryItems();
     
 
     this.quoteForm = this.formBuilder.group({
@@ -212,7 +188,19 @@ export class AppQuotesComponent {
     });
   } 
 
- 
+  addNewItem() {
+    this.inventoryFormControl.get('quantity')?.setValue(0);
+    this.dynamicArray.push(this.inventoryFormControl.value)
+  }
+
+  deleteRow(index: number) {
+    this.dynamicArray.splice(index, 1);
+  }
+  getValues() {
+    console.log(this.dynamicArray);
+  }
+  
+
   getCustomers() {
     this.dataService.getAll(COLLECTION.CUSTOMERS).forEach((customers: any) => {
       console.log("customers ", customers);
@@ -220,8 +208,41 @@ export class AppQuotesComponent {
     });
   }
 
+  filterCustomers() {
+    this.filteredCustomers = this.customerFormControl.valueChanges.pipe(
+      startWith(''),
+      map((value: any) => {
+        const companyName = typeof value === 'string' ? value : value.companyName;
+        return companyName ? this._filter(companyName as string) : this.customers.slice();
+      }),
+    );
+  }
+
+  getInventoryItems() {
+    this.dataService.getAll(COLLECTION.INVENTORY).forEach((inventoryItems: any) => {
+      console.log("inventoryItems ", inventoryItems);
+      this.inventoryItems = inventoryItems;
+    });
+  }
+
+  filterInventoryItems() {
+    this.getInventoryItems(); 
+    // Filter inventory by name 
+    this.filteredInventoryItems = this.inventoryFormControl.valueChanges.pipe(
+      startWith(''),
+      map((value: any) => {
+        const inventoryItem = typeof value === 'string' ? value : value.name;
+        return inventoryItem ? this._filter(inventoryItem as string) : this.inventoryItems.slice();
+      }),
+    );
+  }
+
   displayFn(customer: Customer): string {
     return customer && customer.companyName ? customer.companyName : '';
+  }
+
+  displayInventoryFn(item: Inventory): string {
+    return item && item.name && item.stockCode ? item.name + " (" + item.stockCode + ")": '';
   }
 
   private _filter(name: string): Customer[] {
@@ -276,7 +297,9 @@ export class AppQuotesComponent {
           stockCode: "TSP-100", 
           description: "A very nice spoon",
           quantity: "2",
-          unitPrice: "100"
+          discount: "0",
+          VAT: "0",
+          unitPrice: "2400"
         },
         {
           id: "f0dfdd81-a2d1-4b46-c7a8a-3f546b2386f1", 
@@ -285,6 +308,8 @@ export class AppQuotesComponent {
           stockCode: "FRK-100", 
           description: "A silcer fork",
           quantity: "5",
+          discount: "0",
+          VAT: "0",
           unitPrice: "50"
         }
       ],

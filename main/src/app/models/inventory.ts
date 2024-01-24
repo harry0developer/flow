@@ -6,7 +6,8 @@ export interface Inventory {
     description: string;
     quantity: string;
     unitPrice: string;
-    VAT?: string;
+    discount: string;
+    VAT: string;
     createdOn?: string;
     createdBy?: string; 
     updatedOn?: string;

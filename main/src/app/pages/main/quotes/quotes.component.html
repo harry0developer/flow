@@ -302,51 +302,52 @@
           </mat-form-field>
         </div>
       </div> 
-       
-      <div class="row  m-t-32">
-        <div class="col-md-3">
-          <h4 class="w-100">Add Item</h4>
-        </div>
+    </form> 
+  </mat-card-content>
+</mat-card> 
 
-        <div class="col-md-6">
+
+<mat-card *ngIf="editMode" class="cardWithShadow inventory-form">
+  <mat-card-content class="p-24">
+    <mat-card-title class="m-b-0">Add Items</mat-card-title>    
+
+
+    <form> 
+      <div class="row  m-t-32">
+        <div class="col-md-9">
           <mat-form-field class="w-100" appearance="outline">
-            <mat-label>Item</mat-label>
-            <input type="text" matInput  [formControl]="customerFormControl" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-              <mat-option *ngFor="let customer of filteredCustomers | async" [value]="customer"> {{ customer.companyName }} </mat-option>
+            <mat-label>Search inventory item</mat-label>
+            <input type="text" matInput  [formControl]="inventoryFormControl" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayInventoryFn">
+              <mat-option *ngFor="let item of filteredInventoryItems | async" [value]="item"> {{ item.name }} ({{ item.stockCode }})</mat-option>
             </mat-autocomplete>
           </mat-form-field>
         </div> 
 
         <div class="col-md-3">
-          <button mat-raised-button  color="primary" class="add-item-btn">Add</button>
+          <button mat-raised-button  color="primary" class="add-item-btn" (click)="addNewItem()">Add</button>
         </div>
       </div>
-    </form> 
 
-
-    <form> 
-      <table class="inventory-table">
+      <table class="inventory-table" *ngIf="dynamicArray.length > 0">
         <thead>
           <tr class="row">
             <td class="col-md-1 w-100"><label>Action</label></td>
             <td class="col-md-2 w-100"><label>Stock Code</label></td>
             <td class="col-md-2 w-100"><label>Name</label></td>
-            <td class="col-md-3 w-100"><label>Description</label></td>
-            <td class="col-md-2 w-100"><label>Quantity</label></td>
+            <td class="col-md-1 w-100"><label>Quantity</label></td>
             <td class="col-md-2 w-100"><label>Unit Price</label></td>
+            <!-- <td class="col-md-1 w-100"><label>VAT</label></td>
+            <td class="col-md-1 w-100"><label>Discount</label></td> -->
+            <td class="col-md-2 w-100"><label>Total</label></td>
           </tr>
         </thead>
         <tbody>
           <tr class="row" *ngFor="let dynamic of dynamicArray; let i = index;">
             <td class="col-md-1 w-100">
-              <!-- <button class="fa fa-plus " (click)="deleteRow(i)">Delete</button> -->
                 <button mat-mini-fab color="primary" (click)="deleteRow(i)" aria-label="delete icon">
                   <mat-icon>delete</mat-icon>
                 </button>
-
-              <!-- <button mat-raised-button  color="primary" class="add-item-btn" (click)="deleteRow(i)">Delete</button> -->
-
             </td>
             <td class="col-md-2 w-100">
               <input  name="{{dynamic.stockCode}}" [(ngModel)]="dynamic.stockCode"  type="text" />
@@ -354,14 +355,20 @@
             <td class="col-md-2 w-100">
               <input name="{{dynamic.name}}" [(ngModel)]="dynamic.name"  type="text" />
             </td>
-            <td class="col-md-3 w-100">
-              <input name="{{dynamic.description}}" [(ngModel)]="dynamic.description"  type="text"/>
-            </td>
-            <td class="col-md-2 w-100">
+            <td class="col-md-1 w-100">
               <input name="{{dynamic.quantity}}" [(ngModel)]="dynamic.quantity"  type="number"/>
             </td>
             <td class="col-md-2 w-100">
               <input name="{{dynamic.unitPrice}}" [(ngModel)]="dynamic.unitPrice"  type="text"/>
+            </td>
+            <!-- <td class="col-md-1 w-100">
+              <input name="{{dynamic.discount}}" [(ngModel)]="dynamic.discount"  type="text"/>
+            </td> 
+            <td class="col-md-1 w-100">
+              <input name="{{dynamic.VAT}}" [(ngModel)]="dynamic.VAT"  type="text"/>
+            </td>  -->
+            <td class="col-md-2 w-100">
+              {{ +dynamic.quantity * + dynamic.unitPrice  | currency:'R' }}
             </td>
           </tr>
         </tbody>
@@ -376,7 +383,6 @@
         <button class="fa fa-plus " (click)="getValues()">Get data</button>
       </td>
     </tr> -->
-    <div>{{dynamicArray | json}}</div>
 
 
       

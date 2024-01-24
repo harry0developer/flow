@@ -18,7 +18,7 @@ import { Inventory } from 'src/app/models/inventory';
   styleUrls: ['./inventory.component.scss']
 })
 export class AppInventoryComponent {
-  displayedColumns: string[] = ['photo','name','description', 'stockCode', 'quantity' ,'unitPrice', 'totalPrice', 'actionButton'];
+  displayedColumns: string[] = ['photo','name','description', 'stockCode', 'quantity' ,'unitPrice','discount', 'totalPrice', 'actionButton'];
    
   editMode: boolean = false;
   newInventoryItem: boolean = false;
@@ -51,7 +51,9 @@ export class AppInventoryComponent {
       stockCode: ['', [Validators.required]],
       description: ['', Validators.required],
       quantity: ['', Validators.required],
-      unitPrice: ['', Validators.required]
+      unitPrice: ['', Validators.required],
+      discount: ['', Validators.required],
+      VAT: ['', Validators.required],
     });
   }
 
@@ -65,6 +67,8 @@ export class AppInventoryComponent {
       description: form.description,
       quantity: form.quantity,
       unitPrice: form.unitPrice, 
+      discount: form.discount,
+      VAT: form.discount,
       createdOn: "" + new Date().getTime(),
       createdBy: "Donald Kgomo", 
       updatedOn: "" + new Date().getTime(),
