@@ -1,16 +1,26 @@
- 
-<mat-card class="cardWithShadow theme-card">
-  <mat-card-header>
-    <mat-card-title class="m-b-0">Document</mat-card-title>
-  </mat-card-header>
+<ngx-spinner 
+  bdColor="rgba(255, 255, 255, 0.9)" 
+  size="medium" 
+  color="#018c8c" 
+  type="ball-atom" 
+  class="spinner"
+  [fullScreen]="true">
+    <p style="color: #018c8c"> Loading... </p>
+</ngx-spinner>
 
-  <button mat-menu-item (click)="convetToPDF()">
-    <mat-icon class="d-flex align-items-center"
-      ><i-tabler name="user" class="icon-18 d-flex"></i-tabler></mat-icon
-    >Download PDF
-  </button>
+<mat-card  *ngIf="!editMode"  class="cardWithShadow theme-card">
+   
+    <mat-card-title class="p-24 b-b-1">
+      <div class="row">
+        <div class="col-md-9 col-sm-6">  
+        </div>
+        <div class="col-md-3 col-sm-6 align-end">
+          <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="createQuote()">Create New Quote</button>
+        </div>
+      </div>
+    </mat-card-title>
 
-
+  <!-- PDF Document  -->
   <div id="contentToConvert" class="company-document">
     <div class="row">
       <div class="col-lg-6 company-from">
@@ -43,16 +53,16 @@
     <h3 class="bill-to">Bill to:</h3>
     <div class="row">
       <div class="col-md-6 company-to">
-        <h3 class="name">
+        <h2 class="name">
           {{selectedQuote.customer.companyName}}
-        </h3>
+        </h2>
         
         <div class="address">
           <p *ngFor='let address of selectedQuote.customer.companyBillingAddress.split(",")'>
             {{address}}
           </p>
         </div>
-        <h3 class="vat-no">Customer VAT No. {{selectedQuote.customer.companyVATNumber}}</h3>
+        <h4 class="vat-no">VAT No. {{selectedQuote.customer.companyVATNumber}}</h4>
       </div>
 
       <div class="col-md-6 qoute-info" >
@@ -92,27 +102,27 @@
       </div>
 
       <div class="clear-white-space"></div>
-      <div class="col-8"></div>
-      <div class="col-4 bottom-prices">
+      <div class="col-7"></div>
+      <div class="col-5 bottom-prices">
         <table class="table table-striped"> 
-          <!-- <tbody>
+          <tbody>
             <tr > 
               <td scope="col" class="col-6">Total Price Exclusive</td>
-              <td scope="col" class="col-6">{{total.totalPriceExcl | currency:'R':'symbol':'4.2-2'}}</td>
+              <td scope="col" class="col-6">{{selectedQuote.totalPriceExclusive | currency:'R':'symbol':'4.2-2'}}</td>
             </tr>
             <tr>
               <td scope="col" class="col-6">Total VAT</td>
-               <td scope="col" class="col-6">{{total.totalVat | currency:'R':'symbol':'4.2-2'}}</td>
+               <td scope="col" class="col-6">{{selectedQuote.totalVAT | currency:'R':'symbol':'4.2-2'}}</td>
             </tr>
             <tr>
               <td scope="col" class="col-6">Total Price Discount</td>
-               <td scope="col" class="col-6">{{total.totalPriceDiscount | currency:'R':'symbol':'4.2-2'}}</td>
+               <td scope="col" class="col-6">{{selectedQuote.totalPriceDiscount | currency:'R':'symbol':'4.2-2'}}</td>
             </tr>
             <tr>
               <td scope="col" class="col-6"><b>Total Price Inclusive</b></td>
-               <td scope="col" class="col-6"><b>{{total.totalPriceInclusive | currency:'R':'symbol':'4.2-2'}}</b></td>
+               <td scope="col" class="col-6"><b>{{selectedQuote.totalPriceInclusive | currency:'R':'symbol':'4.2-2'}}</b></td>
             </tr>
-          </tbody> -->
+          </tbody>
         </table>
 
         <hr>
@@ -122,19 +132,12 @@
       <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos optio quo accusamus ex, qui nostrum delectus iure in quibusdam eligendi molestias modi quaerat odio temporibus, ducimus, dicta cum quidem ea!</p>
     </div>
   </div>
+  <!-- PDF Document  -->
 </mat-card>
 
 <mat-card *ngIf="!editMode" class="cardWithShadow">
   <mat-card-content class="p-24">
-    <mat-card-title class=" b-b-1">
-      <div class="row">
-        <div class="col-md-9 col-sm-6 title"> <h3>Quote History</h3></div>
-        <div class="col-md-3 col-sm-6 align-end">
-          <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="addNewQuote()">Create New Quote</button>
-        </div>
-      </div>
-    </mat-card-title>
-    
+    <mat-card-title class="m-b-0">Quote History</mat-card-title>    
 
     <div class="table-responsive m-t-16">
       <table mat-table [dataSource]="dataSource" class="w-100">
@@ -229,6 +232,154 @@
   </mat-card-content>
 </mat-card>
 
+<mat-card *ngIf="editMode" class="cardWithShadow">
+  <mat-card-content class="p-32">
+    <mat-card-title class=" b-b-1">
+      <div class="row">
+        <div class="col-8 col-md-6 title"> 
+          <h3>Create Quote</h3>
+        </div>
+        <div class="col-4 col-md-6 align-end btn-group">
+            <button mat-raised-button color="primary" 
+              class="m-t-12 m-b-12 m-r-3" 
+              [disabled]="!quoteForm?.valid"
+              (click)="createNewQuote()">Create Quote</button>
+          <button mat-raised-button  color="warn" class="m-t-12 m-b-12" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    </mat-card-title>
+
+  
+    <form [formGroup]="quoteForm"> 
+      <div class="row m-t-32">
+        <div class="col-md-3">
+          <h4 class="w-100">Quote Number</h4>
+        </div>
+
+        <div class="col-md-9">
+           <h3>{{autoGeneratedQuoteNumber}}</h3>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-3">
+          <h4 class="w-100">Customer Name</h4>
+        </div>
+
+        <div class="col-md-9">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Customer Name</mat-label>
+            <input type="text" matInput  [formControl]="customerFormControl" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+              <mat-option *ngFor="let customer of filteredCustomers | async" [value]="customer"> {{ customer.companyName }} </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </div>
+      
+
+      <div class="row">
+        <div class="col-md-3">
+          <h4 class="w-100">Choose a date</h4>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Date from</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="quoteDate">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-5">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Date to</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="quoteDueDate">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div> 
+       
+      <div class="row  m-t-32">
+        <div class="col-md-3">
+          <h4 class="w-100">Add Item</h4>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Item</mat-label>
+            <input type="text" matInput  [formControl]="customerFormControl" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+              <mat-option *ngFor="let customer of filteredCustomers | async" [value]="customer"> {{ customer.companyName }} </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div> 
+
+        <div class="col-md-3">
+          <button mat-raised-button  color="primary" class="add-item-btn">Add</button>
+        </div>
+      </div>
+    </form> 
 
 
- 
+    <form> 
+      <table class="inventory-table">
+        <thead>
+          <tr class="row">
+            <td class="col-md-1 w-100"><label>Action</label></td>
+            <td class="col-md-2 w-100"><label>Stock Code</label></td>
+            <td class="col-md-2 w-100"><label>Name</label></td>
+            <td class="col-md-3 w-100"><label>Description</label></td>
+            <td class="col-md-2 w-100"><label>Quantity</label></td>
+            <td class="col-md-2 w-100"><label>Unit Price</label></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row" *ngFor="let dynamic of dynamicArray; let i = index;">
+            <td class="col-md-1 w-100">
+              <!-- <button class="fa fa-plus " (click)="deleteRow(i)">Delete</button> -->
+                <button mat-mini-fab color="primary" (click)="deleteRow(i)" aria-label="delete icon">
+                  <mat-icon>delete</mat-icon>
+                </button>
+
+              <!-- <button mat-raised-button  color="primary" class="add-item-btn" (click)="deleteRow(i)">Delete</button> -->
+
+            </td>
+            <td class="col-md-2 w-100">
+              <input  name="{{dynamic.stockCode}}" [(ngModel)]="dynamic.stockCode"  type="text" />
+            </td>
+            <td class="col-md-2 w-100">
+              <input name="{{dynamic.name}}" [(ngModel)]="dynamic.name"  type="text" />
+            </td>
+            <td class="col-md-3 w-100">
+              <input name="{{dynamic.description}}" [(ngModel)]="dynamic.description"  type="text"/>
+            </td>
+            <td class="col-md-2 w-100">
+              <input name="{{dynamic.quantity}}" [(ngModel)]="dynamic.quantity"  type="number"/>
+            </td>
+            <td class="col-md-2 w-100">
+              <input name="{{dynamic.unitPrice}}" [(ngModel)]="dynamic.unitPrice"  type="text"/>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+
+    <!-- <tr>
+      <td>
+        <button class="fa fa-plus " (click)="addRow()">Add</button>
+      </td>
+      <td>
+        <button class="fa fa-plus " (click)="getValues()">Get data</button>
+      </td>
+    </tr> -->
+    <div>{{dynamicArray | json}}</div>
+
+
+      
+  </mat-card-content>
+</mat-card> 
+

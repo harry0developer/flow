@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../material.module';
 
@@ -35,7 +35,8 @@ import { AppQuotesComponent } from './quotes/quotes.component';
     ReactiveFormsModule,
     TablerIconsModule.pick(TablerIcons),
     MatNativeDateModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    AsyncPipe
   ],
   declarations: [
     AppCustomersComponent,
