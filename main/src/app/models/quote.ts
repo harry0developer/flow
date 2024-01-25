@@ -5,6 +5,7 @@ export interface Quote {
   id: string; 
   quoteNo: string;
   quoteDate: string;
+  quoteStartDate: string;
   quoteDueDate: string;
   quoteTerm: string;
   customer: Customer;

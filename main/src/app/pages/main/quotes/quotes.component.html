@@ -140,7 +140,7 @@
     <mat-card-title class="m-b-0">Quote History</mat-card-title>    
 
     <div class="table-responsive m-t-16">
-      <table mat-table [dataSource]="dataSource" class="w-100">
+      <table mat-table [dataSource]="quotes" class="w-100">
         <!-- quoteNo Column -->
         <ng-container matColumnDef="quoteNo">
           <th
@@ -286,7 +286,7 @@
         <div class="col-md-4">
           <mat-form-field class="w-100" appearance="outline">
             <mat-label>Date from</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="quoteDate">
+            <input matInput [matDatepicker]="picker" formControlName="quoteStartDate">
             <mat-hint>MM/DD/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
