@@ -6,6 +6,8 @@ import { AppSalesOrderComponent } from './sales-order/sales-order.component';
 import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved.component';
 import { AppInventoryComponent } from './inventory/inventory.component';
 import { AppQuotesComponent } from './quotes/quotes.component';
+import { AppUserProfileComponent } from './user-profile/user-profile.component';
+import { AppManageComponent } from './manage/manage.component';
 
 export const MainRoutes: Routes = [
   {
@@ -38,6 +40,14 @@ export const MainRoutes: Routes = [
       {
         path: 'users',
         component: AppUsersComponent,
+      },
+      {
+        path: 'manage',
+        component: AppManageComponent,
+      },
+      {
+        path: 'profile',
+        component: AppUserProfileComponent,
       }
     ],
   },

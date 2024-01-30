@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; 
+import { Component, ViewEncapsulation, ViewChild, CUSTOM_ELEMENTS_SCHEMA, Inject } from '@angular/core'; 
 
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -9,15 +9,67 @@ import { COLLECTION, COMPANY_TYPE } from 'src/app/const/util';
 import { FormBuilder, Validators } from '@angular/forms';
 import { v4 as uuid} from 'uuid';
 import { NgxSpinnerService } from "ngx-spinner";
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+
+const ELEMENT_DATA: any[] = [
+  {
+    id: 1,
+    url: 'assets/images/customers/customer-1.svg',
+    customerName: "Nkanyesi Shobe",
+    customerEmail: "nkanyi@beamlight.com",
+    customerPhoneNumber: "0112004000",
+    companyName: "BeamLight Corp",
+    companyVATNumber: "400080000",
+    companyPhysicalAddress: "100 Mandela Drive, Brynston, Sandton, 2100",
+    customerType: "Business;"
+  },
+  {
+    id: 2,
+    url: 'assets/images/customers/customer-2.svg',
+    customerName: "Linah Kgomo",
+    customerEmail: "linah@ballnet.com",
+    customerPhoneNumber: "0215557000",
+    companyName: "BallNet",
+    companyVATNumber: "555000555",
+    companyPhysicalAddress: "222 Peter Mokaba str, Century Ciry, Cape town, 6065",
+    customerType: "Business"
+  },
+  {
+    id: 3,
+    url: 'assets/images/customers/customer-3.svg',
+    customerName: "Donald Cow",
+    customerEmail: "donald@sqrm.com",
+    customerPhoneNumber: "0120005555",
+    companyName: "SQR Mining",
+    companyVATNumber: "7000011",
+    companyPhysicalAddress: "501 Main str, Sunnyside, Pretoria, 8000",
+    customerType: "Business"
+  },
+  {
+    id: 4,
+    url: 'assets/images/customers/customer-4.svg',
+    customerName: "Thiko Stati",
+    customerEmail: "thiko@stonecorp.com",
+    customerPhoneNumber: "0119997000",
+    companyName: "Stone Corp",
+    companyVATNumber: "88800000",
+    companyPhysicalAddress: "900 main str, newtown, Johannesburg, 9000",
+    customerType: "Business"
+  },
+  
+];
  
+
 @Component({
-  selector: 'app-customers',
-  templateUrl: './customers.component.html',
-  styleUrls: ['./customers.component.scss']
+  selector: 'app-company-info',
+  templateUrl: './company-info.component.html',
+  styleUrls: ['./company-info.component.scss']
 })
-export class AppCustomersComponent {
+export class AppCompanyInfoComponent {
   displayedColumns: string[] = ['companyLogo', 'contactPersonName', 
   'contactPersonPhoneNumber', 'contactPersonEmail', 'companyName', 'companyVATNumber', 'companyBillingAddress' ,'actionButton'];
+  dataSource = ELEMENT_DATA;
   editMode: boolean = false;
   newCustomer: boolean = false;
 
@@ -38,17 +90,33 @@ export class AppCustomersComponent {
   customerForm: any;
   customers: Customer[];
 
-  constructor(private router: Router,
+  constructor(
      private formBuilder: FormBuilder,
      private spinner: NgxSpinnerService,
-     private dataService: DataService) {
+     private dataService: DataService,
+      @Inject(MAT_DIALOG_DATA) public data: {name: string},
+
+     ) {
     // sales overview chart 
   }
-
- 
+  
+  
+  
   ngOnInit(): void {
-
-    this.getCustomers();
+    console.log("Data , ", this.data);
+    if(this.data) {
+      const customer: any = this.data;
+      this.customerForm.controls['contactPersonTitle'].setValue(customer.contactPerson.title);
+      this.customerForm.controls['contactPersonFirstName'].setValue(customer.contactPerson.firstName);
+      this.customerForm.controls['contactPersonLastName'].setValue(customer.contactPerson.lastName);
+      this.customerForm.controls['contactPersonEmail'].setValue(customer.contactPerson.emailAddress);
+      this.customerForm.controls['contactPersonPhoneNumber'].setValue(customer.contactPerson.phoneNumber);
+      this.customerForm.controls['companyName'].setValue(customer.name);
+      this.customerForm.controls['companyVATNumber'].setValue(customer.VATNumber);
+      this.customerForm.controls['companyBillingAddress'].setValue(customer.billingAddress);
+      this.customerForm.controls['companyShippingAddress'].setValue(customer.shippingAddress);
+    }
+    // this.getCustomers();
     this.customerForm = this.formBuilder.group({
       companyName: ['', Validators.required],
       companyVATNumber: ['', [Validators.required]],
@@ -74,12 +142,12 @@ export class AppCustomersComponent {
     const customer: Customer = {
       id: "",
       url: form.url,
-      registrationNumber: "",
       type: COMPANY_TYPE.CUSTOMER,
       name: form.companyName,
-      VATNumber: form.companyVATNumber,
       phoneNumber: "",
       emailAddress: "",
+      VATNumber: form.companyVATNumber,
+      registrationNumber: "",
       billingAddress: form.companyBillingAddress,
       shippingAddress: form.companyShippingAddress,
       contactPerson: {
@@ -88,12 +156,12 @@ export class AppCustomersComponent {
         emailAddress: form.contactPersonEmail,
         phoneNumber: form.contactPersonPhoneNumber,
         title: form.contactPersonTitle,
-        gender: form.gender
+        gender: ""
       },
       bankDetails: {
         accountNumber: form.accountNumber,
         branchCode: form.branchCode,
-        branchName: form.branchName,
+        branchName: form.branchName
       },
       dateCreated: "" + new Date().getTime(),
       createdBy: "Donald Kgomo", 

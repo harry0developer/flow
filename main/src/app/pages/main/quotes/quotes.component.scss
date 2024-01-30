@@ -32,18 +32,33 @@
 
 .company-document {
     padding: 60px;
-    position: absolute;
-    top: -10000px; //hide from page
+    // position: absolute;
+    // top: -10000px; //hide from page
     .company-from-logo {
 
         text-align: right;
         img {
             width: 300px;
         }
+
+        .banking-details {
+            line-height: 1.6;
+            p {
+                margin: 0;
+                padding: 0;
+
+            }
+        }
     }
 
     .qoute-info {
         margin-top: 40px;
+        line-height: 1.6;
+        text-align: right;
+        p {
+            padding: 0;
+            margin: 0;
+        }
     }
  
     .table {
@@ -59,8 +74,10 @@
         th {
             text-align: left;
         }  
+       
     }
 
+   
     .clear-white-space {
         height: 760px;
     }
@@ -71,9 +88,11 @@
     // display: none;
 }
 
-.address p{
-    margin: 0;
-    font-size: 16px;
+.address {
+    line-height: 1.6;
+    p{
+        margin: 0;
+    }
 }
 .add-item-btn {
     width: 120px;

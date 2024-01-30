@@ -10,10 +10,7 @@ import * as TablerIcons from 'angular-tabler-icons/icons';
 
 import { MainRoutes } from './main.routing';
 
-// ui components
-import { AppBadgeComponent } from './badge/badge.component';
-import { AppChipsComponent } from './chips/chips.component';
-import { AppListsComponent } from './lists/lists.component';
+// ui components 
 import { AppMenuComponent } from './menu/menu.component';
 import { AppTooltipsComponent } from './tooltips/tooltips.component';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -25,6 +22,9 @@ import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved
 import { NgxSpinnerModule } from "ngx-spinner";
 import { AppInventoryComponent } from './inventory/inventory.component';
 import { AppQuotesComponent } from './quotes/quotes.component';
+import { AppUserProfileComponent } from './user-profile/user-profile.component';
+import { AppCompanyInfoComponent } from './company-info/company-info.component';
+import { AppManageComponent } from './manage/manage.component';
 
 @NgModule({
   imports: [
@@ -43,12 +43,12 @@ import { AppQuotesComponent } from './quotes/quotes.component';
     AppInventoryComponent,
     AppInvoicesComponent,
     AppQuotesComponent,
+    AppCompanyInfoComponent,
+    AppManageComponent,
     AppSalesOrderComponent,
     AppPaymentRecievedComponent,
     AppUsersComponent,
-    AppBadgeComponent,
-    AppChipsComponent,
-    AppListsComponent,
+    AppUserProfileComponent,
     AppMenuComponent,
     AppTooltipsComponent
   ],

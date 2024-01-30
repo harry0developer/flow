@@ -4,7 +4,7 @@ import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
-import { COLLECTION } from 'src/app/const/util';
+import { COLLECTION, COMPANY_TYPE, GENDER, TITLE } from 'src/app/const/util';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { v4 as uuid} from 'uuid';
 import { NgxSpinnerService } from "ngx-spinner";
@@ -15,132 +15,18 @@ import {map, startWith} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import * as moment from 'moment'
 
-
 @Component({
   selector: 'app-quotes',
   templateUrl: './quotes.component.html',
   styleUrls: ['./quotes.component.scss']
 })
 export class AppQuotesComponent {
-  displayedColumns: string[] = ['quoteNo',  'quoteDate', 'companyName' ,'contactPerson', 'totalPriceInclusive', 'actionButton'];
-
-  dataSource: Quote[] = [
-    {
-      id: "d9dfdd81-92d1-4b46-89f9-3f546b2386f0", 
-      quoteNo: "FRST-100-000",
-      quoteDate: "01/10/2023",
-      quoteStartDate: "01/01/2024",
-      quoteDueDate: "01/11/2024",
-      quoteTerm: "30 days",
-      customer: {
-        id: "f9dfdd81-a2d1-4b46-8000-3f546b2386f0",
-        url: "",
-        companyName: "Freshwater Corp",
-        companyVATNumber: "400100-10000",
-        companyBillingAddress: "123 main str,steelfontein, Mpumalanga, 2010",
-        companyShippingAddress: "123 main str,steelfontein, Mpumalanga, 2010",
-        contactPersonFirstName: "Andile",
-        contactPersonLastName: "Papo",
-        contactPersonEmail: "andile@blueprint.com",
-        contactPersonPhoneNumber: "0825003020",
-        contactPersonTitle: "Mr.", 
-      },
-      items: [
-        {
-          id: "g9dfdd81-a2d1-4b46-c7a8a-3f546b2386f1", 
-          name: "Teaspoon", 
-          photo: "https://placehold.co/100",
-          stockCode: "TSP-100", 
-          description: "A very nice spoon",
-          quantity: "10",
-          unitPrice: "100",
-          VAT: "0",
-          discount: "0"
-        },
-        {
-          id: "f0dfdd81-a2d1-4b46-c7a8a-3f546b2386f1", 
-          name: "Fork", 
-          photo: "https://placehold.co/100",
-          stockCode: "FRK-100", 
-          description: "A silcer fork",
-          quantity: "5",
-          unitPrice: "550",
-          discount: "0",
-          VAT: "0"
-        },
-        {
-          id: "f0dfdd81-a2d1-4b46-c7a8a-3f546b2386f1", 
-          name: "Chopping board", 
-          photo: "https://placehold.co/100",
-          stockCode: "CHB-100", 
-          description: "A Plastic chopping board",
-          quantity: "10",
-          discount: "0",
-          unitPrice: "270",
-          VAT: "0"
-        }
-      ],
-      totalPriceExclusive: "2500",
-      totalVAT: "0",
-      totalPriceDiscount: "100",
-      totalPriceInclusive: "2400",
-    },
-    {
-      id: "ff890d81-9090-4b46-89f9-3f546b2386f0", 
-      quoteNo: "SCCND-100-000",
-      quoteDate: "01/01/2024",
-      quoteStartDate: "01/01/2024",
-      quoteDueDate: "01/02/2024",
-      quoteTerm: "30 days",
-      customer: {
-        id: "f9dfdd81-a2d1-4b46-8000-3f546b2386f0",
-        url: "",
-        companyName: "Dinokeng PTY Ltd",
-        companyVATNumber: "400100-10000",
-        companyBillingAddress: "123 Grey road, Bendor Parl, Polokwane, 2190",
-        companyShippingAddress: "123 Grey road, Bendor Parl, Polokwane, 2190",
-        contactPersonFirstName: "Moses",
-        contactPersonLastName: "Thakgola",
-        contactPersonEmail: "moses@dinokeng.com",
-        contactPersonPhoneNumber: "0825003020",
-        contactPersonTitle: "Mr.", 
-      },
-      items: [
-        {
-          id: "g9dfdd81-a2d1-4b46-c7a8a-3f546b2386f1", 
-          name: "Pots", 
-          photo: "https://placehold.co/100",
-          stockCode: "LAB-200", 
-          description: "designer ports",
-          quantity: "40",
-          unitPrice: "2400",
-          discount: "0",
-          VAT: "0"
-        },
-        {
-          id: "f0dfdd81-a2d1-4b46-c7a8a-3f546b2386f1", 
-          name: "Frying Pan", 
-          photo: "https://placehold.co/100",
-          stockCode: "FPN-09100", 
-          description: "A non sticky frying pan",
-          quantity: "2",
-          unitPrice: "7500",
-          discount: "0",
-          VAT: "0"
-        }
-      ],
-      totalPriceExclusive: "26400",
-      totalVAT: "0",
-      totalPriceDiscount: "50",
-      totalPriceInclusive: "26400",
-    }
-
-  ];
+  displayedColumns: string[] = ['quoteNo',  'quoteDate', 'name' ,'contactPerson', 'totalPriceInclusive', 'actionButton'];
 
   customers: Customer[] = [];
   inventoryItems: Inventory[] = [];
 
-  selectedQuote: Quote = this.dataSource[0];
+  selectedQuote: Quote;
   editMode: boolean = false;
   newQuote: boolean = false;
 
@@ -210,8 +96,8 @@ export class AppQuotesComponent {
     this.filteredCustomers = this.customerFormControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => {
-        const companyName = typeof value === 'string' ? value : value.companyName;
-        return companyName ? this._customerFilter(companyName as string) : this.customers.slice();
+        const name = typeof value === 'string' ? value : value.name;
+        return name ? this._customerFilter(name as string) : this.customers.slice();
       }),
     );
   }
@@ -236,7 +122,7 @@ export class AppQuotesComponent {
   }
 
   displayFn(customer: Customer): string {
-    return customer && customer.companyName ? customer.companyName : '';
+    return customer && customer.name ? customer.name : '';
   }
 
   displayInventoryFn(item: Inventory): string {
@@ -252,7 +138,7 @@ export class AppQuotesComponent {
   private _customerFilter(name: string): Customer[] {
     const filterValue = name.toLowerCase();
 
-    return this.customers.filter(cus => cus.companyName.toLowerCase().includes(filterValue));
+    return this.customers.filter(cus => cus.name.toLowerCase().includes(filterValue));
   }
 
   generateRandomCodeNumber(): string {
@@ -298,7 +184,6 @@ export class AppQuotesComponent {
       updatedOn: ""
     };
  
-    console.log("Quote ", newQuote);
     this.dataService.addItem(newQuote, COLLECTION.QUOTES).forEach(res => {
       console.log(res);
       this.getQuotes();
@@ -326,17 +211,29 @@ export class AppQuotesComponent {
       quoteStartDate: "01/01/2024",
       quoteTerm: "30 days",
       customer: {
-        id: "f9dfdd81-a2d1-4b46-8000-3f546b2386f0",
+        id: "f1200cd81-a2d1-4b46-8000-3f546b2386f0",
         url: "",
-        companyName: "Blue Print Media",
-        companyVATNumber: "VAT-100-10000",
-        companyBillingAddress: "123 main str,steelfontein, Mpumalanga, 2010",
-        companyShippingAddress: "123 main str,steelfontein, Mpumalanga, 2010",
-        contactPersonFirstName: "Sisanda",
-        contactPersonLastName: "Mawela",
-        contactPersonEmail: "sisanda@blueprint.com",
-        contactPersonPhoneNumber: "0825003020",
-        contactPersonTitle: "Mrs.", 
+        type: COMPANY_TYPE.ADMIN,
+        name: "Silver Stripe Holdings",
+        VATNumber: "5600100-10000",
+        registrationNumber: "2000/20000/10",
+        billingAddress: "222 Grey str, Seshego Zone 1, Polokwane, 1900",
+        shippingAddress: "222 Grey str, Seshego Zone 1, Polokwane, 1900",
+        emailAddress: "info@silverstripe.com",
+        phoneNumber: "0150006000",
+        contactPerson: {
+          firstName: "Tshwene",
+          lastName: "Mogolola",
+          emailAddress: "siwe@blueprint.com",
+          phoneNumber: "0805003020",
+          title: TITLE.MISS, 
+          gender: GENDER.FEMALE
+        },
+        bankDetails: {
+          accountNumber: "100200040",
+          branchCode: "909090",
+          branchName: "Midway Mews",
+        }
       },
       items: [
         {

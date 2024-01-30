@@ -1,21 +1,21 @@
-import { Component, ViewEncapsulation, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; 
+import { Component } from '@angular/core'; 
 
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Customer } from 'src/app/models/customer';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
-import { COLLECTION, COMPANY_TYPE } from 'src/app/const/util';
+import { COLLECTION, COMPANY_TYPE, TITLE } from 'src/app/const/util';
 import { FormBuilder, Validators } from '@angular/forms';
 import { v4 as uuid} from 'uuid';
 import { NgxSpinnerService } from "ngx-spinner";
  
 @Component({
-  selector: 'app-customers',
-  templateUrl: './customers.component.html',
-  styleUrls: ['./customers.component.scss']
+  selector: 'app-manage',
+  templateUrl: './manage.component.html',
+  styleUrls: ['./manage.component.scss']
 })
-export class AppCustomersComponent {
+export class AppManageComponent {
   displayedColumns: string[] = ['companyLogo', 'contactPersonName', 
   'contactPersonPhoneNumber', 'contactPersonEmail', 'companyName', 'companyVATNumber', 'companyBillingAddress' ,'actionButton'];
   editMode: boolean = false;
@@ -29,9 +29,8 @@ export class AppCustomersComponent {
     totalPriceInclusive: "121200"
   };
   
-  
   titles = [
-    "Mr.", "Mrs.", "Miss", "Ms.", "Dr.", "Prof." 
+    TITLE.MR, TITLE.MRS, TITLE.MISS, TITLE.PROF, TITLE.DR 
   ];
  
 

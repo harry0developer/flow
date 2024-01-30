@@ -2,7 +2,8 @@ export const COLLECTION = {
     USERS: 'users',
     CUSTOMERS: 'customer',
     INVENTORY: 'inventory',
-    QUOTES: 'quotes'
+    QUOTES: 'quotes',
+    MY_COMPANY: 'my-companies'
 };
 
 export const TITLE = {
@@ -23,4 +24,9 @@ export const ROLE = {
     ADMIN: 'Administrator',
     OPERATOR: 'Operator',
     SUPERUSER: 'Super User'
+}
+
+export const COMPANY_TYPE = {
+    ADMIN: 'Admin',
+    CUSTOMER: 'Customer',
 }

@@ -58,6 +58,11 @@ export const navItems: NavItem[] = [
     iconName: 'users',
     route: '/main/users',
   },
+  {
+    displayName: 'Manage',
+    iconName: 'settings',
+    route: '/main/manage',
+  },
 
   {
     navCap: 'Auth',
