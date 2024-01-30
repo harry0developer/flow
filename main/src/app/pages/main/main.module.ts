@@ -23,7 +23,6 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { AppInventoryComponent } from './inventory/inventory.component';
 import { AppQuotesComponent } from './quotes/quotes.component';
 import { AppUserProfileComponent } from './user-profile/user-profile.component';
-import { AppCompanyInfoComponent } from './company-info/company-info.component';
 import { AppManageComponent } from './manage/manage.component';
 
 @NgModule({
@@ -43,7 +42,6 @@ import { AppManageComponent } from './manage/manage.component';
     AppInventoryComponent,
     AppInvoicesComponent,
     AppQuotesComponent,
-    AppCompanyInfoComponent,
     AppManageComponent,
     AppSalesOrderComponent,
     AppPaymentRecievedComponent,

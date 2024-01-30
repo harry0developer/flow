@@ -1,14 +1,13 @@
 import { Component } from '@angular/core'; 
-
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
-import { Customer } from 'src/app/models/customer';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
-import { COLLECTION, COMPANY_TYPE, TITLE } from 'src/app/const/util';
+import { COLLECTION, GENDER, TITLE } from 'src/app/const/util';
 import { FormBuilder, Validators } from '@angular/forms';
 import { v4 as uuid} from 'uuid';
 import { NgxSpinnerService } from "ngx-spinner";
+import { Company } from 'src/app/models/company';
  
 @Component({
   selector: 'app-manage',
@@ -17,11 +16,12 @@ import { NgxSpinnerService } from "ngx-spinner";
 })
 export class AppManageComponent {
   displayedColumns: string[] = ['companyLogo', 'contactPersonName', 
-  'contactPersonPhoneNumber', 'contactPersonEmail', 'companyName', 'companyVATNumber', 'companyBillingAddress' ,'actionButton'];
+  'contactPersonPhoneNumber', 'contactPersonEmail', 'companyName', 
+  'companyVATNumber', 'companyBillingAddress' ,'actionButton'];
   editMode: boolean = false;
-  newCustomer: boolean = false;
+  newCompany: boolean = false;
 
-  editCustomer: Customer;
+  editCompany: Company;
   total = {
     totalPriceExcl: "120000",
     totalVat: "1200",
@@ -32,12 +32,15 @@ export class AppManageComponent {
   titles = [
     TITLE.MR, TITLE.MRS, TITLE.MISS, TITLE.PROF, TITLE.DR 
   ];
- 
 
-  customerForm: any;
-  customers: Customer[];
+  gender = [
+    GENDER.MALE, GENDER.FEMALE, GENDER.NONBINARY
+  ];
+  
+  companyForm: any;
+  company: Company[];
 
-  constructor(private router: Router,
+  constructor(
      private formBuilder: FormBuilder,
      private spinner: NgxSpinnerService,
      private dataService: DataService) {
@@ -47,107 +50,129 @@ export class AppManageComponent {
  
   ngOnInit(): void {
 
-    this.getCustomers();
-    this.customerForm = this.formBuilder.group({
-      companyName: ['', Validators.required],
-      companyVATNumber: ['', [Validators.required]],
+    this.getCompanies(); 
+   
+
+    this.companyForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      VATNumber: ['', [Validators.required]],
+      registrationNumber: ['', [Validators.required]],
+      billingAddress: ['', Validators.required],
+      shippingAddress: ['', Validators.required],
+      website: [''],
+      phoneNumber: ['', Validators.required],
+      emailAddress:  ['', [Validators.required,  Validators.email]],
+
       contactPersonFirstName: ['', Validators.required],
       contactPersonLastName: ['', Validators.required],
       contactPersonEmail: ['', [Validators.required,  Validators.email]],
       contactPersonPhoneNumber: ['', Validators.required],
       contactPersonTitle: ['', Validators.required],
-      companyBillingAddress: ['', Validators.required],
-      companyShippingAddress: ['', Validators.required],
+      contactPersonGender: ['', Validators.required],
+
+      accountNumber:  ['', Validators.required],
+      branchCode:  ['', Validators.required],
+      bankName:  ['', Validators.required],
     });
   }
 
   copyShippingAddress(checked: any) {
     if(checked) {
-      this.customerForm.controls['companyShippingAddress'].setValue(this.customerForm.get('companyBillingAddress').value);
+      this.companyForm.controls['shippingAddress'].setValue(this.companyForm.get('billingAddress').value);
     }
-  }
-  
+  } 
 
-  addCustomer() { 
-    const form = this.customerForm.value;
-    const customer: Customer = {
+  addCompany() { 
+    const form = this.companyForm.value;
+    const company: Company = {
       id: "",
-      url: form.url,
-      registrationNumber: "",
-      type: COMPANY_TYPE.CUSTOMER,
-      name: form.companyName,
-      VATNumber: form.companyVATNumber,
-      phoneNumber: "",
-      emailAddress: "",
-      billingAddress: form.companyBillingAddress,
-      shippingAddress: form.companyShippingAddress,
+      logo: "https://placehold.co/200",
+      name: form.name,
+      registrationNumber: form.registrationNumber,
+      VATNumber: form.VATNumber,
+      phoneNumber: form.phoneNumber,
+      emailAddress: form.emailAddress,
+      website: form.website,
+      billingAddress: form.billingAddress,
+      shippingAddress: form.shippingAddress,
       contactPerson: {
         firstName: form.contactPersonFirstName,
         lastName: form.contactPersonLastName,
         emailAddress: form.contactPersonEmail,
         phoneNumber: form.contactPersonPhoneNumber,
         title: form.contactPersonTitle,
-        gender: form.gender
+        gender: form.contactPersonGender,
       },
       bankDetails: {
         accountNumber: form.accountNumber,
         branchCode: form.branchCode,
-        branchName: form.branchName,
+        bankName: form.bankName,
       },
-      dateCreated: "" + new Date().getTime(),
+      createdOn: "" + new Date().getTime(),
       createdBy: "Donald Kgomo", 
       updatedOn: "" + new Date().getTime(),
       updatedBy: "Donald Kgomo"
     }
 
-    if(this.newCustomer) {
-      customer.id = uuid();
-      this.dataService.addItem(customer, COLLECTION.CUSTOMERS).forEach((res: any) => {
+    if(this.newCompany) {
+      company.id = uuid();
+      this.dataService.addItem(company, COLLECTION.MY_COMPANIES).forEach((res: any) => {
         console.log("Customer added successfully ", res);
         this.editMode = false;
-        this.getCustomers();
+        this.getCompanies();
       });
+      console.log("Comapny ", company);
+      
     } else {
-      customer.id = this.editCustomer.id,
-      this.dataService.updateItem(customer, COLLECTION.CUSTOMERS).forEach((res: any) => {
+      company.id = this.editCompany.id,
+      this.dataService.updateItem(company, COLLECTION.MY_COMPANIES).forEach((res: any) => {
         console.log("Customer updated successfully ", res);
         this.editMode = false;
-        this.getCustomers();
+        this.getCompanies();
       }); 
     }
   }
 
-  addNewCustomer() {
+  addNewCompany() {
     this.editMode = true;
-    this.newCustomer = true;
+    this.newCompany = true;
   }
  
-  cancelEditCustomer() {
+  cancel() {
     this.editMode = false;
   }
 
-  getCustomers() {
-    this.dataService.getAll(COLLECTION.CUSTOMERS).forEach((customers: any) => {
-      console.log("customers ", customers);
-      this.customers = customers;
+  getCompanies() {
+    this.dataService.getAll(COLLECTION.MY_COMPANIES).forEach((company: any) => {
+      console.log("company ", company);
+      this.company = company;
     });
   }
   
-  editCustomerDetails(customer: Customer){
+  editCompanyDetails(company: Company){
     this.editMode = true;
-    this.editCustomer = customer;
-    console.log("Edit ", customer);
- 
-    this.customerForm.controls['contactPersonTitle'].setValue(customer.contactPerson.title);
-    this.customerForm.controls['contactPersonFirstName'].setValue(customer.contactPerson.firstName);
-    this.customerForm.controls['contactPersonLastName'].setValue(customer.contactPerson.lastName);
-    this.customerForm.controls['contactPersonEmail'].setValue(customer.contactPerson.emailAddress);
-    this.customerForm.controls['contactPersonPhoneNumber'].setValue(customer.contactPerson.phoneNumber);
-    this.customerForm.controls['companyName'].setValue(customer.name);
-    this.customerForm.controls['companyVATNumber'].setValue(customer.VATNumber);
-    this.customerForm.controls['companyBillingAddress'].setValue(customer.billingAddress);
-    this.customerForm.controls['companyShippingAddress'].setValue(customer.shippingAddress);
+    this.editCompany = company;
+    console.log("Edit ", company);
+    this.companyForm.controls['name'].setValue(company.name);
+    this.companyForm.controls['emailAddress'].setValue(company.emailAddress);
+    this.companyForm.controls['website'].setValue(company.website);
+    this.companyForm.controls['phoneNumber'].setValue(company.phoneNumber);
+    this.companyForm.controls['VATNumber'].setValue(company.VATNumber);
+    
+    this.companyForm.controls['contactPersonTitle'].setValue(company.contactPerson.title);
+    this.companyForm.controls['contactPersonGender'].setValue(company.contactPerson.gender);
+    this.companyForm.controls['contactPersonFirstName'].setValue(company.contactPerson.firstName);
+    this.companyForm.controls['contactPersonLastName'].setValue(company.contactPerson.lastName);
+    this.companyForm.controls['contactPersonEmail'].setValue(company.contactPerson.emailAddress);
+    this.companyForm.controls['contactPersonPhoneNumber'].setValue(company.contactPerson.phoneNumber);
+    this.companyForm.controls['registrationNumber'].setValue(company.registrationNumber);
 
+    this.companyForm.controls['accountNumber'].setValue(company.bankDetails.accountNumber);
+    this.companyForm.controls['bankName'].setValue(company.bankDetails.bankName);
+    this.companyForm.controls['branchCode'].setValue(company.bankDetails.branchCode);
+
+    this.companyForm.controls['billingAddress'].setValue(company.billingAddress);
+    this.companyForm.controls['shippingAddress'].setValue(company.shippingAddress);
   }
 
   convetToPDF() {

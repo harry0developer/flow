@@ -1,3 +1,4 @@
+import { Company } from "./company";
 import { Customer } from "./customer";
 import { Inventory } from "./inventory";
 
@@ -9,6 +10,7 @@ export interface Quote {
   quoteDueDate: string;
   quoteTerm: string;
   customer: Customer;
+  company: Company;
   items: Inventory[],
   totalPriceExclusive: string;
   totalVAT: string;

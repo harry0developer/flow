@@ -76,7 +76,7 @@ export class AppCustomersComponent {
       url: form.url,
       registrationNumber: "",
       type: COMPANY_TYPE.CUSTOMER,
-      name: form.companyName,
+      companyName: form.companyName,
       VATNumber: form.companyVATNumber,
       phoneNumber: "",
       emailAddress: "",
@@ -93,7 +93,7 @@ export class AppCustomersComponent {
       bankDetails: {
         accountNumber: form.accountNumber,
         branchCode: form.branchCode,
-        branchName: form.branchName,
+        bankName: form.bankName,
       },
       dateCreated: "" + new Date().getTime(),
       createdBy: "Donald Kgomo", 
@@ -144,7 +144,7 @@ export class AppCustomersComponent {
     this.customerForm.controls['contactPersonLastName'].setValue(customer.contactPerson.lastName);
     this.customerForm.controls['contactPersonEmail'].setValue(customer.contactPerson.emailAddress);
     this.customerForm.controls['contactPersonPhoneNumber'].setValue(customer.contactPerson.phoneNumber);
-    this.customerForm.controls['companyName'].setValue(customer.name);
+    this.customerForm.controls['companyName'].setValue(customer.companyName);
     this.customerForm.controls['companyVATNumber'].setValue(customer.VATNumber);
     this.customerForm.controls['companyBillingAddress'].setValue(customer.billingAddress);
     this.customerForm.controls['companyShippingAddress'].setValue(customer.shippingAddress);

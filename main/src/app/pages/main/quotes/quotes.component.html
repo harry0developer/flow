@@ -25,19 +25,20 @@
     <div class="row">
       <div class="col-lg-6 company-from">
         <h2 class="name">
-          Matswelepele Trading (PTY) Ltd.
+          {{ currentCompany?.name }}
         </h2>
 
         <div class="address">
-          1197A Chrome Street <br>
-          Steelport Industrial Park<br>
-          Limpopo <br>
+          <p *ngFor='let address of currentCompany?.billingAddress?.split("\n")'>
+            {{address}}
+          </p>
+           
           <br>
-          <b>Phone:</b> +27 15 880 0509<br>
-          <b>Email:</b> admin@matswelapele.co.za<br>
-          <b>Website:</b> www.matswelapele.co.za <br>
-          <b>VAT Registration No:</b> 4550288452<br>
-          <b>Business ID No:</b> 2016/226953/07<br>
+          <b>Phone:</b>{{ currentCompany?.phoneNumber }}<br>
+          <b>Email:</b>{{ currentCompany?.emailAddress }}<br>
+          <b>Website:</b>{{ currentCompany?.website }} <br>
+          <b>VAT Registration No:</b>{{ currentCompany?.VATNumber }}<br>
+          <b>Business ID No:</b>{{ currentCompany?.registrationNumber }}<br>
           <br>
         </div>
       </div>
@@ -46,10 +47,10 @@
         <img src="assets/images/logos/matswelapele.png" alt="">
         <div class="banking-details m-t-32">
           <h3>Banking Details</h3>
-          <p><b>Bank name: </b> First National Bank</p>
-          <p><b>Branch name: </b>Midway</p>
-          <p><b>Branch Code: </b>450001</p>
-          <p><b>Reference: </b>{{selectedQuote.quoteNo}}</p>
+          <p><b>Bank name: </b>{{ currentCompany?.bankDetails?.bankName }}</p>
+          <p><b>Account No: </b>{{ currentCompany?.bankDetails?.accountNumber }}</p>
+          <p><b>Branch Code: </b>{{ currentCompany?.bankDetails?.branchCode }}</p>
+          <p><b>Reference: </b>{{selectedQuote?.quoteNo}}</p>
         </div>
       </div> 
 
@@ -63,22 +64,22 @@
     <div class="row">
       <div class="col-md-6 company-to">
         <h2 class="name">
-          {{selectedQuote.customer.name}}
+          {{selectedQuote?.customer?.companyName}}
         </h2>
         
-        <div class="address">
+        <div class="address" *ngIf="selectedQuote?.customer?.billingAddress">
           <p *ngFor='let address of selectedQuote.customer.billingAddress.split(",")'>
             {{address}}
           </p>
         </div>
-        <h4 class="vat-no">VAT No. {{selectedQuote.customer.VATNumber}}</h4>
+        <h4 class="vat-no">VAT No. {{currentCompany?.VATNumber}}</h4>
       </div>
 
       <div class="col-md-6 qoute-info" >
-         <p><b>Qoute No: </b>{{selectedQuote.quoteNo}}</p>
-         <p><b>Date created: </b>{{selectedQuote.quoteDate}}</p>
-         <p><b>Terms: </b>{{selectedQuote.quoteTerm}} days</p>
-         <p><b>Due date: </b>{{selectedQuote.quoteDueDate}}</p>
+         <p><b>Qoute No: </b>{{selectedQuote?.quoteNo}}</p>
+         <p><b>Date created: </b>{{formatDate(selectedQuote.quoteDate)}} </p>
+         <p><b>Terms: </b>{{selectedQuote?.quoteTerm}} days</p>
+         <p><b>Due date: </b>{{formatDate(selectedQuote.quoteDueDate)}}</p>
       </div> 
     </div>
 
@@ -98,11 +99,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of selectedQuote.items"> 
+            <tr *ngFor="let item of selectedQuote?.items"> 
               <td class="col-3">{{item.stockCode}}</td> 
               <td class="col-3">{{item.description}}</td> 
               <td class="col-1">{{item.quantity}}</td> 
-              <td>{{item.unitPrice}}</td> 
+              <td>{{item.unitPrice | currency:'R'}}</td> 
               <td>{{item.VAT}}</td> 
               <td>{{ +item.unitPrice * +item.quantity | currency:'R'}}</td> 
             </tr>
@@ -117,19 +118,19 @@
           <tbody class="align-end">
             <tr > 
               <td scope="col" class="col-6">Total Price Exclusive</td>
-              <td scope="col" class="col-6">{{selectedQuote.totalPriceExclusive | currency:'R':'symbol':'4.2-2'}}</td>
+              <td scope="col" class="col-6">{{selectedQuote?.totalPriceExclusive | currency:'R'}}</td>
             </tr>
             <tr>
               <td scope="col" class="col-6">Total VAT</td>
-               <td scope="col" class="col-6">{{selectedQuote.totalVAT | currency:'R':'symbol':'4.2-2'}}</td>
+               <td scope="col" class="col-6">{{selectedQuote?.totalVAT | currency:'R'}}</td>
             </tr>
             <tr>
               <td scope="col" class="col-6">Total Price Discount</td>
-               <td scope="col" class="col-6">{{selectedQuote.totalPriceDiscount | currency:'R':'symbol':'4.2-2'}}</td>
+               <td scope="col" class="col-6">{{selectedQuote?.totalPriceDiscount | currency:'R'}}</td>
             </tr>
             <tr>
               <td scope="col" class="col-6"><b>Total Price Inclusive</b></td>
-               <td scope="col" class="col-6"><b>{{selectedQuote.totalPriceInclusive | currency:'R':'symbol':'4.2-2'}}</b></td>
+               <td scope="col" class="col-6"><b>{{selectedQuote?.totalPriceInclusive | currency:'R'}}</b></td>
             </tr>
           </tbody>
         </table>
@@ -281,7 +282,7 @@
             <mat-label>Customer Name</mat-label>
             <input type="text" matInput  [formControl]="customerFormControl" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-              <mat-option *ngFor="let customer of filteredCustomers | async" [value]="customer"> {{ customer.name }} </mat-option>
+              <mat-option *ngFor="let customer of filteredCustomers | async" [value]="customer"> {{ customer.companyName }} </mat-option>
             </mat-autocomplete>
           </mat-form-field>
         </div>

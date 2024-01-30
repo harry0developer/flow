@@ -14,6 +14,7 @@ import { Customer } from 'src/app/models/customer';
 import {map, startWith} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import * as moment from 'moment'
+import { Company } from 'src/app/models/company';
 
 @Component({
   selector: 'app-quotes',
@@ -26,7 +27,56 @@ export class AppQuotesComponent {
   customers: Customer[] = [];
   inventoryItems: Inventory[] = [];
 
-  selectedQuote: Quote;
+  selectedQuote: Quote = {
+    id: "",
+    customer: {
+      id:"",
+      companyName: "",
+      phoneNumber: "",
+      emailAddress: "",
+      registrationNumber: "",
+      shippingAddress: "",
+      type: "",
+      url: "",
+      VATNumber: "",
+
+      bankDetails:  {
+        accountNumber: "", branchCode: "", bankName: ""
+      },
+      billingAddress: "",
+      contactPerson: {
+        emailAddress: "", firstName: "", gender: "", lastName: "", phoneNumber: "", title: ""
+      },
+    },
+    company: {
+      id:"",
+      name: "",
+      phoneNumber: "",
+      emailAddress: "",
+      registrationNumber: "",
+      shippingAddress: "",
+      logo: "",
+      VATNumber: "",
+
+      bankDetails:  {
+        accountNumber: "", branchCode: "", bankName: ""
+      },
+      billingAddress: "",
+      contactPerson: {
+        emailAddress: "", firstName: "", gender: "", lastName: "", phoneNumber: "", title: ""
+      },
+    },
+    items: [],
+    quoteDate: "",
+    quoteDueDate: "",
+    quoteNo: "",
+    quoteStartDate: "",
+    quoteTerm: "",
+    totalPriceDiscount: "",
+    totalPriceExclusive: "",
+    totalPriceInclusive: "",
+    totalVAT: ""
+  };
   editMode: boolean = false;
   newQuote: boolean = false;
 
@@ -42,17 +92,18 @@ export class AppQuotesComponent {
   filteredInventoryItems: Observable<Inventory[] | any[]>;
   inventoryFormControl = new FormControl<string | Inventory>('');
   dynamicArray: any[] = [];
- 
+  currentCompany: Company;
+
   constructor(private router: Router,
      private formBuilder: FormBuilder,
      private spinner: NgxSpinnerService,
      private dataService: DataService) {
   }
- 
-
-
+  
  
   ngOnInit(): void {
+
+    this.getCompany();
     this.getQuotes();
     //FIlter customer by name
     this.getCustomers(); 
@@ -80,15 +131,26 @@ export class AppQuotesComponent {
   deleteRow(index: number) {
     this.dynamicArray.splice(index, 1);
   }
+
   getValues() {
     console.log(this.dynamicArray);
   }
   
-
   getCustomers() {
     this.dataService.getAll(COLLECTION.CUSTOMERS).forEach((customers: any) => {
       console.log("customers ", customers);
       this.customers = customers;
+    });
+  }
+
+  formatDate(date?: string) {
+    return moment(date).format('ll');  
+  }
+
+  getCompany() {
+    this.dataService.getAll(COLLECTION.MY_COMPANIES).forEach((currentCompany: any) => {
+      console.log("currentCompany ", currentCompany);
+      this.currentCompany = currentCompany[0];
     });
   }
 
@@ -122,7 +184,7 @@ export class AppQuotesComponent {
   }
 
   displayFn(customer: Customer): string {
-    return customer && customer.name ? customer.name : '';
+    return customer && customer.companyName ? customer.companyName : '';
   }
 
   displayInventoryFn(item: Inventory): string {
@@ -138,7 +200,7 @@ export class AppQuotesComponent {
   private _customerFilter(name: string): Customer[] {
     const filterValue = name.toLowerCase();
 
-    return this.customers.filter(cus => cus.name.toLowerCase().includes(filterValue));
+    return this.customers.filter(cus => cus.companyName.toLowerCase().includes(filterValue));
   }
 
   generateRandomCodeNumber(): string {
@@ -168,6 +230,7 @@ export class AppQuotesComponent {
     let newQuote: Quote = {
       id: uuid(),
       customer: this.customerFormControl.value as Customer,
+      company: this.currentCompany,
       items: this.dynamicArray,
       quoteDate: moment().format(),
       quoteStartDate: dates.quoteStartDate,
@@ -214,7 +277,7 @@ export class AppQuotesComponent {
         id: "f1200cd81-a2d1-4b46-8000-3f546b2386f0",
         url: "",
         type: COMPANY_TYPE.ADMIN,
-        name: "Silver Stripe Holdings",
+        companyName: "Silver Stripe Holdings",
         VATNumber: "5600100-10000",
         registrationNumber: "2000/20000/10",
         billingAddress: "222 Grey str, Seshego Zone 1, Polokwane, 1900",
@@ -232,8 +295,26 @@ export class AppQuotesComponent {
         bankDetails: {
           accountNumber: "100200040",
           branchCode: "909090",
-          branchName: "Midway Mews",
+          bankName: "Midway Mews",
         }
+      },
+      company: {
+        id:"",
+        name: "",
+        phoneNumber: "",
+        emailAddress: "",
+        registrationNumber: "",
+        shippingAddress: "",
+        logo: "",
+        VATNumber: "",
+  
+        bankDetails:  {
+          accountNumber: "", branchCode: "", bankName: ""
+        },
+        billingAddress: "",
+        contactPerson: {
+          emailAddress: "", firstName: "", gender: "", lastName: "", phoneNumber: "", title: ""
+        },
       },
       items: [
         {
@@ -317,7 +398,9 @@ export class AppQuotesComponent {
 
   downloadQuote(quote: Quote) {
     this.selectedQuote = quote;
-    this.convetToPDF();
+    console.log("Download Quote ", quote);
+    
+    // this.convetToPDF();
   }
 
   convetToPDF() {

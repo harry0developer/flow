@@ -6,8 +6,6 @@
     .title {
         margin-top: 16px;
     } 
-
-   
 }
  
 .align-end {
@@ -29,3 +27,10 @@
     color: #fa896b;
 }
 
+.manage-page {
+    background-color: #e0e0e036;
+    .mat-mdc-card-header {
+        padding: 18px;
+    }
+     
+}

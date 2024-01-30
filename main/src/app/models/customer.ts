@@ -2,7 +2,7 @@ export interface Customer {
   id: string;
   url: string;
   type: string;
-  name: string;
+  companyName: string;
   VATNumber: string;
   registrationNumber: string;
   billingAddress: string;
@@ -21,7 +21,7 @@ export interface Customer {
 export interface BankDetails {
   accountNumber: string;
   branchCode: string;
-  branchName: string;
+  bankName: string;
 }
 
 export interface ContactPerson {

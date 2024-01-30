@@ -3,7 +3,7 @@ export const COLLECTION = {
     CUSTOMERS: 'customer',
     INVENTORY: 'inventory',
     QUOTES: 'quotes',
-    MY_COMPANY: 'my-companies'
+    MY_COMPANIES: 'my-companies'
 };
 
 export const TITLE = {
