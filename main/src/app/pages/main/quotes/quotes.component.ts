@@ -400,7 +400,7 @@ export class AppQuotesComponent {
     this.selectedQuote = quote;
     console.log("Download Quote ", quote);
     
-    // this.convetToPDF();
+    this.convetToPDF();
   }
 
   convetToPDF() {

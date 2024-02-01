@@ -10,6 +10,8 @@ export interface User  {
   phone: string;
   role: string;
   physicalAddress: string;
+  username: string;
+  password: string;
   createdOn?: string;
   createdBy?: string; 
   updatedOn?: string;

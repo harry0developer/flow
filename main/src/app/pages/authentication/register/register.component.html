@@ -1,4 +1,4 @@
-<div class="blank-layout-container justify-content-center align-items-center bg-light-primary">
+<div class="register blank-layout-container justify-content-center align-items-center bg-light-primary">
   <div
     class="position-relative row w-100 h-100 bg-gredient justify-content-center"
   >
@@ -15,7 +15,7 @@
             </a>
           </div>
 
-          <div class="row m-t-24 custom-row">
+          <!-- <div class="row m-t-24 custom-row">
             <div class="col-12 col-sm-6">
               <button mat-stroked-button class="w-100">
                 <div class="d-flex align-items-center">
@@ -45,33 +45,46 @@
                 </div>
               </button>
             </div>
-          </div>
+          </div> -->
 
           <div class="or-border m-t-30">or sign up with</div>
+          
+          <p class="errors" *ngIf="errors">{{errors}}</p>
+          <form [formGroup]="sigupForm" class="m-t-30">
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
+              >First name</mat-label>
+            <mat-form-field appearance="outline" class="w-100" color="primary">
+              <input matInput  formControlName="firstName"/>
+            </mat-form-field>
 
-          <form class="m-t-30">
             <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-              >Name</mat-label
-            >
+            >Last name</mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput />
+              <input matInput  formControlName="firstName"/>
             </mat-form-field>
+
             <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-              >Email Adddress</mat-label
-            >
+            >Username</mat-label >
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput type="email" />
+              <input matInput formControlName="username"/>
             </mat-form-field>
+            
+
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
+              >Email Adddress</mat-label>
+            <mat-form-field appearance="outline" class="w-100" color="primary">
+              <input matInput type="email" formControlName="emailAddress"/>
+            </mat-form-field>
+
             <!-- password -->
             <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-              >Password</mat-label
-            >
+              >Password</mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput type="password" />
+              <input matInput type="password"  formControlName="password"/>
             </mat-form-field>
 
-            <a [routerLink]="['/']" mat-flat-button color="primary" class="w-100">
-              Sign Up
+            <a (click)="signup()" mat-flat-button color="primary" class="w-100">
+              Create Account
             </a>
             <!-- input -->
           </form>
@@ -85,6 +98,7 @@
               Sign In</a
             >
           </span>
+
         </mat-card-content>
       </mat-card>
     </div>

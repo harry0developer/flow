@@ -22,7 +22,9 @@ const users: User[] =[
     phone: "0729003000",
     role: ROLE.OPERATOR,
     idNo: "96010184000080",
-    physicalAddress: ""
+    physicalAddress: "",
+    username: "",
+    password: ""
   },
   { 
     id: uuid(),
@@ -34,7 +36,9 @@ const users: User[] =[
     phone: "0825003000",
     role: ROLE.OPERATOR,
     idNo: "98010184000080",
-    physicalAddress: ""
+    physicalAddress: "",
+    username: "",
+    password: ""
   },
   { 
     id: uuid(),
@@ -46,7 +50,9 @@ const users: User[] =[
     phone: "0847003000",
     role: ROLE.ADMIN,
     idNo: "88010184000080",
-    physicalAddress: ""
+    physicalAddress: "",
+    username: "",
+    password: ""
   }
 ];
  
@@ -126,6 +132,8 @@ export class AppUsersComponent {
       title: form.title,
       phone: form.phone,
       role: form.role,
+      username: "",
+      password: "",
       physicalAddress: form.physicalAddress,
       createdOn: "" + new Date().getTime(),
       createdBy: "Donald Kgomo", 
