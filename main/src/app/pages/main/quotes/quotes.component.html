@@ -25,7 +25,7 @@
     <div class="row">
       <div class="col-lg-6 company-from">
         <h2 class="name">
-          {{ currentCompany?.name }}
+          {{ currentCompany.name }}
         </h2>
 
         <div class="address">
@@ -34,11 +34,11 @@
           </p>
            
           <br>
-          <b>Phone:</b>{{ currentCompany?.phoneNumber }}<br>
-          <b>Email:</b>{{ currentCompany?.emailAddress }}<br>
-          <b>Website:</b>{{ currentCompany?.website }} <br>
-          <b>VAT Registration No:</b>{{ currentCompany?.VATNumber }}<br>
-          <b>Business ID No:</b>{{ currentCompany?.registrationNumber }}<br>
+          <b>Phone:</b>{{ currentCompany.phoneNumber }}<br>
+          <b>Email:</b>{{ currentCompany.emailAddress }}<br>
+          <b>Website:</b>{{ currentCompany.website }} <br>
+          <b>VAT Registration No:</b>{{ currentCompany.VATNumber }}<br>
+          <b>Business ID No:</b>{{ currentCompany.registrationNumber }}<br>
           <br>
         </div>
       </div>
@@ -47,10 +47,10 @@
         <img src="assets/images/logos/matswelapele.png" alt="">
         <div class="banking-details m-t-32">
           <h3>Banking Details</h3>
-          <p><b>Bank name: </b>{{ currentCompany?.bankDetails?.bankName }}</p>
-          <p><b>Account No: </b>{{ currentCompany?.bankDetails?.accountNumber }}</p>
-          <p><b>Branch Code: </b>{{ currentCompany?.bankDetails?.branchCode }}</p>
-          <p><b>Reference: </b>{{selectedQuote?.quoteNo}}</p>
+          <p><b>Bank name: </b>{{ currentCompany.bankDetails.bankName }}</p>
+          <p><b>Account No: </b>{{ currentCompany.bankDetails.accountNumber }}</p>
+          <p><b>Branch Code: </b>{{ currentCompany.bankDetails.branchCode }}</p>
+          <p><b>Reference: </b>{{selectedQuote.quoteNo}}</p>
         </div>
       </div> 
 
@@ -64,7 +64,7 @@
     <div class="row">
       <div class="col-md-6 company-to">
         <h2 class="name">
-          {{selectedQuote?.customer?.companyName}}
+          {{selectedQuote.customer.name}}
         </h2>
         
         <div class="address" *ngIf="selectedQuote?.customer?.billingAddress">
@@ -72,14 +72,14 @@
             {{address}}
           </p>
         </div>
-        <h4 class="vat-no">VAT No. {{currentCompany?.VATNumber}}</h4>
+        <h4 class="vat-no">VAT No. {{currentCompany.VATNumber}}</h4>
       </div>
 
       <div class="col-md-6 qoute-info" >
-         <p><b>Qoute No: </b>{{selectedQuote?.quoteNo}}</p>
-         <p><b>Date created: </b>{{formatDate(selectedQuote.quoteDate)}} </p>
-         <p><b>Terms: </b>{{selectedQuote?.quoteTerm}} days</p>
-         <p><b>Due date: </b>{{formatDate(selectedQuote.quoteDueDate)}}</p>
+         <p><b>Qoute No: </b>{{selectedQuote.quoteNo}}</p>
+         <p><b>Date created: </b>{{selectedQuote.quoteDate}} </p>
+         <p><b>Terms: </b>{{selectedQuote.quoteTerm}} days</p>
+         <p><b>Due date: </b>{{selectedQuote.quoteDueDate}}</p>
       </div> 
     </div>
 
@@ -103,9 +103,9 @@
               <td class="col-3">{{item.stockCode}}</td> 
               <td class="col-3">{{item.description}}</td> 
               <td class="col-1">{{item.quantity}}</td> 
-              <td>{{item.unitPrice | currency:'R'}}</td> 
+              <td>{{item.costPrice | currency:'R'}}</td> 
               <td>{{item.VAT}}</td> 
-              <td>{{ +item.unitPrice * +item.quantity | currency:'R'}}</td> 
+              <td>{{ +item.costPrice * +item.quantity | currency:'R'}}</td> 
             </tr>
           </tbody>
         </table>
@@ -118,19 +118,19 @@
           <tbody class="align-end">
             <tr > 
               <td scope="col" class="col-6">Total Price Exclusive</td>
-              <td scope="col" class="col-6">{{selectedQuote?.totalPriceExclusive | currency:'R'}}</td>
+              <td scope="col" class="col-6">{{selectedQuote.totalPriceExclusive | currency:'R'}}</td>
             </tr>
             <tr>
               <td scope="col" class="col-6">Total VAT</td>
-               <td scope="col" class="col-6">{{selectedQuote?.totalVAT | currency:'R'}}</td>
+               <td scope="col" class="col-6">{{selectedQuote.totalVAT | currency:'R'}}</td>
             </tr>
             <tr>
               <td scope="col" class="col-6">Total Price Discount</td>
-               <td scope="col" class="col-6">{{selectedQuote?.totalPriceDiscount | currency:'R'}}</td>
+               <td scope="col" class="col-6">{{selectedQuote.totalPriceDiscount | currency:'R'}}</td>
             </tr>
             <tr>
               <td scope="col" class="col-6"><b>Total Price Inclusive</b></td>
-               <td scope="col" class="col-6"><b>{{selectedQuote?.totalPriceInclusive | currency:'R'}}</b></td>
+               <td scope="col" class="col-6"><b>{{selectedQuote.totalPriceInclusive | currency:'R'}}</b></td>
             </tr>
           </tbody>
         </table>
@@ -189,7 +189,7 @@
           Company Name
           </th>
           <td mat-cell *matCellDef="let element">
-             {{element.customer?.companyName}}
+             {{element.customer?.name}}
           </td>
         </ng-container>
 
@@ -282,7 +282,7 @@
             <mat-label>Customer Name</mat-label>
             <input type="text" matInput  [formControl]="customerFormControl" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-              <mat-option *ngFor="let customer of filteredCustomers | async" [value]="customer"> {{ customer.companyName }} </mat-option>
+              <mat-option *ngFor="let customer of filteredCustomers | async" [value]="customer"> {{ customer.name }} </mat-option>
             </mat-autocomplete>
           </mat-form-field>
         </div>
@@ -370,7 +370,7 @@
               <input name="{{dynamic.quantity}}" [(ngModel)]="dynamic.quantity"  type="number"/>
             </td>
             <td class="col-md-2 w-100">
-              <input name="{{dynamic.unitPrice}}" [(ngModel)]="dynamic.unitPrice"  type="text"/>
+              <input name="{{dynamic.costPrice}}" [(ngModel)]="dynamic.costPrice"  type="text"/>
             </td>
             <!-- <td class="col-md-1 w-100">
               <input name="{{dynamic.discount}}" [(ngModel)]="dynamic.discount"  type="text"/>
@@ -379,7 +379,7 @@
               <input name="{{dynamic.VAT}}" [(ngModel)]="dynamic.VAT"  type="text"/>
             </td>  -->
             <td class="col-md-2 w-100">
-              {{ (+dynamic.quantity * +dynamic.unitPrice) + +dynamic.VAT - +dynamic.discount  | currency:'R' }}
+              {{ (+dynamic.quantity * +dynamic.costPrice) + +dynamic.VAT - +dynamic.discount  | currency:'R' }}
             </td>
           </tr>
         </tbody>

@@ -85,8 +85,7 @@ export class AppManageComponent {
   addCompany() { 
     const form = this.companyForm.value;
     const company: Company = {
-      id: "",
-      logo: "https://placehold.co/200",
+      photo: "https://placehold.co/200",
       name: form.name,
       registrationNumber: form.registrationNumber,
       VATNumber: form.VATNumber,
@@ -108,15 +107,14 @@ export class AppManageComponent {
         branchCode: form.branchCode,
         bankName: form.bankName,
       },
-      createdOn: "" + new Date().getTime(),
+      createdOn: new Date(),
       createdBy: "Donald Kgomo", 
-      updatedOn: "" + new Date().getTime(),
+      updatedOn: new Date(),
       updatedBy: "Donald Kgomo"
     }
 
     if(this.newCompany) {
-      company.id = uuid();
-      this.dataService.addItem(company, COLLECTION.MY_COMPANIES).forEach((res: any) => {
+      this.dataService.addItem(company, COLLECTION.COMPANIES).forEach((res: any) => {
         console.log("Customer added successfully ", res);
         this.editMode = false;
         this.getCompanies();
@@ -124,8 +122,7 @@ export class AppManageComponent {
       console.log("Comapny ", company);
       
     } else {
-      company.id = this.editCompany.id,
-      this.dataService.updateItem(company, COLLECTION.MY_COMPANIES).forEach((res: any) => {
+      this.dataService.updateItem(company, COLLECTION.COMPANIES).forEach((res: any) => {
         console.log("Customer updated successfully ", res);
         this.editMode = false;
         this.getCompanies();
@@ -143,7 +140,7 @@ export class AppManageComponent {
   }
 
   getCompanies() {
-    this.dataService.getAll(COLLECTION.MY_COMPANIES).forEach((company: any) => {
+    this.dataService.getAll(COLLECTION.COMPANIES).forEach((company: any) => {
       console.log("company ", company);
       this.company = company;
     });

@@ -25,6 +25,9 @@ export class AppSideLoginComponent {
 
   login() {
     console.log(this.loginForm.value);
-    
+    this.dataService.login(this.loginForm.value).subscribe(res => {
+      console.log("token ", res);
+      
+    })
   }
 }

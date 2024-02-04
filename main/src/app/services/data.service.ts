@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 import {  Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Product } from '../models/product';
 import { User } from '../models/user';
 import { Inventory } from '../models/inventory';
 import { Customer } from '../models/customer';
@@ -17,17 +16,37 @@ import { Auth } from '../models/auth';
 })
 export class DataService {
 
-  private apiServer = "http://localhost:5000/api/flow/";
+  private apiServer = "http://localhost:5000/";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
     })
-  }
+  };
+
+  token: string;
   constructor(private httpClient: HttpClient) { }
 
+  getToken(): string {
+    return this.token;
+  }
+ 
 
   getAll(collection: string): Observable<User | Inventory | Quote| Company | Customer> {
     return this.httpClient.get<User | Inventory | Quote| Company | Customer>(this.apiServer + collection)
+    .pipe(
+      catchError(this.errorHandler)
+    );
+  }
+
+  getById(collection: string, item: User | Inventory | Quote| Company | Customer): Observable<User | Inventory | Quote| Company | Customer> {
+    return this.httpClient.get<User | Inventory | Quote| Company | Customer>(this.apiServer + collection + "/"+ item._id)
+    .pipe(
+      catchError(this.errorHandler)
+    );
+  }
+
+  delete(collection: string, item: User | Inventory | Quote| Company | Customer): Observable<User | Inventory | Quote| Company | Customer> {
+    return this.httpClient.delete<User | Inventory | Quote| Company | Customer>(this.apiServer + collection + "/"+ item._id)
     .pipe(
       catchError(this.errorHandler)
     );

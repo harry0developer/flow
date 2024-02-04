@@ -5,9 +5,8 @@ import html2canvas from 'html2canvas';
 import { Customer } from 'src/app/models/customer';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
-import { COLLECTION, COMPANY_TYPE } from 'src/app/const/util';
+import { COLLECTION, GENDER, TITLE } from 'src/app/const/util';
 import { FormBuilder, Validators } from '@angular/forms';
-import { v4 as uuid} from 'uuid';
 import { NgxSpinnerService } from "ngx-spinner";
  
 @Component({
@@ -16,10 +15,9 @@ import { NgxSpinnerService } from "ngx-spinner";
   styleUrls: ['./customers.component.scss']
 })
 export class AppCustomersComponent {
-  displayedColumns: string[] = ['companyLogo', 'contactPersonName', 
-  'contactPersonPhoneNumber', 'contactPersonEmail', 'companyName', 'companyVATNumber', 'companyBillingAddress' ,'actionButton'];
+  displayedColumns: string[] = ['logo', 'name', 'contactPersonName', 
+  'phoneNumber', 'emailAddress', 'VATNumber','registrationNumber', 'billingAddress' ,'actionButton'];
   editMode: boolean = false;
-  newCustomer: boolean = false;
 
   editCustomer: Customer;
   total = {
@@ -31,9 +29,13 @@ export class AppCustomersComponent {
   
   
   titles = [
-    "Mr.", "Mrs.", "Miss", "Ms.", "Dr.", "Prof." 
+    TITLE.MR, TITLE.MRS, TITLE.MISS, TITLE.PROF, TITLE.DR 
   ];
- 
+
+  gender = [
+    GENDER.MALE, GENDER.FEMALE, GENDER.NONBINARY
+  ];
+  
 
   customerForm: any;
   customers: Customer[];
@@ -50,80 +52,120 @@ export class AppCustomersComponent {
 
     this.getCustomers();
     this.customerForm = this.formBuilder.group({
-      companyName: ['', Validators.required],
-      companyVATNumber: ['', [Validators.required]],
+      name: ['', Validators.required],
+      VATNumber: ['', [Validators.required]],
+      registrationNumber: ['', [Validators.required]],
+      emailAddress: ['', [Validators.required,  Validators.email]],
+      phoneNumber: ['', Validators.required],
+      billingAddress: ['', Validators.required],
+      shippingAddress: ['', Validators.required],
+
       contactPersonFirstName: ['', Validators.required],
       contactPersonLastName: ['', Validators.required],
       contactPersonEmail: ['', [Validators.required,  Validators.email]],
       contactPersonPhoneNumber: ['', Validators.required],
       contactPersonTitle: ['', Validators.required],
-      companyBillingAddress: ['', Validators.required],
-      companyShippingAddress: ['', Validators.required],
+      contactPersonGender: ['', Validators.required],
     });
   }
 
   copyShippingAddress(checked: any) {
     if(checked) {
-      this.customerForm.controls['companyShippingAddress'].setValue(this.customerForm.get('companyBillingAddress').value);
+      this.customerForm.controls['shippingAddress'].setValue(this.customerForm.get('billingAddress').value);
     }
   }
-  
 
-  addCustomer() { 
+  getCustomerById(item: Customer) { 
+    this.dataService.getById( COLLECTION.CUSTOMERS, item,).forEach((res: any) => {
+      console.log("Customer updated successfully ", res);
+    }); 
+  
+  }
+
+  deleteCustomer() {
+    this.dataService.delete(COLLECTION.CUSTOMERS, this.editCustomer,).forEach((res: any) => {
+      console.log("Customer updated successfully ", res);
+      this.editMode = false;
+    }); 
+  }
+  
+  updateCustomer() {
     const form = this.customerForm.value;
     const customer: Customer = {
-      id: "",
-      url: form.url,
-      registrationNumber: "",
-      type: COMPANY_TYPE.CUSTOMER,
-      companyName: form.companyName,
-      VATNumber: form.companyVATNumber,
-      phoneNumber: "",
-      emailAddress: "",
-      billingAddress: form.companyBillingAddress,
-      shippingAddress: form.companyShippingAddress,
+      _id: this.editCustomer._id,
+      registrationNumber: form.registrationNumber,
+      name: form.name,
+      VATNumber: form.VATNumber,
+      phoneNumber: form.phoneNumber,
+      emailAddress: form.emailAddress,
+      billingAddress: form.billingAddress,
+      shippingAddress: form.shippingAddress,
       contactPerson: {
         firstName: form.contactPersonFirstName,
         lastName: form.contactPersonLastName,
         emailAddress: form.contactPersonEmail,
         phoneNumber: form.contactPersonPhoneNumber,
         title: form.contactPersonTitle,
-        gender: form.gender
+        gender: form.contactPersonGender
       },
-      bankDetails: {
-        accountNumber: form.accountNumber,
-        branchCode: form.branchCode,
-        bankName: form.bankName,
-      },
-      dateCreated: "" + new Date().getTime(),
-      createdBy: "Donald Kgomo", 
-      updatedOn: "" + new Date().getTime(),
-      updatedBy: "Donald Kgomo"
+
+      createdOn: new Date(),
+      createdBy: "65bfd1a6965711aa24e06f79", 
+      updatedOn: new Date(),
+      updatedBy: "65bfd1a6965711aa24e06f79"
     }
 
-    if(this.newCustomer) {
-      customer.id = uuid();
-      this.dataService.addItem(customer, COLLECTION.CUSTOMERS).forEach((res: any) => {
-        console.log("Customer added successfully ", res);
-        this.editMode = false;
-        this.getCustomers();
-      });
-    } else {
-      customer.id = this.editCustomer.id,
-      this.dataService.updateItem(customer, COLLECTION.CUSTOMERS).forEach((res: any) => {
-        console.log("Customer updated successfully ", res);
-        this.editMode = false;
-        this.getCustomers();
-      }); 
+    console.log("Addding ", customer);
+ 
+    this.dataService.updateItem(customer, COLLECTION.CUSTOMERS).forEach((res: any) => {
+      console.log("Customer updated successfully ", res);
+      this.editMode = false;
+      this.getCustomers();
+    }); 
+  
+  }
+
+  addCustomer() { 
+    const form = this.customerForm.value;
+    const customer: Customer = {
+      registrationNumber: form.registrationNumber,
+      name: form.name,
+      VATNumber: form.VATNumber,
+      phoneNumber: form.phoneNumber,
+      emailAddress: form.emailAddress,
+      billingAddress: form.billingAddress,
+      shippingAddress: form.shippingAddress,
+      contactPerson: {
+        firstName: form.contactPersonFirstName,
+        lastName: form.contactPersonLastName,
+        emailAddress: form.contactPersonEmail,
+        phoneNumber: form.contactPersonPhoneNumber,
+        title: form.contactPersonTitle,
+        gender: form.contactPersonGender
+      },
+
+      createdOn: new Date(),
+      createdBy: "65bfd1a6965711aa24e06f79", 
+      updatedOn: new Date(),
+      updatedBy: "65bfd1a6965711aa24e06f79"
     }
+
+    console.log("Addding ", customer);
+    
+    this.dataService.addItem(customer, COLLECTION.CUSTOMERS).forEach((res: any) => {
+      console.log("Customer added successfully ", res);
+      this.editMode = false;
+      this.getCustomers();
+    });
+    
   }
 
   addNewCustomer() {
     this.editMode = true;
-    this.newCustomer = true;
+    this.customerForm.reset()
   }
  
-  cancelEditCustomer() {
+  cancel() {
     this.editMode = false;
   }
 
@@ -137,17 +179,22 @@ export class AppCustomersComponent {
   editCustomerDetails(customer: Customer){
     this.editMode = true;
     this.editCustomer = customer;
-    console.log("Edit ", customer);
- 
-    this.customerForm.controls['contactPersonTitle'].setValue(customer.contactPerson.title);
+    console.log("Edit ", customer); 
+
+    this.customerForm.controls['name'].setValue(customer.name);
+    this.customerForm.controls['VATNumber'].setValue(customer.VATNumber);
+
+    this.customerForm.controls['registrationNumber'].setValue(customer.registrationNumber);
+    this.customerForm.controls['emailAddress'].setValue(customer.emailAddress);
+    this.customerForm.controls['phoneNumber'].setValue(customer.phoneNumber);
+    this.customerForm.controls['billingAddress'].setValue(customer.billingAddress);
+    this.customerForm.controls['shippingAddress'].setValue(customer.shippingAddress);
     this.customerForm.controls['contactPersonFirstName'].setValue(customer.contactPerson.firstName);
     this.customerForm.controls['contactPersonLastName'].setValue(customer.contactPerson.lastName);
     this.customerForm.controls['contactPersonEmail'].setValue(customer.contactPerson.emailAddress);
     this.customerForm.controls['contactPersonPhoneNumber'].setValue(customer.contactPerson.phoneNumber);
-    this.customerForm.controls['companyName'].setValue(customer.companyName);
-    this.customerForm.controls['companyVATNumber'].setValue(customer.VATNumber);
-    this.customerForm.controls['companyBillingAddress'].setValue(customer.billingAddress);
-    this.customerForm.controls['companyShippingAddress'].setValue(customer.shippingAddress);
+    this.customerForm.controls['contactPersonTitle'].setValue(customer.contactPerson.title);
+    this.customerForm.controls['contactPersonGender'].setValue(customer.contactPerson.gender);
 
   }
 

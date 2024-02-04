@@ -1,3 +1,4 @@
+  
 .customer-edit-mode {
     .tab-min-height {
         min-height: 300px;
@@ -6,8 +7,6 @@
     .title {
         margin-top: 16px;
     } 
-
-   
 }
  
 .align-end {
@@ -27,5 +26,13 @@
 
 .error {
     color: #fa896b;
+}
+
+.manage-page {
+    background-color: #e0e0e036;
+    .mat-mdc-card-header {
+        padding: 18px;
+    }
+     
 }
 

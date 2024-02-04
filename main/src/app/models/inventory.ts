@@ -1,15 +1,17 @@
 export interface Inventory {
-    id: string; 
+    _id?: string;
     name: string; 
     photo: string;
     stockCode: string; 
     description: string;
-    quantity: string;
-    unitPrice: string;
-    discount: string;
-    VAT: string;
-    createdOn?: string;
+    quantity: number;
+    costPrice: number;
+    sellingPrice: number;
+    discountPrice?: number;
+    discountPercentage?: number;
+    VAT?: number;
+    createdOn?: Date;
     createdBy?: string; 
-    updatedOn?: string;
+    updatedOn?: Date;
     updatedBy?: string;
 }

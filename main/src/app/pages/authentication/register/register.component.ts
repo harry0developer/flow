@@ -26,13 +26,13 @@ export class AppSideRegisterComponent {
   signup() {
     const formData = this.sigupForm.value;
     let user: User = {
-      id: uuid(),
+      
       profilePhoto: "",
       firstName: formData.firstName as string,
       lastName: formData.lastName as string,
       gender: "",
       title: "",
-      idNo: "",
+      idNumber: "",
       email: "",
       phone: "",
       role: ROLE.OPERATOR,

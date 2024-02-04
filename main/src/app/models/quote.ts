@@ -3,23 +3,22 @@ import { Customer } from "./customer";
 import { Inventory } from "./inventory";
 
 export interface Quote {
-  id: string; 
+  _id?: string;
   quoteNo: string;
-  quoteDate: string;
-  quoteStartDate: string;
-  quoteDueDate: string;
-  quoteTerm: string;
+  quoteDate: Date;
+  quoteStartDate: Date;
+  quoteDueDate: Date;
+  quoteTerm: number;
   customer: Customer;
   company: Company;
   items: Inventory[],
-  totalPriceExclusive: string;
-  totalVAT: string;
-  totalPriceDiscount: string;
-  totalPriceInclusive: string;
-  
-  createdOn?: string;
+  totalPriceExclusive: number;
+  totalVAT: number;
+  totalPriceDiscount: number;
+  totalPriceInclusive: number;
+  createdOn?: Date;
   createdBy?: string; 
-  updatedOn?: string;
+  updatedOn?: Date;
   updatedBy?: string;
   } 
   

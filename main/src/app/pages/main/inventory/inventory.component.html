@@ -10,8 +10,11 @@
             <button mat-raised-button color="primary" 
               class="m-t-12 m-b-12 m-r-3" 
               [disabled]="!inventoryForm?.valid"
-              (click)="addInventoryItem()">Save</button>
-          <button mat-raised-button  color="warn" class="m-t-12 m-b-12" (click)="cancelEditInventory()">Cancel</button>
+              (click)="saveItem()">Save</button>
+
+            <button mat-raised-button  color="warn" 
+              class="m-t-12 m-b-12" 
+              (click)="cancelEditInventory()">Cancel</button>
         </div>
       </div>
     </mat-card-title>
@@ -85,15 +88,25 @@
 
       <div class="row m-t-12">
         <div class="col-md-3">
-          <h4 class="w-100">Unit price</h4>
+          <h4 class="w-100">Cost price</h4>
         </div>
 
-        <div class="col-md-9">
+        <div class="col-md-4">
           <mat-form-field class="w-100" appearance="outline">
-            <mat-label>Unit Price</mat-label>
-            <input matInput type="text" formControlName="unitPrice">
-            <mat-hint class="error" *ngIf="inventoryForm?.get('unitPrice')?.invalid && inventoryForm?.get('unitPrice')?.touched">
-              *Unit price is required
+            <mat-label>Cost Price</mat-label>
+            <input matInput type="text" formControlName="costPrice">
+            <mat-hint class="error" *ngIf="inventoryForm?.get('costPrice')?.invalid && inventoryForm?.get('costPrice')?.touched">
+              *Cost price is required
+            </mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-5">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Selling Price</mat-label>
+            <input matInput type="text" formControlName="sellingPrice">
+            <mat-hint class="error" *ngIf="inventoryForm?.get('sellingPrice')?.invalid && inventoryForm?.get('costPrice')?.touched">
+              *Selling price is required
             </mat-hint>
           </mat-form-field>
         </div>
@@ -107,8 +120,8 @@
         <div class="col-md-9">
           <mat-form-field class="w-100" appearance="outline">
             <mat-label>Discount</mat-label>
-            <input matInput type="text" formControlName="discount">
-            <mat-hint class="error" *ngIf="inventoryForm?.get('discount')?.invalid && inventoryForm?.get('discount')?.touched">
+            <input matInput type="text" formControlName="discountPrice">
+            <mat-hint class="error" *ngIf="inventoryForm?.get('discountPrice')?.invalid && inventoryForm?.get('discount')?.touched">
               *Discount is required
             </mat-hint>
           </mat-form-field>
@@ -143,7 +156,7 @@
       <div class="row">
         <div class="col-md-9 col-sm-6 title"> <h3>Manage Inventory</h3></div>
         <div class="col-md-3 col-sm-6 align-end">
-          <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="addNewInventoryItem()">Add Item</button>
+          <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="enableEditMode()">Add New Item</button>
         </div>
       </div>
     </mat-card-title>
@@ -226,8 +239,8 @@
           </td>
         </ng-container>
 
-        <!-- unitPrice Column --> 
-        <ng-container matColumnDef="unitPrice">
+        <!-- costPrice Column --> 
+        <ng-container matColumnDef="costPrice">
           <th
             mat-header-cell
             *matHeaderCellDef
@@ -236,24 +249,25 @@
           Unit Price
           </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
-            {{ element.unitPrice | currency:'R'}}  
+            {{ element.costPrice | currency:'R'}}  
           </td>
         </ng-container>
 
-
-        <!-- unitPrice Column --> 
-        <ng-container matColumnDef="discount">
+        <!-- discountPrice Column --> 
+        <ng-container matColumnDef="discountPrice">
           <th
             mat-header-cell
             *matHeaderCellDef
             class="f-w-600 mat-subtitle-1 f-s-14"
           >
-          Discount
+          Unit Price
           </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
-            {{ element.discount | currency:'R'}}  
+            {{ element.discountPrice | currency:'R'}}  
           </td>
         </ng-container>
+
+ 
 
         <!-- Total Price Column --> 
         <ng-container matColumnDef="totalPrice">
@@ -265,7 +279,7 @@
           Total Price
           </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
-            {{ element.quantity * element.unitPrice | currency:'R'}}  
+            {{ element.quantity * element.costPrice | currency:'R'}}  
           </td>
         </ng-container>
 

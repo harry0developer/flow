@@ -1,9 +1,10 @@
 export const COLLECTION = {
     USERS: 'users',
-    CUSTOMERS: 'customer',
+    CUSTOMERS: 'customers',
     INVENTORY: 'inventory',
     QUOTES: 'quotes',
-    MY_COMPANIES: 'my-companies'
+    INVOICES: 'invoices',
+    COMPANIES: 'companies'
 };
 
 export const TITLE = {

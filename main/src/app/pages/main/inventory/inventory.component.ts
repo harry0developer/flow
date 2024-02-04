@@ -18,10 +18,10 @@ import { Inventory } from 'src/app/models/inventory';
   styleUrls: ['./inventory.component.scss']
 })
 export class AppInventoryComponent {
-  displayedColumns: string[] = ['photo','name','description', 'stockCode', 'quantity' ,'unitPrice','discount', 'totalPrice', 'actionButton'];
+  displayedColumns: string[] = ['photo','name','description', 'stockCode', 'quantity' ,'costPrice','discountPrice', 'totalPrice', 'actionButton'];
    
   editMode: boolean = false;
-  newInventoryItem: boolean = false;
+  isNewInventoryItem: boolean = false;
 
   editInventoryItem: Inventory;
   
@@ -38,21 +38,15 @@ export class AppInventoryComponent {
  
   ngOnInit(): void {
 
-    this.spinner.show();
-
-    setTimeout(() => {
-      /** spinner ends after 5 seconds */
-      this.spinner.hide();
-    }, 5000); 
-
     this.getInventory();
     this.inventoryForm = this.formBuilder.group({
       name: ['', Validators.required],
       stockCode: ['', [Validators.required]],
       description: ['', Validators.required],
       quantity: ['', Validators.required],
-      unitPrice: ['', Validators.required],
-      discount: ['', Validators.required],
+      costPrice: ['', Validators.required],
+      discountPrice: ['', Validators.required],
+      sellingPrice: ['', Validators.required],
       VAT: ['', Validators.required],
     });
   }
@@ -60,41 +54,71 @@ export class AppInventoryComponent {
   addInventoryItem() { 
     const form = this.inventoryForm.value;
     const inventoryItem: Inventory = {
-      id: "",
       photo: "https://placehold.co/200",
       name: form.name,
       stockCode: form.stockCode,
       description: form.description,
       quantity: form.quantity,
-      unitPrice: form.unitPrice, 
-      discount: form.discount,
-      VAT: form.discount,
-      createdOn: "" + new Date().getTime(),
-      createdBy: "Donald Kgomo", 
-      updatedOn: "" + new Date().getTime(),
-      updatedBy: "Donald Kgomo"
+      costPrice: form.costPrice, 
+      discountPrice: form.discountPrice,
+      sellingPrice: form.sellingPrice,
+      VAT: form.discountPrice,
+      createdOn: new Date(),
+      createdBy: "65bfd1a6965711aa24e06f79", 
+      updatedOn: new Date(),
+      updatedBy: "65bfd1a6965711aa24e06f79"
     }
 
-    if(this.newInventoryItem) {
-      inventoryItem.id = uuid();
-      this.dataService.addItem(inventoryItem, COLLECTION.INVENTORY).forEach((res: any) => {
-        console.log("Inventory item added successfully ", res);
-        this.editMode = false;
-        this.getInventory();
-      });
-    } else {
-      inventoryItem.id = this.editInventoryItem.id,
-      this.dataService.updateItem(inventoryItem, COLLECTION.INVENTORY).forEach((res: any) => {
-        console.log("Inventory item updated successfully ", res);
-        this.editMode = false;
-        this.getInventory();
-      }); 
-    }
+
+    this.dataService.addItem(inventoryItem, COLLECTION.INVENTORY).forEach((res: any) => {
+      console.log("Inventory item added successfully ", res);
+      this.editMode = false;
+      this.getInventory();
+    });
+    
   }
 
-  addNewInventoryItem() {
+  
+  updateInventoryItem() { 
+    const form = this.inventoryForm.value;
+    const inventoryItem: Inventory = {
+      photo: "https://placehold.co/200",
+      name: form.name,
+      stockCode: form.stockCode,
+      description: form.description,
+      quantity: form.quantity,
+      costPrice: form.costPrice, 
+      discountPrice: form.discountPrice,
+      sellingPrice: form.sellingPrice,
+      VAT: form.discountPrice,
+      _id: this.editInventoryItem._id,
+      createdOn: new Date(),
+      createdBy: "65bfd1a6965711aa24e06f79", 
+      updatedOn: new Date(),
+      updatedBy: "65bfd1a6965711aa24e06f79"
+    }
+
+   
+    this.dataService.updateItem(inventoryItem, COLLECTION.INVENTORY).forEach((res: any) => {
+      console.log("Inventory item updated successfully ", res);
+      this.editMode = false;
+      this.getInventory();
+    }); 
+  
+  }
+
+  enableEditMode() {
     this.editMode = true;
-    this.newInventoryItem = true;
+    this.isNewInventoryItem = true;
+    this.inventoryForm.reset();
+  }
+
+  saveItem() {
+    if(this.isNewInventoryItem) {
+      this.addInventoryItem();
+    } else {
+      this.updateInventoryItem();
+    }
   }
  
   cancelEditInventory() {
@@ -102,40 +126,33 @@ export class AppInventoryComponent {
   }
 
   getInventory() {
+    this.spinner.show();
     this.dataService.getAll(COLLECTION.INVENTORY).forEach((inventory: any) => {
       console.log("inventory ", inventory);
       this.inventoryItems = inventory;
-    });
+      this.spinner.hide();
+    }).catch(err => {
+      this.spinner.hide();
+    })
   }
   
   editInventoryItemDetails(inventory: Inventory){
     this.editMode = true;
     this.editInventoryItem = inventory;
+    this.isNewInventoryItem = false;
     console.log("Edit ", inventory);
  
     this.inventoryForm.controls['name'].setValue(inventory.name);
     this.inventoryForm.controls['stockCode'].setValue(inventory.stockCode);
     this.inventoryForm.controls['description'].setValue(inventory.description);
-    this.inventoryForm.controls['unitPrice'].setValue(inventory.unitPrice);
+    this.inventoryForm.controls['sellingPrice'].setValue(inventory.sellingPrice);
+    this.inventoryForm.controls['costPrice'].setValue(inventory.costPrice);
     this.inventoryForm.controls['quantity'].setValue(inventory.quantity);
+    this.inventoryForm.controls['discountPrice'].setValue(inventory.discountPrice);
+    this.inventoryForm.controls['VAT'].setValue(inventory.VAT);
+
 
   }
-
-  convetToPDF() {
-    var data = document.getElementById('contentToConvert');
-      html2canvas((data as any)).then(canvas => {
-      // Few necessary setting options
-        var imgWidth = 208;
-        var pageHeight = 295;
-        var imgHeight = canvas.height * imgWidth / canvas.width;
-        var heightLeft = imgHeight;
-        
-        const contentDataURL = canvas.toDataURL('image/png')
-        let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF
-        var position = 0;
-        pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
-        pdf.save('new-file.pdf'); // Generated PDF
-      });
-  }
+ 
 
 }

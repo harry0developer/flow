@@ -1,153 +1,220 @@
 <mat-card *ngIf="editMode" class="cardWithShadow">
   <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-atom" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
-  <mat-card-content class="p-24">
+  <mat-card-content class="p-32 manage-page">
     <mat-card-title class=" b-b-1">
       <div class="row">
-        <div class="col-8 col-md-6 title"> 
-          <h3>Edit Customers</h3>
+        <div class="col-6 col-md-4 title"> 
+          <h3>Edit Company Info</h3>
         </div>
-        <div class="col-4 col-md-6 align-end btn-group">
-            <button mat-raised-button color="primary" 
+        <div class="col-6 col-md-8 align-end btn-group">
+           
+
+            <button mat-raised-button 
+            color="primary" 
+            class="m-t-12 m-b-12 m-r-3" 
+            [disabled]="!customerForm?.valid"
+            (click)="updateCustomer()">Update</button>
+            
+           
+            <button mat-raised-button 
+              color="warn" 
               class="m-t-12 m-b-12 m-r-3" 
               [disabled]="!customerForm?.valid"
-              (click)="addCustomer()">Save</button>
-          <button mat-raised-button  color="warn" class="m-t-12 m-b-12" (click)="cancelEditCustomer()">Cancel</button>
+              (click)="deleteCustomer()">Delete</button>
+
+            <button mat-raised-button  
+              color="accent" 
+              class="m-t-12 m-b-12" 
+              (click)="cancel()">Cancel</button>
+              
         </div>
       </div>
     </mat-card-title>
 
   
     <form [formGroup]="customerForm"> 
-      <div class="row m-t-32">
-        <div class="col-md-3">
-          <h4 class="w-100">Company Info</h4>
-        </div>
+     
+      <mat-card class="b-1 shadow-none">
+        <mat-card-header>
+          <mat-card-title>Company Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1">
+          <div class="row m-t-32">
+            <div class="col-md-3">
+              <h4 class="w-100">Company Info</h4>
+            </div>
+    
+            <div class="col-md-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Company name</mat-label>
+                <input matInput type="text" formControlName="name">
+                <mat-hint class="error" *ngIf="customerForm?.get('name')?.invalid && customerForm?.get('name')?.touched">
+                  *Company name is required
+                </mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>VAT number</mat-label>
+                <input matInput type="text" formControlName="VATNumber">
+                <mat-hint class="error" *ngIf="customerForm?.get('VATNumber')?.invalid && customerForm?.get('VATNumber')?.touched">
+                  *VAT Number is required
+                </mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Registration No</mat-label>
+                <input matInput type="text" formControlName="registrationNumber">
+                <mat-hint class="error" *ngIf="customerForm?.get('registrationNumber')?.invalid && customerForm?.get('registrationNumber')?.touched">
+                  *Registration number is required
+                </mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
 
-        <div class="col-md-5">
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>Company Name</mat-label>
-            <input matInput type="text" formControlName="companyName">
-            <mat-hint class="error" *ngIf="customerForm?.get('companyName')?.invalid && customerForm?.get('companyName')?.touched">
-              *Company Name is required
-            </mat-hint>
-          </mat-form-field>
-        </div>
-        <div class="col-md-4">
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>VAT Number</mat-label>
-            <input matInput type="text" formControlName="companyVATNumber">
-            <mat-hint class="error" *ngIf="customerForm?.get('companyVATNumber')?.invalid && customerForm?.get('companyVATNumber')?.touched">
-              *VAT Number is required
-            </mat-hint>
-          </mat-form-field>
-        </div>
-      </div> 
+          <div class="row">
+            <div class="col-md-3">
+              <h4 class="w-100">Company Contacts</h4>
+            </div>
+    
+            <div class="col-md-4">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Phone number</mat-label>
+                <input matInput type="text" formControlName="phoneNumber">
+                <mat-hint class="error" *ngIf="customerForm?.get('phoneNumber')?.invalid && customerForm?.get('phoneNumber')?.touched">
+                  *Phone number is required
+                </mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col-md-5">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Email address</mat-label>
+                <input matInput type="email" formControlName="emailAddress">
+                <mat-hint class="error" *ngIf="customerForm?.get('emailAddress')?.invalid && customerForm?.get('emailAddress')?.touched">
+                  *Email address is required
+                </mat-hint>
+              </mat-form-field>
+            </div> 
+          </div>
 
-      <div class="row m-t-12">
-        <div class="col-md-3">
-          <h4 class="w-100">Contact Person</h4>
-        </div> 
+        </mat-card-content>
+      </mat-card>
+ 
+      <mat-card class="b-1 shadow-none">
+        <mat-card-header>
+          <mat-card-title>Contact Person</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1"> 
+          <div class="row m-t-12">
+            <div class="col-md-3">
+              <h4 class="w-100">Title/Gender</h4>
+            </div> 
+    
+            <div class="col-md-4">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Title</mat-label>
+                <select matNativeControl required formControlName="contactPersonTitle">
+                  <option *ngFor="let val of titles" value="{{val}}">{{val}}</option> 
+                </select>
+              </mat-form-field>
+            </div> 
 
-        <div class="col-md-2">
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>Title</mat-label>
-            <select matNativeControl required formControlName="contactPersonTitle">
-              <option *ngFor="let val of titles" value="{{val}}">{{val}}</option> 
-            </select>
-            
-          </mat-form-field>
-        </div> 
+            <div class="col-md-5">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Gender</mat-label>
+                <select matNativeControl required formControlName="contactPersonGender">
+                  <option *ngFor="let val of gender" value="{{val}}">{{val}}</option> 
+                </select>
+              </mat-form-field>
+            </div> 
+          </div>
 
-        
-        <div class="col-md-4">
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>First Name</mat-label>
-            <input matInput type="text" formControlName="contactPersonFirstName">
-            <mat-hint class="error" *ngIf="customerForm?.get('contactPersonFirstName')?.invalid && customerForm?.get('contactPersonFirstName')?.touched">
-              *First name is required
-            </mat-hint>
-          </mat-form-field>
-        </div> 
+          <div class="row m-t-12">
+            <div class="col-md-3">
+              <h4 class="w-100">Full Name</h4>
+            </div> 
+             
+            <div class="col-md-4">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>First name</mat-label>
+                <input matInput type="text" formControlName="contactPersonFirstName">
+                <mat-hint class="error" *ngIf="customerForm?.get('contactPersonFirstName')?.invalid && customerForm?.get('contactPersonFirstName')?.touched">
+                  *First name is required
+                </mat-hint>
+              </mat-form-field>
+            </div> 
+    
+            <div class="col-md-5">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Last name</mat-label>
+                <input matInput type="text" formControlName="contactPersonLastName">
+                <mat-hint class="error" *ngIf="customerForm?.get('contactPersonLastName')?.invalid && customerForm?.get('contactPersonLastName')?.touched">
+                  *Last name is required
+                </mat-hint>
+              </mat-form-field>
+            </div> 
+          </div>
 
-        <div class="col-md-3">
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>Last Name</mat-label>
-            <input matInput type="text" formControlName="contactPersonLastName">
-            <mat-hint class="error" *ngIf="customerForm?.get('contactPersonLastName')?.invalid && customerForm?.get('contactPersonLastName')?.touched">
-              *Last name is required
-            </mat-hint>
-          </mat-form-field>
-        </div> 
-      </div>
+          <div class="row m-t-12">
+            <div class="col-md-3">
+              <h4 class="w-100">Contact Details</h4>
+            </div>
+    
+            <div class="col-md-4">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Phone number</mat-label>
+                <input matInput type="text" formControlName="contactPersonPhoneNumber">
+                <mat-hint class="error" *ngIf="customerForm?.get('contactPersonPhoneNumber')?.invalid && customerForm?.get('contactPersonPhoneNumber')?.touched">
+                  *Phone number is required
+                </mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col-md-5">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Email address</mat-label>
+                <input matInput type="email" formControlName="contactPersonEmail">
+                <mat-hint class="error" *ngIf="customerForm?.get('contactPersonEmail')?.invalid && customerForm?.get('contactPersonEmail')?.touched">
+                  *Email address is required
+                </mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
 
-      <div class="row m-t-12">
-        <div class="col-md-3">
-          <h4 class="w-100">Email Address</h4>
-        </div>
-
-        <div class="col-md-9">
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>Email Address</mat-label>
-            <input matInput type="email" formControlName="contactPersonEmail">
-            <mat-hint class="error" *ngIf="customerForm?.get('contactPersonEmail')?.invalid && customerForm?.get('contactPersonEmail')?.touched">
-              *Email address is required
-            </mat-hint>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row m-t-12">
-        <div class="col-md-3">
-          <h4 class="w-100">Phone Number</h4>
-        </div>
-
-        <div class="col-md-9">
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>Phone Number</mat-label>
-            <input matInput type="text" formControlName="contactPersonPhoneNumber">
-            <mat-hint class="error" *ngIf="customerForm?.get('contactPersonPhoneNumber')?.invalid && customerForm?.get('contactPersonPhoneNumber')?.touched">
-              *Phone number is required
-            </mat-hint>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row m-t-12">
-        <div class="col-md-3">
-          <h4 class="w-100">Company Address</h4>
-        </div>
-
-        <div class="col-md-4">
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>Billing Address</mat-label>
-            <textarea matInput rows="5" formControlName="companyBillingAddress"></textarea>
-            <mat-hint class="error" *ngIf="customerForm?.get('companyBillingAddress')?.invalid && customerForm?.get('companyBillingAddress')?.touched">
-              *Billing address is required
-            </mat-hint>
-          </mat-form-field>
-          <mat-checkbox color="primary" (change)="copyShippingAddress($event.checked)">Shipping address is the same as Biling Address</mat-checkbox>
-        </div>
-
-        <div class="col-md-5">
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>Shipping Address</mat-label>
-            <textarea matInput rows="5" formControlName="companyShippingAddress"></textarea>
-            <mat-hint class="error" *ngIf="customerForm?.get('companyShippingAddress')?.invalid && customerForm?.get('companyShippingAddress')?.touched">
-              *Shipping address is required
-            </mat-hint>
-          </mat-form-field>
-        </div>
-      </div>
-
-
+          <div class="row m-t-12">
+            <div class="col-md-3">
+              <h4 class="w-100">Company Address</h4>
+            </div>
+    
+            <div class="col-md-4">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Billing address</mat-label>
+                <textarea matInput rows="5" formControlName="billingAddress"></textarea>
+                <mat-hint class="error" *ngIf="customerForm?.get('billingAddress')?.invalid && customerForm?.get('billingAddress')?.touched">
+                  *Billing address is required
+                </mat-hint>
+              </mat-form-field>
+              <mat-checkbox color="primary" (change)="copyShippingAddress($event.checked)">Shipping address is the same as Biling Address</mat-checkbox>
+            </div>
+    
+            <div class="col-md-5">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Shipping address</mat-label>
+                <textarea matInput rows="5" formControlName="shippingAddress"></textarea>
+                <mat-hint class="error" *ngIf="customerForm?.get('shippingAddress')?.invalid && customerForm?.get('shippingAddress')?.touched">
+                  *Shipping address is required
+                </mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+    
+        </mat-card-content>
+      </mat-card>
     </form>
-
-
-
+ 
   </mat-card-content>
 </mat-card>
-
-
+ 
 <mat-card *ngIf="!editMode" class="cardWithShadow">
   <mat-card-content class="p-24">
     <mat-card-title class=" b-b-1">
@@ -162,7 +229,7 @@
     <div class="table-responsive m-t-16">
       <table mat-table [dataSource]="customers" class="w-100">
         <!-- Logo Column -->
-        <ng-container matColumnDef="companyLogo">
+        <ng-container matColumnDef="logo">
           <th
             mat-header-cell
             *matHeaderCellDef
@@ -181,22 +248,8 @@
           </td>
         </ng-container>
 
-        <!-- Full name Column --> 
-        <ng-container matColumnDef="contactPersonName">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            class="f-w-600 mat-subtitle-1 f-s-14"
-          >
-          Name
-          </th>
-          <td mat-cell *matCellDef="let element" class="mat-body-1">
-            {{ element.contactPersonTitle }} {{ element.contactPersonFirstName }} {{ element.contactPersonLastName }}
-          </td>
-        </ng-container>
-
-        <!-- Company Name Column -->
-        <ng-container matColumnDef="companyName">
+         <!-- Company Name Column -->
+         <ng-container matColumnDef="name">
           <th
             mat-header-cell
             *matHeaderCellDef
@@ -205,12 +258,28 @@
             Company
           </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
-            {{ element.companyName }}
+            {{ element.name }}
           </td>
         </ng-container>
 
+
+        <!-- Full name Column --> 
+        <ng-container matColumnDef="contactPersonName">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Contact Person
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            {{ element.contactPerson.title }} {{ element.contactPerson.firstName }} {{ element.contactPerson.lastName }}
+          </td>
+        </ng-container>
+
+       
         <!-- Customer email Column -->
-        <ng-container matColumnDef="contactPersonEmail">
+        <ng-container matColumnDef="emailAddress">
           <th
             mat-header-cell
             *matHeaderCellDef
@@ -219,12 +288,12 @@
           Email
           </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
-            {{ element.contactPersonEmail }}
+            {{ element.emailAddress }}
           </td> 
         </ng-container>
 
         <!--  Customer Phone Number -->
-        <ng-container matColumnDef="contactPersonPhoneNumber">
+        <ng-container matColumnDef="phoneNumber">
           <th
             mat-header-cell
             *matHeaderCellDef
@@ -233,12 +302,26 @@
             Phone
           </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
-            {{ element.contactPersonPhoneNumber }}
+            {{ element.phoneNumber }}
           </td>
         </ng-container>
 
-          <!-- Company VAT Number Column -->
-          <ng-container matColumnDef="companyVATNumber">
+        <!-- Company Registration Number Column -->
+        <ng-container matColumnDef="registrationNumber">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Reg Number
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            {{ element.registrationNumber }}
+          </td>
+        </ng-container>
+
+        <!-- Company VAT Number Column -->
+        <ng-container matColumnDef="VATNumber">
           <th
             mat-header-cell
             *matHeaderCellDef
@@ -247,12 +330,12 @@
           VAT Number
           </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
-            {{ element.companyVATNumber }}
+            {{ element.VATNumber }}
           </td>
         </ng-container>
 
         <!-- Company Physical Address Column -->
-        <ng-container matColumnDef="companyBillingAddress">
+        <ng-container matColumnDef="billingAddress">
           <th
             mat-header-cell
             *matHeaderCellDef
@@ -261,7 +344,7 @@
           Address
           </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
-            {{ element.companyBillingAddress }}
+            {{ element.billingAddress }}
           </td>
         </ng-container>
 

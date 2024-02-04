@@ -12,7 +12,7 @@ import { DataService } from 'src/app/services/data.service';
 export class AppUsersComponent implements OnInit {
  
 
-  displayedColumns: string[] = ['name', 'gender','idNo', 'phone', 'email'];
+  displayedColumns: string[] = ['name', 'gender','idNumber', 'phone', 'email'];
   // dataSource = ELEMENT_DATA;
  
   users: User[];

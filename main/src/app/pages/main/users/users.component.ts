@@ -6,14 +6,11 @@ import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { COLLECTION, GENDER, ROLE, TITLE } from 'src/app/const/util';
 import { FormBuilder, Validators } from '@angular/forms';
-import { v4 as uuid} from 'uuid';
 import { NgxSpinnerService } from "ngx-spinner";
 import { User } from 'src/app/models/user';
 
-
 const users: User[] =[
   { 
-    id: uuid(),
     firstName: "Tau",
     lastName: "Mogale",
     title: TITLE.MR,
@@ -21,13 +18,12 @@ const users: User[] =[
     email: "tau@flow.com",
     phone: "0729003000",
     role: ROLE.OPERATOR,
-    idNo: "96010184000080",
+    idNumber: "96010184000080",
     physicalAddress: "",
     username: "",
     password: ""
   },
   { 
-    id: uuid(),
     firstName: "Cecil",
     lastName: "Seleka",
     title: TITLE.MRS,
@@ -35,13 +31,12 @@ const users: User[] =[
     email: "cecil@flow.com",
     phone: "0825003000",
     role: ROLE.OPERATOR,
-    idNo: "98010184000080",
+    idNumber: "98010184000080",
     physicalAddress: "",
     username: "",
     password: ""
   },
   { 
-    id: uuid(),
     firstName: "Liah",
     lastName: "Thobela",
     title: TITLE.DR,
@@ -49,7 +44,7 @@ const users: User[] =[
     email: "linah@flow.com",
     phone: "0847003000",
     role: ROLE.ADMIN,
-    idNo: "88010184000080",
+    idNumber: "88010184000080",
     physicalAddress: "",
     username: "",
     password: ""
@@ -62,7 +57,7 @@ const users: User[] =[
   styleUrls: ['./users.component.scss']
 })
 export class AppUsersComponent {
-  displayedColumns: string[] = ['name','idNo', 'gender', "email", "phone", "physicalAddress", "actionButton"];
+  displayedColumns: string[] = ['name','idNumber', 'gender', "email", "phone", "physicalAddress", "actionButton"];
   dataSource = users;
   editMode: boolean = false;
   newUser: boolean = false;
@@ -102,7 +97,7 @@ export class AppUsersComponent {
       gender: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', [Validators.required]],
-      idNo: ['', Validators.required],
+      idNumber: ['', Validators.required],
       role: ['', Validators.required],
       email: ['', [Validators.required,  Validators.email]],
       phone: ['', Validators.required],
@@ -122,11 +117,10 @@ export class AppUsersComponent {
   addUser() { 
     const form = this.userForm.value;
     const user: User = {
-      id: "",
       profilePhoto: form.profilePhoto,
       email: form.email,
       gender: form.gender,
-      idNo: form.idNo,
+      idNumber: form.idNumber,
       firstName: form.firstName,
       lastName: form.lastName,
       title: form.title,
@@ -142,14 +136,12 @@ export class AppUsersComponent {
     }
 
     if(this.newUser) {
-      user.id = uuid();
       this.dataService.addItem(user, COLLECTION.USERS).forEach((res: any) => {
         console.log("user added successfully ", res);
         this.editMode = false;
         this.getUsers();
       });
     } else {
-      user.id = this.editUser.id,
       console.log("Update user", user);
       
       this.dataService.updateItem(user, COLLECTION.USERS).forEach((res: any) => {
@@ -176,7 +168,7 @@ export class AppUsersComponent {
     this.userForm.controls['lastName'].setValue(user.lastName);
     this.userForm.controls['title'].setValue(user.title);
     this.userForm.controls['gender'].setValue(user.gender);
-    this.userForm.controls['idNo'].setValue(user.idNo);
+    this.userForm.controls['idNumber'].setValue(user.idNumber);
     this.userForm.controls['role'].setValue(user.role);
     this.userForm.controls['email'].setValue(user.email);
     this.userForm.controls['phone'].setValue(user.phone);

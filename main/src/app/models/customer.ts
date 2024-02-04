@@ -1,8 +1,7 @@
 export interface Customer {
-  id: string;
-  url: string;
-  type: string;
-  companyName: string;
+  _id?: string;
+  photo?: string;
+  name: string;
   VATNumber: string;
   registrationNumber: string;
   billingAddress: string;
@@ -11,18 +10,11 @@ export interface Customer {
   phoneNumber: string;
   emailAddress: string;
   contactPerson: ContactPerson,
-  bankDetails: BankDetails,
-  dateCreated?: string;
+  createdOn?: Date;
   createdBy?: string; 
-  updatedOn?: string;
+  updatedOn?: Date;
   updatedBy?: string;
-} 
- 
-export interface BankDetails {
-  accountNumber: string;
-  branchCode: string;
-  bankName: string;
-}
+}  
 
 export interface ContactPerson {
   title: string;

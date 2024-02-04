@@ -1,6 +1,6 @@
 export interface Company {
-    id: string;
-    logo: string; 
+  _id?: string;
+    photo?: string; 
     name: string;
     VATNumber: string;
     registrationNumber: string;
@@ -11,9 +11,9 @@ export interface Company {
     emailAddress: string;
     contactPerson: ContactPerson,
     bankDetails: BankDetails,
-    createdOn?: string;
+    createdOn?: Date;
     createdBy?: string; 
-    updatedOn?: string;
+    updatedOn?: Date;
     updatedBy?: string;
   } 
    
