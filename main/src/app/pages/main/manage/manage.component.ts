@@ -19,7 +19,7 @@ export class AppManageComponent {
   'contactPersonPhoneNumber', 'contactPersonEmail', 'companyName', 
   'companyVATNumber', 'companyBillingAddress' ,'actionButton'];
   editMode: boolean = false;
-  newCompany: boolean = false;
+  isNewCompany: boolean = false;
 
   editCompany: Company;
   total = {
@@ -63,12 +63,7 @@ export class AppManageComponent {
       phoneNumber: ['', Validators.required],
       emailAddress:  ['', [Validators.required,  Validators.email]],
 
-      contactPersonFirstName: ['', Validators.required],
-      contactPersonLastName: ['', Validators.required],
-      contactPersonEmail: ['', [Validators.required,  Validators.email]],
-      contactPersonPhoneNumber: ['', Validators.required],
-      contactPersonTitle: ['', Validators.required],
-      contactPersonGender: ['', Validators.required],
+      // contactPersonId: ['', Validators.required], 
 
       accountNumber:  ['', Validators.required],
       branchCode:  ['', Validators.required],
@@ -82,6 +77,8 @@ export class AppManageComponent {
     }
   } 
 
+
+  
   addCompany() { 
     const form = this.companyForm.value;
     const company: Company = {
@@ -94,45 +91,71 @@ export class AppManageComponent {
       website: form.website,
       billingAddress: form.billingAddress,
       shippingAddress: form.shippingAddress,
-      contactPerson: {
-        firstName: form.contactPersonFirstName,
-        lastName: form.contactPersonLastName,
-        emailAddress: form.contactPersonEmail,
-        phoneNumber: form.contactPersonPhoneNumber,
-        title: form.contactPersonTitle,
-        gender: form.contactPersonGender,
-      },
+      contactPersonId: "65bfd1a6965711aa24e06f79",//form.contactPersonId,
       bankDetails: {
         accountNumber: form.accountNumber,
         branchCode: form.branchCode,
         bankName: form.bankName,
       },
       createdOn: new Date(),
-      createdBy: "Donald Kgomo", 
+      createdBy: "65bfd1a6965711aa24e06f79", 
       updatedOn: new Date(),
-      updatedBy: "Donald Kgomo"
+      updatedBy: "65bfd1a6965711aa24e06f79"
     }
 
-    if(this.newCompany) {
-      this.dataService.addItem(company, COLLECTION.COMPANIES).forEach((res: any) => {
-        console.log("Customer added successfully ", res);
-        this.editMode = false;
-        this.getCompanies();
-      });
-      console.log("Comapny ", company);
-      
+    this.dataService.addItem(company, COLLECTION.COMPANIES).forEach((res: any) => {
+      console.log("Customer added successfully ", res);
+      this.editMode = false;
+      this.getCompanies();
+    });      
+    
+  }
+
+  updateCompany() { 
+    const form = this.companyForm.value;
+    const company: Company = {
+      _id: this.editCompany._id,
+      photo: "https://placehold.co/200",
+      name: form.name,
+      registrationNumber: form.registrationNumber,
+      VATNumber: form.VATNumber,
+      phoneNumber: form.phoneNumber,
+      emailAddress: form.emailAddress,
+      website: form.website,
+      billingAddress: form.billingAddress,
+      shippingAddress: form.shippingAddress,
+      contactPersonId: "65bfd1a6965711aa24e06f79",//form.contactPersonId,
+      bankDetails: {
+        accountNumber: form.accountNumber,
+        branchCode: form.branchCode,
+        bankName: form.bankName,
+      },
+      createdOn: new Date(),
+      createdBy: "65bfd1a6965711aa24e06f79", 
+      updatedOn: new Date(),
+      updatedBy: "65bfd1a6965711aa24e06f79"
+    }
+
+ 
+    this.dataService.updateItem(company, COLLECTION.COMPANIES).forEach((res: any) => {
+      console.log("Customer updated successfully ", res);
+      this.editMode = false;
+      this.getCompanies();
+    }); 
+    
+  }
+
+  saveCompany() {
+    if(this.isNewCompany) {
+      this.addCompany()
     } else {
-      this.dataService.updateItem(company, COLLECTION.COMPANIES).forEach((res: any) => {
-        console.log("Customer updated successfully ", res);
-        this.editMode = false;
-        this.getCompanies();
-      }); 
+      this.updateCompany();
     }
   }
 
   addNewCompany() {
     this.editMode = true;
-    this.newCompany = true;
+    this.isNewCompany = true;
   }
  
   cancel() {
@@ -149,19 +172,14 @@ export class AppManageComponent {
   editCompanyDetails(company: Company){
     this.editMode = true;
     this.editCompany = company;
-    console.log("Edit ", company);
+    this.isNewCompany = false;
+    console.log("Edit address ", company);
     this.companyForm.controls['name'].setValue(company.name);
     this.companyForm.controls['emailAddress'].setValue(company.emailAddress);
     this.companyForm.controls['website'].setValue(company.website);
     this.companyForm.controls['phoneNumber'].setValue(company.phoneNumber);
     this.companyForm.controls['VATNumber'].setValue(company.VATNumber);
-    
-    this.companyForm.controls['contactPersonTitle'].setValue(company.contactPerson.title);
-    this.companyForm.controls['contactPersonGender'].setValue(company.contactPerson.gender);
-    this.companyForm.controls['contactPersonFirstName'].setValue(company.contactPerson.firstName);
-    this.companyForm.controls['contactPersonLastName'].setValue(company.contactPerson.lastName);
-    this.companyForm.controls['contactPersonEmail'].setValue(company.contactPerson.emailAddress);
-    this.companyForm.controls['contactPersonPhoneNumber'].setValue(company.contactPerson.phoneNumber);
+
     this.companyForm.controls['registrationNumber'].setValue(company.registrationNumber);
 
     this.companyForm.controls['accountNumber'].setValue(company.bankDetails.accountNumber);
@@ -171,22 +189,4 @@ export class AppManageComponent {
     this.companyForm.controls['billingAddress'].setValue(company.billingAddress);
     this.companyForm.controls['shippingAddress'].setValue(company.shippingAddress);
   }
-
-  convetToPDF() {
-    var data = document.getElementById('contentToConvert');
-      html2canvas((data as any)).then(canvas => {
-      // Few necessary setting options
-        var imgWidth = 208;
-        var pageHeight = 295;
-        var imgHeight = canvas.height * imgWidth / canvas.width;
-        var heightLeft = imgHeight;
-        
-        const contentDataURL = canvas.toDataURL('image/png')
-        let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF
-        var position = 0;
-        pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
-        pdf.save('new-file.pdf'); // Generated PDF
-      });
-  }
-
 }

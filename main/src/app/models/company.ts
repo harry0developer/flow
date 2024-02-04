@@ -9,7 +9,7 @@ export interface Company {
     website?: string;
     phoneNumber: string;
     emailAddress: string;
-    contactPerson: ContactPerson,
+    contactPersonId: string,
     bankDetails: BankDetails,
     createdOn?: Date;
     createdBy?: string; 

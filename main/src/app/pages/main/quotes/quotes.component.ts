@@ -53,9 +53,7 @@ export class AppQuotesComponent {
         accountNumber: "", branchCode: "", bankName: ""
       },
       billingAddress: "",
-      contactPerson: {
-        emailAddress: "", firstName: "", gender: "", lastName: "", phoneNumber: "", title: ""
-      },
+      contactPersonId: ""
     },
     items: [],
     quoteDate: new Date(),
@@ -293,9 +291,7 @@ export class AppQuotesComponent {
           accountNumber: "", branchCode: "", bankName: ""
         },
         billingAddress: "",
-        contactPerson: {
-          emailAddress: "", firstName: "", gender: "", lastName: "", phoneNumber: "", title: ""
-        },
+        contactPersonId: ""
       },
       items: [
         {
