@@ -5,3 +5,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .logo {
     width: 100px;
 }
+
+.error-message {
+    text-align: center;
+    font-size: 14px;
+    color: #f43d0c;
+    font-weight: 600;
+}
+
+.form-intput-validation-error {
+    color: #fa896b;
+}

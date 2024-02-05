@@ -15,21 +15,29 @@
             </a>
           </div>
 
-          <div class="or-border m-t-30">sign in with</div>
+        
+          <div class="or-border m-t-30">Sign In</div>
 
+          <div class="error-message">
+            <p>{{loginError}}</p>
+          </div>
           <form  [formGroup]="loginForm" class="m-t-30">
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-              >Username</mat-label
-            >
-            <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput  formControlName="username" />
+            <mat-form-field class="w-100 m-b-12" appearance="outline">
+              <mat-label>Email Address</mat-label>
+              <input matInput type="email" formControlName="email">
+              <mat-hint class="form-intput-validation-error " *ngIf="loginForm?.get('email')?.invalid && loginForm?.get('email')?.touched">
+                *Email is required
+              </mat-hint>
             </mat-form-field>
-            <!-- password -->
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-              >Password</mat-label
-            >
-            <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput type="password"  formControlName="password"/>
+
+            <mat-form-field class="w-100 m-b-12" appearance="outline">
+              <mat-label>Password</mat-label>
+              <input matInput type="password" formControlName="password">
+              <mat-hint class="form-intput-validation-error" *ngIf="loginForm?.get('password')?.invalid && loginForm?.get('password')?.touched">
+                <span *ngIf="loginForm.get('password')?.errors?.['required']">
+                  Password is required.
+                </span>
+              </mat-hint>
             </mat-form-field>
 
             <div class="d-flex align-items-center m-b-12">
@@ -40,7 +48,7 @@
                 >Forgot Password ?</a
               >
             </div>
-            <a (click)="login()" mat-flat-button color="primary" class="w-100">
+            <a (click)="login()" [disabled]="!loginForm.valid" mat-flat-button color="primary" class="w-100">
               Sign In
             </a>
             <!-- input -->

@@ -26,10 +26,14 @@ export class DataService {
   token: string;
   constructor(private httpClient: HttpClient) { }
 
-  getToken(): string {
-    return this.token;
-  }
  
+  setStorage(key: string, value: any) {
+    localStorage.setItem(key, JSON.parse(value));
+  }
+
+  getStorage(key: string) {
+    return JSON.parse(localStorage.getItem(key) || '{}');
+  }
 
   getAll(collection: string): Observable<User | Inventory | Quote| Company | Customer> {
     return this.httpClient.get<User | Inventory | Quote| Company | Customer>(this.apiServer + collection)
@@ -66,7 +70,7 @@ export class DataService {
     )
   }  
 
-  login(authData: Auth) {
+  login(authData: any) {
     return this.httpClient.post<Auth>(this.apiServer + 'login', authData, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
@@ -75,7 +79,7 @@ export class DataService {
 
 
   signup(user: User) {
-    return this.httpClient.post<User>(this.apiServer + 'signup', user, this.httpOptions)
+    return this.httpClient.post<User>(this.apiServer + 'register', user, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )
@@ -89,15 +93,6 @@ export class DataService {
   }
   
   errorHandler(error: any) {
-     let errorMessage = '';
-     if(error.error instanceof ErrorEvent) {
-       // Get client-side error
-       errorMessage = error.error.message;
-     } else {
-       // Get server-side error
-       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-     }
-     console.log(errorMessage);
-     return throwError(errorMessage);
+     return throwError(error.error)
   }
 }

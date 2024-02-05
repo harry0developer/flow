@@ -7,8 +7,7 @@ import { DataService } from 'src/app/services/data.service';
 import { COLLECTION, GENDER, ROLE, TITLE } from 'src/app/const/util';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgxSpinnerService } from "ngx-spinner";
-import { User } from 'src/app/models/user';
- 
+import { User } from 'src/app/models/user'; 
  
 @Component({
   selector: 'app-users',
@@ -34,12 +33,11 @@ export class AppUsersComponent {
   genders = [
     GENDER.MALE, GENDER.FEMALE, GENDER.NONBINARY
   ];
-
+ 
   constructor(private router: Router,
      private formBuilder: FormBuilder,
      private spinner: NgxSpinnerService,
-     private dataService: DataService) {
-  }
+     private dataService: DataService,) {  }
 
  
   ngOnInit(): void {
@@ -68,14 +66,13 @@ export class AppUsersComponent {
     this.editMode = false;
   }
 
-
-  
+ 
   updateUser() { 
     const form = this.userForm.value;
     const user: User = {
       _id: this.editUser._id,
       profilePhoto: form.profilePhoto,
-      email: form.email,
+      email: this.editUser.email,
       gender: form.gender,
       idNumber: form.idNumber,
       firstName: form.firstName,
@@ -83,13 +80,8 @@ export class AppUsersComponent {
       title: form.title,
       phone: form.phone,
       role: form.role,
-      username: "",
       password: "",
-      physicalAddress: form.physicalAddress,
-      createdOn: "" + new Date().getTime(),
-      createdBy: "65bfd1a6965711aa24e06f79", 
-      updatedOn: "" + new Date().getTime(),
-      updatedBy: "65bfd1a6965711aa24e06f79"
+      physicalAddress: form.physicalAddress
     } 
 
     this.dataService.updateItem(user, COLLECTION.USERS).forEach((res: any) => {
@@ -112,13 +104,9 @@ export class AppUsersComponent {
       title: form.title,
       phone: form.phone,
       role: form.role,
-      username: "",
       password: "",
-      physicalAddress: form.physicalAddress,
-      createdOn: "" + new Date().getTime(),
-      createdBy: "65bfd1a6965711aa24e06f79", 
-      updatedOn: "" + new Date().getTime(),
-      updatedBy: "65bfd1a6965711aa24e06f79"
+      physicalAddress: form.physicalAddress
+
     }
  
     this.dataService.addItem(user, COLLECTION.USERS).forEach((res: any) => {

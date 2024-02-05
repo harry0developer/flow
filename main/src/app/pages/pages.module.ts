@@ -9,6 +9,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import * as TablerIcons from 'angular-tabler-icons/icons';
 import { AppDashboardComponent } from './dashboard/dashboard.component';
+import { NotifierModule } from 'angular-notifier';
 
 @NgModule({
   declarations: [AppDashboardComponent],
@@ -18,8 +19,10 @@ import { AppDashboardComponent } from './dashboard/dashboard.component';
     FormsModule,
     NgApexchartsModule,
     RouterModule.forChild(PagesRoutes),
-    TablerIconsModule.pick(TablerIcons)
+    TablerIconsModule.pick(TablerIcons),
+    NotifierModule.withConfig({})
   ],
-  exports: [TablerIconsModule]
+  exports: [TablerIconsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PagesModule {}

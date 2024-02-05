@@ -24,6 +24,7 @@ import { AppInventoryComponent } from './inventory/inventory.component';
 import { AppQuotesComponent } from './quotes/quotes.component';
 import { AppUserProfileComponent } from './user-profile/user-profile.component';
 import { AppManageComponent } from './manage/manage.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @NgModule({
   imports: [
@@ -50,5 +51,6 @@ import { AppManageComponent } from './manage/manage.component';
     AppMenuComponent,
     AppTooltipsComponent
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MainModule {}

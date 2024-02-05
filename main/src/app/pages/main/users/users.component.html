@@ -1,4 +1,5 @@
 <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-atom" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+
 <mat-card *ngIf="editMode" class="cardWithShadow">
   <mat-card-content class="p-24">
     <mat-card-title class=" b-b-1">
@@ -13,6 +14,7 @@
               [disabled]="!userForm?.valid"
               (click)="saveUser()">Save</button>
           <button mat-raised-button  color="warn" class="m-t-12 m-b-12" (click)="cancelEditUser()">Cancel</button>
+          
         </div>
       </div>
     </mat-card-title>

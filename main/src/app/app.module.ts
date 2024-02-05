@@ -24,8 +24,10 @@ import { HeaderComponent } from './layouts/full/header/header.component';
 import { BrandingComponent } from './layouts/full/sidebar/branding.component';
 import { AppNavItemComponent } from './layouts/full/sidebar/nav-item/nav-item.component';
 import { NgxSpinnerModule } from "ngx-spinner";
-
-
+import { AuthService } from './services/auth.service';
+import { AuthGuardService } from './services/auth-guard.service';
+import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
+ 
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,10 +47,13 @@ import { NgxSpinnerModule } from "ngx-spinner";
     ReactiveFormsModule,
     MaterialModule,
     TablerIconsModule.pick(TablerIcons),
-    NgxSpinnerModule.forRoot({ type: 'ball-atom' })
-
+    NgxSpinnerModule.forRoot({ type: 'ball-atom' }),
   ],
   exports: [TablerIconsModule],
+  providers: [AuthService, AuthGuardService, 
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+    JwtHelperService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

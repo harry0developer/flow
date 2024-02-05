@@ -2,6 +2,7 @@
   <div
     class="position-relative row w-100 h-100 bg-gredient justify-content-center"
   >
+
     <div class="col-lg-4 d-flex align-items-center">
       <mat-card class="cardWithShadow boxed-auth">
         <mat-card-content class="p-32">
@@ -47,45 +48,53 @@
             </div>
           </div> -->
 
-          <div class="or-border m-t-30">or sign up with</div>
-          
-          <p class="errors" *ngIf="errors">{{errors}}</p>
+          <div class="or-border m-t-30">Sign Up</div>
+          <div class="error-message">
+            <p>{{registrationError}}</p>
+          </div>
           <form [formGroup]="sigupForm" class="m-t-30">
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-              >First name</mat-label>
-            <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput  formControlName="firstName"/>
+
+            <mat-form-field class="w-100 m-b-12" appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input matInput type="text" formControlName="firstName">
+              <mat-hint class="form-intput-validation-error " *ngIf="sigupForm?.get('firstName')?.invalid && sigupForm?.get('firstName')?.touched">
+                *First name is required
+              </mat-hint>
             </mat-form-field>
 
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-            >Last name</mat-label>
-            <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput  formControlName="firstName"/>
+            <mat-form-field class="w-100 m-b-12" appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input matInput type="text" formControlName="lastName">
+              <mat-hint class="form-intput-validation-error " *ngIf="sigupForm?.get('lastName')?.invalid && sigupForm?.get('lastName')?.touched">
+                *Last name is required
+              </mat-hint>
             </mat-form-field>
 
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-            >Username</mat-label >
-            <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput formControlName="username"/>
-            </mat-form-field>
-            
-
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-              >Email Adddress</mat-label>
-            <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput type="email" formControlName="emailAddress"/>
+            <mat-form-field class="w-100 m-b-12" appearance="outline">
+              <mat-label>Email Address</mat-label>
+              <input matInput type="email" formControlName="email">
+              <mat-hint class="form-intput-validation-error " *ngIf="sigupForm?.get('email')?.invalid && sigupForm?.get('email')?.touched">
+                *Email address is required
+              </mat-hint>
             </mat-form-field>
 
-            <!-- password -->
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-              >Password</mat-label>
-            <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput type="password"  formControlName="password"/>
+            <mat-form-field class="w-100 m-b-12" appearance="outline">
+              <mat-label>Password</mat-label>
+              <input matInput type="password"  minlength="6" formControlName="password">
+              <mat-hint class="form-intput-validation-error" *ngIf="sigupForm?.get('password')?.invalid && sigupForm?.get('password')?.touched">
+                <span *ngIf="sigupForm.get('password')?.errors?.['required']">
+                  Password is required.
+                </span>
+                <span *ngIf="sigupForm.get('password')?.errors?.['minlength']">
+                  Password must be at least 6 characters
+                </span> 
+              </mat-hint>
             </mat-form-field>
 
-            <a (click)="signup()" mat-flat-button color="primary" class="w-100">
+            <a (click)="signup()" [disabled]="!sigupForm.valid" mat-flat-button color="primary" class="w-100">
               Create Account
             </a>
+
             <!-- input -->
           </form>
           <span class="d-block f-w-500 text-center m-t-24"
@@ -104,3 +113,4 @@
     </div>
   </div>
 </div>
+

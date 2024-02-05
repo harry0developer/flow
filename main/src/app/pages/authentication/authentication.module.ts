@@ -16,6 +16,8 @@ import { AuthenticationRoutes } from './authentication.routing';
 
 import { AppSideLoginComponent } from './login/login.component';
 import { AppSideRegisterComponent } from './register/register.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NotifierService } from 'angular-notifier';
 
 @NgModule({
   imports: [
@@ -34,5 +36,6 @@ import { AppSideRegisterComponent } from './register/register.component';
     AppSideLoginComponent,
     AppSideRegisterComponent,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AuthenticationModule {}
