@@ -34,6 +34,7 @@ export const COMPANY_TYPE = {
 
 export const STORAGE = {
     TOKEN: 'token',
+    USER: 'user'
 }
 
 export const ROUTES = {

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {  Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ROLE, ROUTES, STORAGE } from 'src/app/const/util';
 import { User } from 'src/app/models/user';
 import { DataService } from 'src/app/services/data.service';
@@ -19,9 +20,13 @@ export class AppSideRegisterComponent {
     password: new FormControl('', [Validators.required,  Validators.minLength(6)]),
   });
   
-  constructor( private dataService: DataService, private router: Router) {}
+  constructor( 
+    private dataService: DataService, 
+    private spinner: NgxSpinnerService,
+    private router: Router) {}
   
   signup() {
+    this.spinner.show();
     const formData = this.sigupForm.value;
     let user: User = {
       profilePhoto: "",
@@ -38,13 +43,16 @@ export class AppSideRegisterComponent {
     };
 
     console.log(user);
-    this.dataService.signup(user).subscribe(token => {
-      console.log("Signup token ", token);
-      this.dataService.setStorage(STORAGE.TOKEN, token)
+    this.dataService.signup(user).subscribe(response => {
+      console.log("Signup response ", response);
+      this.dataService.setStorage(STORAGE.TOKEN, response.data.token);
+      this.dataService.setStorage(STORAGE.USER, response.data.user);
+      this.spinner.hide();
       this.router.navigateByUrl(ROUTES.DASHBOARD);
     }, err => {
       console.log(err);
       this.registrationError = err.error;
+      this.spinner.hide();
     })
   }
 }

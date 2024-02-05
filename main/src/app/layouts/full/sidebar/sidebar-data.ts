@@ -43,12 +43,6 @@ export const navItems: NavItem[] = [
     iconName: 'cash',
     route: '/main/payment-recieved',
   },
-  // {
-  //   displayName: 'Badge',
-  //   iconName: 'rosette',
-  //   route: '/main/badge',
-  // },
-  
 
   {
     navCap: "Admin"
@@ -63,26 +57,10 @@ export const navItems: NavItem[] = [
     iconName: 'settings',
     route: '/main/manage',
   },
+  {
+    displayName: 'My Profile',
+    iconName: 'user',
+    route: '/main/profile',
+  },
 
-  {
-    navCap: 'Auth',
-  },
-  {
-    displayName: 'Login',
-    iconName: 'lock',
-    route: '/authentication/login',
-  },
-  {
-    displayName: 'Register',
-    iconName: 'user-plus',
-    route: '/authentication/register',
-  },
-  {
-    navCap: 'Extra',
-  },
-  {
-    displayName: 'Icons',
-    iconName: 'mood-smile',
-    route: '/extra/icons',
-  }
 ];

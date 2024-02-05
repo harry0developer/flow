@@ -13,6 +13,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     font-weight: 600;
 }
 
-.form-intput-validation-error {
+.form-intput-validation-error, .error {
     color: #fa896b;
+}
+.mat-mdc-form-field-hint-wrapper {
+    padding: 0;
+}
+
+.mat-icon {
+    vertical-align: bottom;
 }

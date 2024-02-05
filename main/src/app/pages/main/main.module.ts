@@ -22,9 +22,9 @@ import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved
 import { NgxSpinnerModule } from "ngx-spinner";
 import { AppInventoryComponent } from './inventory/inventory.component';
 import { AppQuotesComponent } from './quotes/quotes.component';
-import { AppUserProfileComponent } from './user-profile/user-profile.component';
 import { AppManageComponent } from './manage/manage.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AppProfileComponent } from './profile/profile.component';
 
 @NgModule({
   imports: [
@@ -47,9 +47,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     AppSalesOrderComponent,
     AppPaymentRecievedComponent,
     AppUsersComponent,
-    AppUserProfileComponent,
     AppMenuComponent,
-    AppTooltipsComponent
+    AppTooltipsComponent,
+    AppProfileComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

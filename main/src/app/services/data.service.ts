@@ -28,7 +28,11 @@ export class DataService {
 
  
   setStorage(key: string, value: any) {
-    localStorage.setItem(key, JSON.parse(value));
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  removeFromStorage(key: string) {
+    localStorage.removeItem(key);
   }
 
   getStorage(key: string) {
@@ -71,7 +75,7 @@ export class DataService {
   }  
 
   login(authData: any) {
-    return this.httpClient.post<Auth>(this.apiServer + 'login', authData, this.httpOptions)
+    return this.httpClient.post<any>(this.apiServer + 'login', authData, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )
@@ -79,7 +83,7 @@ export class DataService {
 
 
   signup(user: User) {
-    return this.httpClient.post<User>(this.apiServer + 'register', user, this.httpOptions)
+    return this.httpClient.post<any>(this.apiServer + 'register', user, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )

@@ -1,0 +1,231 @@
+ 
+<ngx-spinner 
+  bdColor="rgba(255, 255, 255, 0.9)" 
+  size="medium" 
+  color="#018c8c" 
+  type="ball-atom" 
+  class="spinner"
+  [fullScreen]="true">
+    <p style="color: #018c8c"> Loading... </p>
+</ngx-spinner>
+
+<mat-card class="cardWithShadow profile">
+  <mat-card-header class="w-100">
+    <mat-card-title>
+      <div class="row p-l-12 p-r-12">
+        <div class="col-7 col-md-7 p-l-12"> 
+          <h3>Manage Profile</h3>
+        </div>
+        <div class="col-5 col-md-5 align-end">
+          <button mat-raised-button 
+            color="primary"
+            class="m-t-12"  
+            *ngIf="!editMode"
+            (click)="editProfile()">Edit Profile</button>
+
+          <button mat-raised-button 
+            color="primary"
+            class="m-t-12 m-r-8"  
+            *ngIf="editMode"
+            [disabled]="!userForm.valid"
+            (click)="updateProfile()">Save</button>
+
+          <button mat-raised-button 
+            color="accent"
+            class="m-t-12"  
+            *ngIf="editMode"
+            (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    </mat-card-title>
+  </mat-card-header>
+
+  <!-- Preview mode  -->
+  <mat-card-content *ngIf="!editMode" class="b-t-1 p-32">
+    <div class="profile-name">
+      <img
+        src="assets/images/profile/user-1.jpg"
+        alt="users"
+        width="100"
+        class="profile-image"  />
+
+      <div class="text-info m-l-32">
+
+        <h2>
+          <span *ngIf="user.title">{{ user.title }} </span>{{ user.firstName }} {{ user.lastName }}
+        </h2> 
+        <p class="role">
+          <mat-icon aria-label="user" fontIcon="manage_accounts"></mat-icon>
+          {{ user.role }}
+        </p>
+      </div>
+    </div>
+
+
+    <div class="info b-t-1 p-t-16">
+      <p *ngIf="user.phone">
+        <mat-icon aria-label="user" fontIcon="call"></mat-icon>
+        {{ user.phone }}
+      </p> 
+      <p *ngIf="user.email">
+        <mat-icon aria-label="user" fontIcon="mail"></mat-icon>
+        {{ user.email }}
+      </p>  
+
+      <p *ngIf="user.gender">
+        <mat-icon *ngIf="user.gender !== 'Female' && user.gender !== 'Male' " aria-label="gender" fontIcon="wc"></mat-icon>
+        <mat-icon *ngIf="user.gender === 'Female' " aria-label="gender" fontIcon="woman"></mat-icon>
+        <mat-icon *ngIf="user.gender === 'Male' " aria-label="gender" fontIcon="man"></mat-icon>
+        {{ user.gender }}
+      </p> 
+      <p *ngIf="user.idNumber">
+        <mat-icon aria-label="user" fontIcon="fingerprint"></mat-icon>
+        {{ user.idNumber }}
+      </p> 
+      <p *ngIf="user.physicalAddress">
+        <mat-icon aria-label="user" fontIcon="location_on"></mat-icon>
+        {{ user.physicalAddress }}
+      </p> 
+    </div>
+  </mat-card-content>
+
+
+  <!-- Edit mode  -->
+  <mat-card-content *ngIf="editMode" class="b-t-1 p-32">
+    <form [formGroup]="userForm"> 
+      <div class="row m-t-12">
+        <div class="col-md-3">
+          <h4 class="w-100">User Details</h4>
+        </div> 
+
+        <div class="col-md-2">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Title</mat-label>
+            <select matNativeControl required formControlName="title">
+              <option *ngFor="let val of titles" value="{{val}}">{{val}}</option> 
+            </select>
+          </mat-form-field>
+        </div> 
+
+        <div class="col-md-4">
+          <mat-form-field class="w-100 readonly" appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput readonly type="text" formControlName="firstName">
+            <mat-hint class="error">
+              First name cannot be modified
+            </mat-hint>
+          </mat-form-field>
+        </div> 
+
+        <div class="col-md-3">
+          <mat-form-field class="w-100 readonly" appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput readonly type="text" formControlName="lastName">
+            <mat-hint class="error" >
+              Last name cannot be modified
+            </mat-hint>
+          </mat-form-field>
+        </div> 
+      </div>
+
+      <div class="row m-t-12">
+        <div class="col-md-3">
+          <h4 class="w-100">Gender / ID Number</h4>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Gender</mat-label>
+            <select matNativeControl required formControlName="gender">
+              <option *ngFor="let val of genders" value="{{val}}">{{val}}</option> 
+            </select>
+            <mat-hint class="error" *ngIf="userForm?.get('gender')?.invalid && userForm?.get('gender')?.touched">
+              *Gender is required
+            </mat-hint>
+          </mat-form-field> 
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>ID Number</mat-label>
+            <input matInput type="text" formControlName="idNumber">
+            <mat-hint class="error" *ngIf="userForm?.get('idNumber')?.invalid && userForm?.get('idNumber')?.touched">
+              *ID number is required
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row m-t-12">
+        <div class="col-md-3">
+          <h4 class="w-100">Role</h4>
+        </div>
+
+        <div class="col-md-9">
+          <mat-form-field class="w-100 readonly" appearance="outline">
+            <mat-label>User Role</mat-label>
+            <input matInput type="text" readonly formControlName="role">
+            <mat-hint class="error">
+              *User role cannot be modified
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+
+      <div class="row m-t-12">
+        <div class="col-md-3">
+          <h4 class="w-100">Email Address</h4>
+        </div>
+
+        <div class="col-md-9">
+          <mat-form-field class="w-100 readonly" appearance="outline">
+            <mat-label>Email Address</mat-label>
+            <input matInput type="email" readonly formControlName="email">
+            <mat-hint class="error">
+              *Email address cannot be modified
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row m-t-12">
+        <div class="col-md-3">
+          <h4 class="w-100">Phone Number</h4>
+        </div>
+
+        <div class="col-md-9">
+          <mat-form-field class="w-100 m-b-12" appearance="outline">
+            <mat-label>Phone Number</mat-label>
+            <input matInput type="text" formControlName="phone">
+            <mat-hint class="error" *ngIf="userForm?.get('phone')?.invalid && userForm?.get('phone')?.touched">
+              *Phone number is required
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row m-t-12">
+        <div class="col-md-3">
+          <h4 class="w-100">Residenatial Address</h4>
+        </div>
+
+        <div class="col-md-9">
+          <mat-form-field class="w-100 m-b-12" appearance="outline">
+            <mat-label>Physical Address</mat-label>
+            <textarea matInput rows="5" formControlName="physicalAddress"></textarea>
+            <mat-hint class="error" *ngIf="userForm?.get('physicalAddress')?.invalid && userForm?.get('physicalAddress')?.touched">
+              *Physcial address is required
+            </mat-hint>
+          </mat-form-field>
+        </div>
+
+
+      </div>
+
+
+    </form>
+  </mat-card-content>
+</mat-card>
+
+ 

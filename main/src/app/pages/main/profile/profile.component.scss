@@ -1,0 +1,45 @@
+.profile {
+    .mat-mdc-card-header {
+        padding: 18px;
+    }
+     
+    .align-end {
+        text-align: right;
+        button {
+            width: 120px;
+            // margin: auto 4px
+        }
+    
+    }
+  
+    mat-card-title {
+        width: 100 !important;
+    }
+
+    .readonly {
+        font-weight: 600;
+    }
+
+    .profile-name {
+        display: flex;
+
+    }
+   
+    .info {
+        margin-top: 32px;
+        p {
+            margin: 0;
+        }
+    }
+   
+    .mat-icon {
+        font-size: 14px;
+    vertical-align: text-top;
+    }
+}
+
+::ng-deep {
+    .mat-mdc-form-field-hint-wrapper {
+        padding: 0 !important;
+    }
+}

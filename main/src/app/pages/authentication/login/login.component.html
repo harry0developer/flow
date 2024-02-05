@@ -1,3 +1,15 @@
+<ngx-spinner 
+  bdColor="rgba(255, 255, 255, 0.9)" 
+  size="medium" 
+  color="#018c8c" 
+  type="ball-atom" 
+  class="spinner"
+  [fullScreen]="true">
+    <p style="color: #018c8c"> Loading... </p>
+</ngx-spinner>
+<!-- <notifier-container></notifier-container> -->
+
+
 <div class="blank-layout-container justify-content-center align-items-center bg-light-primary">
   <div
     class="position-relative row w-100 h-100 bg-gredient justify-content-center"
@@ -26,7 +38,7 @@
               <mat-label>Email Address</mat-label>
               <input matInput type="email" formControlName="email">
               <mat-hint class="form-intput-validation-error " *ngIf="loginForm?.get('email')?.invalid && loginForm?.get('email')?.touched">
-                *Email is required
+                *Email address is required
               </mat-hint>
             </mat-form-field>
 
