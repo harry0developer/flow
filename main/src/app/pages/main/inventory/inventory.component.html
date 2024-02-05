@@ -150,16 +150,31 @@
 </mat-card>
 
 
-<mat-card *ngIf="!editMode" class="cardWithShadow">
-  <mat-card-content class="p-24">
-    <mat-card-title class=" b-b-1">
-      <div class="row">
-        <div class="col-md-9 col-sm-6 title"> <h3>Manage Inventory</h3></div>
-        <div class="col-md-3 col-sm-6 align-end">
-          <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="enableEditMode()">Add New Item</button>
-        </div>
+<mat-card class="cardWithShadow theme-card" *ngIf="!editMode">
+  <mat-card-title class="p-24 b-b-1">
+    <div class="row">
+      <div class="col-md-9 col-sm-6">  
       </div>
-    </mat-card-title>
+      <div class="col-md-3 col-sm-6 align-end">
+        <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="enableEditMode()">Add New Item</button>
+      </div>
+    </div>
+  </mat-card-title>
+</mat-card>
+
+
+<mat-card class="cardWithShadow theme-card" *ngIf="!editMode && inventoryItems.length < 1">
+  <mat-card-content class="p-24">
+    <mat-card-title class="m-b-0">Not items in the inventory</mat-card-title>  
+    <p>You have not added items in the inventory</p>
+  </mat-card-content>
+</mat-card>
+
+
+
+<mat-card *ngIf="!editMode && inventoryItems.length > 0" class="cardWithShadow theme-card">
+  <mat-card-content class="p-24">
+    <mat-card-title class=" b-b-1 p-b-16"> Manage Inventory </mat-card-title>
     
     <div class="table-responsive m-t-16">
       <table mat-table [dataSource]="inventoryItems" class="w-100">

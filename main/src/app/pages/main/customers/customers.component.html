@@ -214,17 +214,32 @@
  
   </mat-card-content>
 </mat-card>
- 
-<mat-card *ngIf="!editMode" class="cardWithShadow">
-  <mat-card-content class="p-24">
-    <mat-card-title class=" b-b-1">
-      <div class="row">
-        <div class="col-md-9 col-sm-6 title"> <h3>Edit Customers</h3></div>
-        <div class="col-md-3 col-sm-6 align-end">
-          <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="addNewCustomer()">Add Customer</button>
-        </div>
+
+
+
+<mat-card class="cardWithShadow theme-card" *ngIf="!editMode">
+  <mat-card-title class="p-24 b-b-1">
+    <div class="row">
+      <div class="col-md-9 col-sm-6">  
       </div>
-    </mat-card-title>
+      <div class="col-md-3 col-sm-6 align-end">
+        <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="addNewCustomer()">Add New Customer</button>
+      </div>
+    </div>
+  </mat-card-title>
+</mat-card>
+
+
+<mat-card class="cardWithShadow theme-card" *ngIf="!editMode && customers.length < 1">
+  <mat-card-content class="p-24">
+    <mat-card-title class="m-b-0">No customers</mat-card-title>  
+    <p>You have not added customer, please add customers to be able to generate quotations</p>
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="!editMode && customers.length > 0" class="cardWithShadow">
+  <mat-card-content class="p-24">
+    <mat-card-title class="b-b-1 p-b-16">Manage Customers </mat-card-title>
     
     <div class="table-responsive m-t-16">
       <table mat-table [dataSource]="customers" class="w-100">

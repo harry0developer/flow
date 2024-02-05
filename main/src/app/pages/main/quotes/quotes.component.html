@@ -8,7 +8,7 @@
     <p style="color: #018c8c"> Loading... </p>
 </ngx-spinner>
 
-<mat-card  *ngIf="!editMode"  class="cardWithShadow theme-card">
+<mat-card *ngIf="!editMode" class="cardWithShadow theme-card">
    
     <mat-card-title class="p-24 b-b-1">
       <div class="row">
@@ -21,9 +21,9 @@
     </mat-card-title>
 
   <!-- PDF Document  -->
-  <div id="contentToConvert" class="company-document">
+  <div id="contentToConvert" *ngIf="currentCompany" class="company-document">
     <div class="row">
-      <div class="col-lg-6 company-from">
+      <div class="col-6 company-from">
         <h2 class="name">
           {{ currentCompany.name }}
         </h2>
@@ -43,7 +43,7 @@
         </div>
       </div>
 
-      <div class="col-lg-6 company-from-logo" >
+      <div class="col-6 company-from-logo" >
         <img src="assets/images/logos/matswelapele.png" alt="">
         <div class="banking-details m-t-32">
           <h3>Banking Details</h3>
@@ -60,9 +60,9 @@
     <hr>
     <!-- Bill To -->
     <h1>Qoute</h1>
-    <h3 class="bill-to">Bill to:</h3>
+    <h3 class="m-0">Bill to:</h3>
     <div class="row">
-      <div class="col-md-6 company-to">
+      <div class="col-6 company-to">
         <h2 class="name">
           {{selectedQuote.customer.name}}
         </h2>
@@ -75,18 +75,18 @@
         <h4 class="vat-no">VAT No. {{currentCompany.VATNumber}}</h4>
       </div>
 
-      <div class="col-md-6 qoute-info" >
+      <div class="col-6 qoute-info" >
          <p><b>Qoute No: </b>{{selectedQuote.quoteNo}}</p>
-         <p><b>Date created: </b>{{selectedQuote.quoteDate}} </p>
+         <p><b>Date created: </b>{{formatDate(selectedQuote.quoteDate)}} </p>
          <p><b>Terms: </b>{{selectedQuote.quoteTerm}} days</p>
-         <p><b>Due date: </b>{{selectedQuote.quoteDueDate}}</p>
+         <p><b>Due date: </b>{{formatDate(selectedQuote.quoteDueDate)}}</p>
       </div> 
     </div>
 
     <!-- table  -->
 
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-12">
         <table class="table table-striped">
           <thead>
             <tr>
@@ -103,34 +103,35 @@
               <td class="col-3">{{item.stockCode}}</td> 
               <td class="col-3">{{item.description}}</td> 
               <td class="col-1">{{item.quantity}}</td> 
-              <td>{{item.costPrice | currency:'R'}}</td> 
+              <td>{{item.sellingPrice | currency:'R'}}</td> 
               <td>{{item.VAT}}</td> 
-              <td>{{ +item.costPrice * +item.quantity | currency:'R'}}</td> 
+              <td>{{ +item.sellingPrice * +item.quantity | currency:'R'}}</td> 
             </tr>
           </tbody>
         </table>
       </div>
-
-      <div class="clear-white-space"></div>
-      <div class="col-7"></div>
-      <div class="col-5">
-        <table class="table table-striped"> 
+    </div>
+    <div class="clear-white-space"></div>
+    <div class="row">
+      <div class="col-6"></div>
+      <div class="col-6">
+        <table> 
           <tbody class="align-end">
             <tr > 
-              <td scope="col" class="col-6">Total Price Exclusive</td>
-              <td scope="col" class="col-6">{{selectedQuote.totalPriceExclusive | currency:'R'}}</td>
+              <td scope="col" class="col-12">Total Price Exclusive</td>
+              <td scope="col" class="col-12">{{selectedQuote.totalPriceExclusive | currency:'R'}}</td>
             </tr>
             <tr>
-              <td scope="col" class="col-6">Total VAT</td>
-               <td scope="col" class="col-6">{{selectedQuote.totalVAT | currency:'R'}}</td>
+              <td scope="col" class="col-12">Total VAT</td>
+               <td scope="col" class="col-12">{{selectedQuote.totalVAT | currency:'R'}}</td>
             </tr>
             <tr>
-              <td scope="col" class="col-6">Total Price Discount</td>
-               <td scope="col" class="col-6">{{selectedQuote.totalPriceDiscount | currency:'R'}}</td>
+              <td scope="col" class="col-12">Total Price Discount</td>
+               <td scope="col" class="col-12">{{selectedQuote.totalPriceDiscount | currency:'R'}}</td>
             </tr>
             <tr>
-              <td scope="col" class="col-6"><b>Total Price Inclusive</b></td>
-               <td scope="col" class="col-6"><b>{{selectedQuote.totalPriceInclusive | currency:'R'}}</b></td>
+              <td scope="col" class="col-12"><b>Total Price Inclusive</b></td>
+               <td scope="col" class="col-12"><b>{{selectedQuote.totalPriceInclusive | currency:'R'}}</b></td>
             </tr>
           </tbody>
         </table>
@@ -146,7 +147,11 @@
 </mat-card>
 
 <mat-card *ngIf="!editMode" class="cardWithShadow">
-  <mat-card-content class="p-24">
+  <mat-card-content class="p-24" *ngIf="quotes.length < 1">
+    <mat-card-title class="m-b-0">No quotations available</mat-card-title>  
+    <p>You have not created quotations</p>
+  </mat-card-content>
+  <mat-card-content class="p-24" *ngIf="quotes.length > 0">
     <mat-card-title class="m-b-0">Quote History</mat-card-title>    
 
     <div class="table-responsive m-t-16">
@@ -175,7 +180,7 @@
           Quote Date
           </th>
           <td mat-cell *matCellDef="let element">
-             {{element.quoteDate}}
+             {{formatDate(element.quoteDate)}}
           </td>
         </ng-container>
 
@@ -203,7 +208,7 @@
           Contact Person
           </th>
           <td mat-cell *matCellDef="let element">
-             {{element.customer?.contactPersonTitle}} {{element.customer?.contactPersonFirstName}} {{element.customer?.contactPersonLastName}}
+             {{element.customer?.contactPerson.title}} {{element.customer?.contactPerson.firstName}} {{element.customer?.contactPerson.lastName}}
           </td>
         </ng-container>
  
@@ -229,7 +234,7 @@
             class="f-w-600 mat-subtitle-1 f-s-14"
           > </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
-            <button color="primary" (click)="downloadQuote(element)" mat-mini-fab>
+            <button color="primary" (click)="generateQouteDocument(element)" mat-mini-fab>
               <mat-icon>download</mat-icon>
             </button>
           </td>
@@ -254,7 +259,7 @@
               class="m-t-12 m-b-12 m-r-3" 
               [disabled]="!quoteForm?.valid || !customerFormControl.touched || !customerFormControl.value 
               || !inventoryFormControl.touched || !inventoryFormControl.value"
-              (click)="createNewQuote()">Create Quote</button>
+              (click)="createNewQuote()">Generate Quote</button>
           <button mat-raised-button  color="warn" class="m-t-12 m-b-12" (click)="cancel()">Cancel</button>
         </div>
       </div>
@@ -317,12 +322,9 @@
   </mat-card-content>
 </mat-card> 
 
-
 <mat-card *ngIf="editMode" class="cardWithShadow inventory-form">
   <mat-card-content class="p-24">
     <mat-card-title class="m-b-0">Add Items</mat-card-title>    
-
-
     <form> 
       <div class="row  m-t-32">
         <div class="col-md-9">
@@ -348,8 +350,8 @@
             <td class="col-md-2 w-100"><label>Name</label></td>
             <td class="col-md-1 w-100"><label>Quantity</label></td>
             <td class="col-md-2 w-100"><label>Unit Price</label></td>
-            <!-- <td class="col-md-1 w-100"><label>VAT</label></td>
-            <td class="col-md-1 w-100"><label>Discount</label></td> -->
+            <td class="col-md-1 w-100"><label>VAT</label></td>
+            <td class="col-md-1 w-100"><label>Discount</label></td>
             <td class="col-md-2 w-100"><label>Total</label></td>
           </tr>
         </thead>
@@ -370,16 +372,16 @@
               <input name="{{dynamic.quantity}}" [(ngModel)]="dynamic.quantity"  type="number"/>
             </td>
             <td class="col-md-2 w-100">
-              <input name="{{dynamic.costPrice}}" [(ngModel)]="dynamic.costPrice"  type="text"/>
+              <input name="{{dynamic.sellingPrice}}" [(ngModel)]="dynamic.sellingPrice"  type="text"/>
             </td>
-            <!-- <td class="col-md-1 w-100">
-              <input name="{{dynamic.discount}}" [(ngModel)]="dynamic.discount"  type="text"/>
+            <td class="col-md-1 w-100">
+              <input name="{{dynamic.discountPrice}}" [(ngModel)]="dynamic.discountPrice"  type="text"/>
             </td> 
             <td class="col-md-1 w-100">
               <input name="{{dynamic.VAT}}" [(ngModel)]="dynamic.VAT"  type="text"/>
-            </td>  -->
+            </td> 
             <td class="col-md-2 w-100">
-              {{ (+dynamic.quantity * +dynamic.costPrice) + +dynamic.VAT - +dynamic.discount  | currency:'R' }}
+              {{ (+dynamic.quantity * +dynamic.sellingPrice)   | currency:'R' }}
             </td>
           </tr>
         </tbody>

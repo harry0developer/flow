@@ -29,18 +29,22 @@
     color: #fa896b;
 }
 
-
+ 
 .company-document {
     padding: 60px;
+    width: 21cm;
+    height: 29.7cm; 
+
     position: absolute;
     top: -10000px; //hide from page
+ 
     .company-from-logo {
 
         text-align: right;
         img {
-            width: 300px;
+            width: 200px;
         }
-
+ 
         .banking-details {
             line-height: 1.6;
             p {
@@ -49,6 +53,10 @@
 
             }
         }
+    }
+
+    .clear-white-space {
+        height: 180px;
     }
 
     .qoute-info {
@@ -78,16 +86,11 @@
     }
 
    
-    .clear-white-space {
-        height: 760px;
-    }
+
 
 }
 
-#contentToConvert {
-    // display: none;
-}
-
+ 
 .address {
     line-height: 1.6;
     p{
@@ -120,6 +123,8 @@
             font-weight: bold;
         }
     }
+
+    
 }
 
  

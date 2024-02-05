@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Generated Qoute</h2>
+ 
+<button mat-icon-button color="primary" 
+  (click)="cancel()" class="top-right">
+  <mat-icon>close</mat-icon>
+</button>
+ 
+<mat-dialog-content class="m-b-12">
+  <p>
+    Your qoute has been generated as a (PDF) document. You can:
+  </p>
+
+  <ul class="m-b-32">
+    <li>Share it via email</li>
+    <li>Download it to your computer</li>
+  </ul>
+
+  <div class="btn-group">
+    <button mat-raised-button class="m-r-12" 
+      (click)="shareViaEmail()" 
+      color="primary">Share via email</button>
+
+    <button mat-raised-button
+      (click)="downloadAsPDF()" 
+      color="accent">Download as PDF</button>
+  </div>
+
+</mat-dialog-content>
