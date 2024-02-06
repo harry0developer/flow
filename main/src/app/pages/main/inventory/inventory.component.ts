@@ -26,7 +26,7 @@ export class AppInventoryComponent {
   editInventoryItem: Inventory;
   
   inventoryForm: any;
-  inventoryItems: Inventory[];
+  inventoryItems: Inventory[] = [];
 
   constructor(private router: Router,
      private formBuilder: FormBuilder,

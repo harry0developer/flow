@@ -4,7 +4,7 @@ import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
-import { COLLECTION, COMPANY_TYPE, GENDER, STORAGE, TITLE } from 'src/app/const/util';
+import { COLLECTION, STORAGE } from 'src/app/const/util';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { NgxSpinnerService } from "ngx-spinner";
 import { Quote } from 'src/app/models/quote';
@@ -24,7 +24,7 @@ import { ShareDialogComponent } from './share/share.component';
   styleUrls: ['./quotes.component.scss']
 })
 export class AppQuotesComponent {
-  displayedColumns: string[] = ['quoteNo',  'quoteDate', 'name' ,'contactPerson', 'totalPriceInclusive', 'actionButton'];
+  displayedColumns: string[] = ['quoteNo',  'quoteDate', 'name' ,'contactPerson', 'totalPriceInclusive', 'viewButton', 'shareButton'];
 
   customers: Customer[] = [];
   inventoryItems: Inventory[] = [];
@@ -73,6 +73,8 @@ export class AppQuotesComponent {
   newQuote: boolean = false;
 
   editQuote: Quote;
+  processQuoteMode: boolean = false;
+  quoteToProcess: Quote;
  
   quoteForm: any;
   inventoryItemForm: any;
@@ -87,6 +89,7 @@ export class AppQuotesComponent {
   currentCompany: Company;
 
   loggedInUser: User;
+  mailToString: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -245,6 +248,7 @@ export class AppQuotesComponent {
       this.spinner.hide();
       this.getQuotes();
       this.editMode = false;
+      this.processQuoteMode = false;
 
     }, err => {
       this.spinner.hide();
@@ -254,17 +258,20 @@ export class AppQuotesComponent {
 
   cancel() {
     this.editMode = false;
+    this.processQuoteMode = false;
   }
 
   createQuote() {
     this.editMode = true;
     this.newQuote = true;
+    this.processQuoteMode = false;
     this.quoteForm.reset()
   }
  
   addNewQuote() {
     this.editMode = true;
     this.newQuote = true;
+    this.processQuoteMode = false;
   }
 
   getTotalPrice(item: Inventory) {
@@ -273,6 +280,7 @@ export class AppQuotesComponent {
  
   cancelEditQuote() {
     this.editMode = false;
+    this.processQuoteMode = false;
   }
 
   getQuotes() {
@@ -290,6 +298,7 @@ export class AppQuotesComponent {
   viewQuoteDetails(quote: Quote){
     this.editMode = true;
     this.editQuote = quote; 
+    this.processQuoteMode = false;
 
   }
 
@@ -297,7 +306,6 @@ export class AppQuotesComponent {
     this.selectedQuote = quote;
     this.openDialog(quote);
   }
-
 
   openDialog(qoute: Quote): void {
     const dialogHandler = this.dialog.open(ShareDialogComponent, {
@@ -310,9 +318,9 @@ export class AppQuotesComponent {
     dialogHandler.afterClosed().subscribe((res)=> {
       console.log(res);
       if(res == 'share') {
-        this.convetToPDF();
+        this.convetToPDF('contentToConvert');
       } else if(res == 'download') {
-        this.convetToPDF();
+        this.convetToPDF('contentToConvert');
       } else {
         console.log("Closed");
 
@@ -321,9 +329,9 @@ export class AppQuotesComponent {
     })
   }
 
-  convetToPDF() {
+  convetToPDF(id: string) {
     this.spinner.show();
-    var data = document.getElementById('contentToConvert');
+    var data = document.getElementById(id);
       html2canvas((data as any)).then(canvas => {
       // Few necessary setting options
         var imgWidth = 208;
@@ -339,6 +347,32 @@ export class AppQuotesComponent {
         this.spinner.hide();
       });
   }
+
+
+  /// INVOICE - PROCESS QUOTE
+
+  
+  processQuote(quote: Quote) {
+    this.editMode = true;
+    this.processQuoteMode = true;
+    this.quoteToProcess  = quote;
+    this.selectedQuote = quote; 
+    this.mailToString = `mailto:${this.selectedQuote.customer.emailAddress},${this.selectedQuote.customer.contactPerson.emailAddress}?subject=Quote%20no%20${this.selectedQuote.quoteNo}&amp;body=Please%20find%20the%20requested%20quote%20attached%20`;
+  }
+
+  generateInvoice() {
+    console.log(this.quoteToProcess);
+    console.log(this.currentCompany);
+  }
+
+  downloadAsPDF() {
+    this.convetToPDF('quote-invoice')
+  }
+  
+
+  editQuoteForInvoicing() {}
+ 
+  generateInvoiceFromQuote() {}
 
 }
 

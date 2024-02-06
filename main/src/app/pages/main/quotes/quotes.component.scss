@@ -30,6 +30,64 @@
 }
 
  
+
+//Ducplicate code 
+.company-document-preview {
+    padding: 60px;
+    width: 21cm;
+    height: 29.7cm; 
+
+
+    position: absolute;
+    background-color: #fff;
+ 
+    .company-from-logo {
+
+        text-align: right;
+        img {
+            width: 200px;
+        }
+ 
+        .banking-details {
+            line-height: 1.6;
+            p {
+                margin: 0;
+                padding: 0;
+
+            }
+        }
+    }
+
+    .clear-white-space {
+        height: 180px;
+    }
+
+    .qoute-info {
+        margin-top: 40px;
+        line-height: 1.6;
+        text-align: right;
+        p {
+            padding: 0;
+            margin: 0;
+        }
+    }
+ 
+    .table {
+        width: 100%;
+        text-align: left;
+        thead {
+            background-color: #ddd;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            height: 30px;
+        }
+
+        th {
+            text-align: left;
+        }  
+    }
+}
+
 .company-document {
     padding: 60px;
     width: 21cm;
@@ -82,17 +140,12 @@
         th {
             text-align: left;
         }  
-       
     }
-
-   
-
-
 }
 
  
 .address {
-    line-height: 1.6;
+    line-height: 1.2;
     p{
         margin: 0;
     }
@@ -127,4 +180,13 @@
     
 }
 
+
+.process-quote {
+    .quote-action-menu {
+        button {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+    }
+}
  

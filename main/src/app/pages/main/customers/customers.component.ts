@@ -38,7 +38,7 @@ export class AppCustomersComponent {
   
 
   customerForm: any;
-  customers: Customer[];
+  customers: Customer[] = [];
 
   constructor(private router: Router,
      private formBuilder: FormBuilder,
@@ -49,7 +49,6 @@ export class AppCustomersComponent {
 
  
   ngOnInit(): void {
-
     this.getCustomers();
     this.customerForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -79,7 +78,6 @@ export class AppCustomersComponent {
     this.dataService.getById( COLLECTION.CUSTOMERS, item,).forEach((res: any) => {
       console.log("Customer updated successfully ", res);
     }); 
-  
   }
 
   deleteCustomer() {
@@ -149,8 +147,6 @@ export class AppCustomersComponent {
       updatedOn: new Date(),
       updatedBy: "65bfd1a6965711aa24e06f79"
     }
-
-    console.log("Addding ", customer);
     
     this.dataService.addItem(customer, COLLECTION.CUSTOMERS).forEach((res: any) => {
       console.log("Customer added successfully ", res);
@@ -180,10 +176,8 @@ export class AppCustomersComponent {
     this.editMode = true;
     this.editCustomer = customer;
     console.log("Edit ", customer); 
-
     this.customerForm.controls['name'].setValue(customer.name);
     this.customerForm.controls['VATNumber'].setValue(customer.VATNumber);
-
     this.customerForm.controls['registrationNumber'].setValue(customer.registrationNumber);
     this.customerForm.controls['emailAddress'].setValue(customer.emailAddress);
     this.customerForm.controls['phoneNumber'].setValue(customer.phoneNumber);
@@ -195,7 +189,6 @@ export class AppCustomersComponent {
     this.customerForm.controls['contactPersonPhoneNumber'].setValue(customer.contactPerson.phoneNumber);
     this.customerForm.controls['contactPersonTitle'].setValue(customer.contactPerson.title);
     this.customerForm.controls['contactPersonGender'].setValue(customer.contactPerson.gender);
-
   }
 
   convetToPDF() {
