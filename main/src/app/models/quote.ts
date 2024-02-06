@@ -1,6 +1,7 @@
 import { Company } from "./company";
 import { Customer } from "./customer";
 import { Inventory } from "./inventory";
+import { Invoice } from "./invoice";
 
 export interface Quote {
   _id?: string;
@@ -17,6 +18,7 @@ export interface Quote {
   totalPriceDiscount: number;
   totalPriceInclusive: number;
   invoiced: boolean;
+  invoice?: Invoice | string,
   createdOn?: Date;
   createdBy?: string; 
   updatedOn?: Date;

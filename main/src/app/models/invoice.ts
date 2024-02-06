@@ -1,6 +1,7 @@
 import { Company } from "./company";
 import { Customer } from "./customer";
 import { Inventory } from "./inventory";
+import { SalesOrder } from "./sale-order";
 
 export interface Invoice {
   _id?: string;
@@ -10,12 +11,13 @@ export interface Invoice {
   invoiceTerm: string | number;
   customer: Customer;
   company: Company;
-  items: Inventory[],
   totalPriceExclusive: number;
   totalVAT: number;
   totalPriceDiscount: number;
   totalPriceInclusive: number;
-  quote: string | undefined;
+  quote: any;
+  hasSalesOrder: boolean;
+  salesOrder?: any,
   createdOn?: Date;
   createdBy?: string; 
   updatedOn?: Date;

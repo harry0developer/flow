@@ -17,6 +17,7 @@ import { User } from 'src/app/models/user';
 import { MatDialog } from '@angular/material/dialog';
 import { Invoice } from 'src/app/models/invoice';
 import { ShareDialogComponent } from '../quotes/share/share.component';
+import { SalesOrder } from 'src/app/models/sale-order';
 
 @Component({
   selector: 'app-invoices',
@@ -29,11 +30,12 @@ export class AppInvoicesComponent {
   processQuoteMode: boolean = false;
   mailToString: string;
   invoices: Invoice[] = [];
+  editInvoiceMode: boolean = false;
+  documentId = 'invoiceDocument';
 
-  displayedColumns: string[] = ['invoiceNo',  'invoiceDate', 'quoteNo', 'totalPriceInclusive', 'viewButton', 'shareButton'];
+  displayedColumns: string[] = ['invoiceNo',  'invoiceDate', 'quoteNo', 'totalPriceInclusive', 'salesOrder', 'viewButton', 'shareButton'];
 
   constructor(
-    private formBuilder: FormBuilder,
      private spinner: NgxSpinnerService,
      public dialog: MatDialog,
      private dataService: DataService) {
@@ -67,6 +69,13 @@ export class AppInvoicesComponent {
     });
   }
 
+  manageInvoice(invoice: Invoice) {
+    this.editInvoiceMode = true;
+    this.activeInvoice = invoice;
+    console.log("Active invoice ", invoice);
+    
+  }
+
   formatAddress(address: string): string[] {
     const addNewLine = address.split('\n');
     const addComma = address.split(',');
@@ -80,15 +89,57 @@ export class AppInvoicesComponent {
       return [address]; 
     }
   }
+
+  generateSalesOrder() {
+    console.log('invoice ', this.activeInvoice);
+    const salesOrder: SalesOrder = {
+      salesOrderNo: this.dataService.generateRandomCodeNumber("SON-"),
+      salesOrderDate: new Date(),
+      customer: this.activeInvoice.customer,
+      company: this.activeInvoice.company,
+      quote: this.activeInvoice.quote,
+      invoice: this.activeInvoice,
+      createdOn: new Date(),
+      createdBy: this.dataService.getStorage(STORAGE.USER)._id,
+      updatedOn: new Date(),
+      updatedBy: this.dataService.getStorage(STORAGE.USER)._id,
+    }
+ 
+    this.spinner.show();
+    this.dataService.addItem(salesOrder, COLLECTION.SALES_ORDER).subscribe((res) => {
+      console.log(res);
+      this.editInvoiceMode = false;
+      this.processQuoteMode = false;
+      this.activeInvoice.hasSalesOrder = true;
+      this.activeInvoice.salesOrder = res._id;
+      
+      this.dataService.updateItem(this.activeInvoice, COLLECTION.INVOICES).subscribe(res => {
+        console.log("Invoice Updated", res);
+        this.spinner.hide();
+      }, err => {
+        console.log(err);
+        this.spinner.hide();
+      })
+    }, err => {
+      console.log(err);
+      this.spinner.hide();
+    })
+    
+  }
+
  
   generateInvoiceDocument(invoice: Invoice) {
     this.activeInvoice = invoice;
-    this.openDialog(invoice);
+    this.openDialog();
   }
 
-  openDialog(invoice: Invoice) {
+  openDialog(): void {
     const dialogHandler = this.dialog.open(ShareDialogComponent, {
       width: '420px',
+      data: {
+        title: "Generate Quote",
+        subHeader: "Your qoute has been generated as a (PDF) document. You can: "
+      },
       disableClose: true
     });
 
@@ -96,22 +147,17 @@ export class AppInvoicesComponent {
     dialogHandler.afterClosed().subscribe((res)=> {
       console.log(res);
       if(res == 'share') {
-        this.convetToPDF('contentToConvert');
+        this.dataService.convetToPDF(this.documentId);
       } else if(res == 'download') {
-        this.convetToPDF('contentToConvert');
+        this.dataService.convetToPDF(this.documentId);
       } else {
         console.log("Closed");
-
       }
       
     })
   }
 
-  manageInvoice(invoice: Invoice) {
-    console.log(invoice);
-    
-  }
-
+  
   processQuote(invoice: Invoice) {
     this.processQuoteMode = true;
     this.activeInvoice = invoice; 
@@ -122,22 +168,11 @@ export class AppInvoicesComponent {
     return moment(date).format('DD/MM/YYYY');  
   }
 
-  convetToPDF(id: string) {
-    this.spinner.show();
-    var data = document.getElementById(id);
-      html2canvas((data as any)).then(canvas => {
-      // Few necessary setting options
-        var imgWidth = 208;
-        var pageHeight = 295;
-        var imgHeight = canvas.height * imgWidth / canvas.width;
-        var heightLeft = imgHeight;
-        
-        const contentDataURL = canvas.toDataURL('image/png')
-        let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF
-        var position = 0;
-        pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
-        pdf.save(new Date().getTime().toString() + '.pdf'); // Generated PDF
-        this.spinner.hide();
-      });
+  downloadAsPDF() {
+    this.dataService.convetToPDF(this.documentId)
+  }
+  
+  cancel() {
+    this.editInvoiceMode = false;
   }
 }

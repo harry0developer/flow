@@ -1,180 +1,244 @@
-<mat-card class="cardWithShadow theme-card">
-  <mat-card-header>
-    <mat-card-title class="m-b-0">Menu</mat-card-title>
-  </mat-card-header>
-  <mat-card-content class="b-t-1">
-    <div class="row">
-      <div class="col-sm-6 col-lg-4">
-        <mat-card class="b-1 shadow-none">
-          <mat-card-header>
-            <mat-card-title>Basic</mat-card-title>
-          </mat-card-header>
-          <mat-card-content class="b-t-1">
-            <button
-              mat-flat-button
-              color="primary"
-              class="m-t-8"
-              [matMenuTriggerFor]="menu"
+<ngx-spinner 
+  bdColor="rgba(255, 255, 255, 0.9)" 
+  size="medium" 
+  color="#018c8c" 
+  type="ball-atom" 
+  class="spinner"
+  [fullScreen]="true">
+    <p style="color: #018c8c"> Loading... </p>
+</ngx-spinner>
+ 
+
+<mat-card *ngIf="!editSalesOrderMode" class="cardWithShadow invoice-page">
+  <mat-card-content class="p-24 align-center p-t-32 p-b-32" *ngIf="salesOrders.length < 1">
+    <div class="big-icon m-b-32">
+      <img src="assets/images/icons/invoices.png" alt="">
+    </div>
+    <mat-card-title class="m-b-0">No sales orders available</mat-card-title>  
+    <p class="m-0">You can generate a sales order from the invoice tab</p>
+  </mat-card-content>
+  <mat-card-content class="p-24" *ngIf="salesOrders.length > 0">
+    <mat-card-title class="m-b-0">Sales Order</mat-card-title>    
+
+    <div class="table-responsive m-t-16">
+      <table mat-table [dataSource]="salesOrders" class="w-100">
+        <!-- salesOrderNo Column -->
+        <ng-container matColumnDef="salesOrderNo">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Sales Order No
+          </th>
+          <td mat-cell *matCellDef="let element">
+             {{element.salesOrderNo}}
+          </td>
+        </ng-container>
+
+        <!-- salesOrderDate Column -->
+        <ng-container matColumnDef="salesOrderDate">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="f-w-600 mat-subtitle-1 f-s-14"
+        >
+        Sales Order Date
+        </th>
+        <td mat-cell *matCellDef="let element">
+            {{formatDate(element.salesOrderDate)}}
+        </td>
+        </ng-container>
+
+        <!-- createdBy Column -->
+        <ng-container matColumnDef="createdBy">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
             >
-              Menu
+            Create By
+          </th>
+          <td mat-cell *matCellDef="let element">
+              {{element.createdBy.firstName}} {{element.createdBy.lastName}}
+          </td>
+        </ng-container>
+
+         
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="viewButton">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          > </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            <button color="primary" (click)="manageSalesOrder(element)" mat-mini-fab>
+              <mat-icon>edit_document</mat-icon>
             </button>
-            <mat-menu #menu="matMenu" class="cardWithShadow">
-              <button mat-menu-item>Item 1</button>
-              <button mat-menu-item>Item 2</button>
-            </mat-menu>
-          </mat-card-content>
-        </mat-card>
-      </div>
-      <div class="col-sm-6 col-lg-4">
-        <mat-card class="b-1 shadow-none">
-          <mat-card-header>
-            <mat-card-title>with Icons</mat-card-title>
-          </mat-card-header>
-          <mat-card-content class="b-t-1">
-            <button
-              mat-icon-button
-              [matMenuTriggerFor]="menu"
-              aria-label="Example icon-button with a menu"
-            >
-              <mat-icon>
-                <i-tabler name="dots" class="icon-20"></i-tabler>
-              </mat-icon>
+            
+          </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="shareButton">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          > </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            <button color="primary" (click)="generateSalesOrderDocument(element)" mat-mini-fab>
+              <mat-icon>download</mat-icon>
             </button>
-            <mat-menu #menu="matMenu" class="cardWithShadow">
-              <button mat-menu-item>
-                <mat-icon>dialpad</mat-icon>
-                <span>Redial</span>
-              </button>
-              <button mat-menu-item disabled>
-                <mat-icon>voicemail</mat-icon>
-                <span>Check voice mail</span>
-              </button>
-              <button mat-menu-item>
-                <mat-icon>notifications_off</mat-icon>
-                <span>Disable alerts</span>
-              </button>
-            </mat-menu>
-          </mat-card-content>
-        </mat-card>
-      </div>
-      <div class="col-sm-6 col-lg-4">
-        <mat-card class="b-1 shadow-none">
-          <mat-card-header>
-            <mat-card-title>Nested Menu</mat-card-title>
-          </mat-card-header>
-          <mat-card-content class="b-t-1">
-            <button
-              mat-flat-button
-              color="primary"
-              [matMenuTriggerFor]="animals"
-              class="m-t-8"
-            >
-              Animal index
-            </button>
-            <mat-menu class="cardWithShadow" #animals="matMenu">
-              <button mat-menu-item [matMenuTriggerFor]="vertebrates">
-                Vertebrates
-              </button>
-              <button mat-menu-item [matMenuTriggerFor]="invertebrates">
-                Invertebrates
-              </button>
-            </mat-menu>
+            
+          </td>
+        </ng-container>
 
-            <mat-menu class="cardWithShadow" #vertebrates="matMenu">
-              <button mat-menu-item [matMenuTriggerFor]="fish">Fishes</button>
-              <button mat-menu-item [matMenuTriggerFor]="amphibians">
-                Amphibians
-              </button>
-              <button mat-menu-item [matMenuTriggerFor]="reptiles">
-                Reptiles
-              </button>
-              <button mat-menu-item>Birds</button>
-              <button mat-menu-item>Mammals</button>
-            </mat-menu>
-
-            <mat-menu class="cardWithShadow" #invertebrates="matMenu">
-              <button mat-menu-item>Insects</button>
-              <button mat-menu-item>Molluscs</button>
-              <button mat-menu-item>Crustaceans</button>
-              <button mat-menu-item>Corals</button>
-              <button mat-menu-item>Arachnids</button>
-              <button mat-menu-item>Velvet worms</button>
-              <button mat-menu-item>Horseshoe crabs</button>
-            </mat-menu>
-
-            <mat-menu class="cardWithShadow" #fish="matMenu">
-              <button mat-menu-item>Baikal oilfish</button>
-              <button mat-menu-item>Bala shark</button>
-              <button mat-menu-item>Ballan wrasse</button>
-              <button mat-menu-item>Bamboo shark</button>
-              <button mat-menu-item>Banded killifish</button>
-            </mat-menu>
-
-            <mat-menu class="cardWithShadow" #amphibians="matMenu">
-              <button mat-menu-item>Sonoran desert toad</button>
-              <button mat-menu-item>Western toad</button>
-              <button mat-menu-item>Arroyo toad</button>
-              <button mat-menu-item>Yosemite toad</button>
-            </mat-menu>
-
-            <mat-menu class="cardWithShadow" #reptiles="matMenu">
-              <button mat-menu-item>Banded Day Gecko</button>
-              <button mat-menu-item>Banded Gila Monster</button>
-              <button mat-menu-item>Black Tree Monitor</button>
-              <button mat-menu-item>Blue Spiny Lizard</button>
-              <button mat-menu-item disabled>Velociraptor</button>
-            </mat-menu>
-          </mat-card-content>
-        </mat-card>
-      </div>
-
-      <div class="col-12">
-        <mat-card class="b-1 shadow-none">
-          <mat-card-header>
-            <mat-card-title>Positions</mat-card-title>
-          </mat-card-header>
-          <mat-card-content class="b-t-1">
-            <div class="row">
-              <div class="col-sm-3">
-                <button mat-flat-button color="primary" class="w-100" [matMenuTriggerFor]="aboveMenu">
-                  Above
-                </button>
-                <mat-menu class="cardWithShadow" #aboveMenu="matMenu" yPosition="above">
-                  <button mat-menu-item>Item 1</button>
-                  <button mat-menu-item>Item 2</button>
-                </mat-menu>
-              </div>
-              <div class="col-sm-3">
-                <button mat-flat-button color="accent" class="w-100" [matMenuTriggerFor]="belowMenu">
-                  Below
-                </button>
-                <mat-menu class="cardWithShadow" #belowMenu="matMenu" yPosition="below">
-                  <button mat-menu-item>Item 1</button>
-                  <button mat-menu-item>Item 2</button>
-                </mat-menu>
-              </div>
-              <div class="col-sm-3">
-                <button mat-flat-button color="warn" class="w-100" [matMenuTriggerFor]="beforeMenu">
-                  Before
-                </button>
-                <mat-menu class="cardWithShadow" #beforeMenu="matMenu" xPosition="before">
-                  <button mat-menu-item>Item 1</button>
-                  <button mat-menu-item>Item 2</button>
-                </mat-menu>
-              </div>
-              <div class="col-sm-3">
-                <button mat-flat-button color="primary" class="w-100" [matMenuTriggerFor]="afterMenu">
-                  After
-                </button>
-                <mat-menu class="cardWithShadow" #afterMenu="matMenu" xPosition="after">
-                  <button mat-menu-item>Item 1</button>
-                  <button mat-menu-item>Item 2</button>
-                </mat-menu>
-              </div>
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
     </div>
   </mat-card-content>
+</mat-card>
+
+
+<mat-card *ngIf="editSalesOrderMode" class="process-invoice">
+  <mat-card-title class="p-24 b-b-1">
+    <div class="row">
+        <section class="col-9">
+          <div class="invoice-action-menu">
+            <a [href]="mailToString" target="_top"
+              mat-button color="primary">
+              <mat-icon>mail</mat-icon>
+              Send via Email
+            </a>
+            <button mat-button color="primary" (click)="downloadAsPDF()">
+              <mat-icon>picture_as_pdf</mat-icon>
+              Download Sales Order
+            </button>  
+            <button mat-button color="primary" (click)="downloadAsPDF()">
+              <mat-icon>picture_as_pdf</mat-icon>
+              Download Deliver Note
+            </button>  
+            <button mat-button color="primary" (click)="downloadAsPDF()">
+              <mat-icon>picture_as_pdf</mat-icon>
+              Download Proof Of Delivery
+            </button>  
+          </div>
+        </section>
+        <div class="col-3 align-btn-right">
+          <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+        </div>
+    </div>
+  </mat-card-title>
+</mat-card>
+
+<mat-card *ngIf="activeSalesOrder">
+
+    <!-- PDF Document  -->
+    <div id="salesOrderDocument" *ngIf="currentCompany" class="cardWithShadow invoice-document-preview" [ngClass]="{'hide-document': !editSalesOrderMode}">
+      <div class="row">
+        <div class="col-6 company-from">
+          <h2 class="name">
+            {{ currentCompany.name }}
+          </h2>
+  
+          <div class="address">
+            <p *ngFor='let address of formatAddress(currentCompany.billingAddress)'>
+              {{address}}
+            </p>
+             
+            <br>
+            <b>Phone:</b>{{ currentCompany.phoneNumber }}<br>
+            <b>Email:</b>{{ currentCompany.emailAddress }}<br>
+            <b>Website:</b>{{ currentCompany.website }} <br>
+            <b>VAT Registration No:</b>{{ currentCompany.VATNumber }}<br>
+            <b>Business ID No:</b>{{ currentCompany.registrationNumber }}<br>
+            <br>
+          </div>
+        </div>
+  
+        <div class="col-6 company-from-logo" >
+          <img src="assets/images/logos/matswelapele.png" alt="">
+          <div class="banking-details m-t-32">
+            <h3>Banking Details</h3>
+            <p><b>Bank name: </b>{{ currentCompany.bankDetails.bankName }}</p>
+            <p><b>Account No: </b>{{ currentCompany.bankDetails.accountNumber }}</p>
+            <p><b>Branch Code: </b>{{ currentCompany.bankDetails.branchCode }}</p>
+            <p><b>Reference: </b>{{activeSalesOrder.salesOrderNo}}</p>
+          </div>
+        </div> 
+  
+        
+      </div>
+  
+      <hr>
+      <!-- Bill To -->
+      <h1>Sales Order</h1>
+      <h3 class="m-0">Bill to:</h3>
+      <div class="row">
+        <div class="col-6 company-to">
+          <h2 class="name">
+            {{activeSalesOrder.customer.name}}
+          </h2>
+          
+          <div class="address" *ngIf="activeSalesOrder?.customer?.billingAddress">
+            <p *ngFor='let address of formatAddress(activeSalesOrder.customer.billingAddress)'>
+              {{address}}
+            </p>
+          </div>
+          <h4 class="vat-no">VAT No. {{currentCompany.VATNumber}}</h4>
+        </div>
+  
+        <div class="col-6 qoute-info" >
+           <p><b>Sales Order No: </b>{{activeSalesOrder.salesOrderNo}}</p>
+           <p><b>Date created: </b>{{formatDate(activeSalesOrder.salesOrderDate)}} </p>
+           <p><b>Sales Person: </b>{{activeSalesOrder.createdBy?.firstName}} {{activeSalesOrder.createdBy?.lastName}} </p>
+           <p><b>Sales Person Phone: </b>{{activeSalesOrder.createdBy?.phone}}  </p>
+           <p><b>Sales Person Email: </b>{{activeSalesOrder.createdBy?.email}}  </p>
+
+
+        </div> 
+      </div>
+  
+      <!-- table  -->
+  
+      <div class="row">
+        <div class="col-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="col-3">Name</th>
+                <th scope="col" class="col-3">Stock Code</th>
+                <th scope="col" class="col-3">Description</th>
+                <th scope="col" class="col-1">Qty</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of activeSalesOrder?.quote?.items"> 
+                <td class="col-3">{{item.name}}</td> 
+                <td class="col-3">{{item.stockCode}}</td> 
+                <td class="col-3">{{item.description}}</td> 
+                <td class="col-1">{{item.quantity}}</td> 
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="clear-white-space"></div>
+      <div class="row">
+        <div class="col-6"></div>
+        <div class="col-6">
+          
+  
+          <hr>
+  
+          
+        </div>
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos optio quo accusamus ex, qui nostrum delectus iure in quibusdam eligendi molestias modi quaerat odio temporibus, ducimus, dicta cum quidem ea!</p>
+      </div>
+    </div>
+  <!-- PDF Document  -->
 </mat-card>

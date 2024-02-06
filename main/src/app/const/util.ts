@@ -4,7 +4,8 @@ export const COLLECTION = {
     INVENTORY: 'inventory',
     QUOTES: 'quotes',
     INVOICES: 'invoices',
-    COMPANIES: 'companies'
+    COMPANIES: 'companies',
+    SALES_ORDER: 'sales-order',
 };
 
 export const TITLE = {

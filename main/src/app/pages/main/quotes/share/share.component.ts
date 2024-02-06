@@ -19,9 +19,16 @@ export interface DialogData {
   styleUrls: ['./share.component.scss']
 })
 export class ShareDialogComponent {
+  dialogData: any = {
+    title: "",
+    subHeader: ""
+  }
   constructor(
     public dialogRef: MatDialogRef<ShareDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+      console.log("Params ", this.data);
+      this.dialogData = this.data;
+    }
  
   shareViaEmail() {
     this.dialogRef.close("share");
@@ -29,7 +36,6 @@ export class ShareDialogComponent {
 
   downloadAsPDF() {
     this.dialogRef.close("download");
-    
   }
   cancel() {
     this.dialogRef.close();

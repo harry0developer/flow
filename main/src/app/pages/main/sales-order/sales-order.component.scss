@@ -71,32 +71,7 @@
     }
 }
 
-.no-sales-order {
-    border:1px solid #ffae1f;
-    border-radius: 4px;
-}
-
-.has-sales-order {
-    border:1px solid #44b7f7;
-    border-radius: 4px;
-}
-
-.no-sales-order, .has-sales-order {
-    padding: 10px;
-    text-align: center;
-    width: 140px;
-}
-
 .align-btn-right {
     text-align: right;
 }
 
-.invoiced-badge {
-    background-color: #10b0fa;
-    color: #FFF;
-    width: 21cm;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 10px;
-    z-index: 99999;
-}

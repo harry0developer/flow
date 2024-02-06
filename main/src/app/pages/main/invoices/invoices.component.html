@@ -7,139 +7,15 @@
   [fullScreen]="true">
     <p style="color: #018c8c"> Loading... </p>
 </ngx-spinner>
+ 
 
-<mat-card class="cardWithShadow theme-card">
-  <!-- PDF Document  -->
-  <div id="contentToConvert" *ngIf="currentCompany && activeInvoice" class="invoice-document-preview">
-    <div class="row">
-      <div class="col-6 company-from">
-        <h2 class="name">
-          {{ currentCompany.name }}
-        </h2>
-
-        <div class="address">
-          <p *ngFor='let address of formatAddress(currentCompany.billingAddress)'>
-            {{address}}
-          </p> 
-          <br>
-          <b>Phone:</b>{{ currentCompany.phoneNumber }}<br>
-          <b>Email:</b>{{ currentCompany.emailAddress }}<br>
-          <b>Website:</b>{{ currentCompany.website }} <br>
-          <b>VAT Registration No:</b>{{ currentCompany.VATNumber }}<br>
-          <b>Business ID No:</b>{{ currentCompany.registrationNumber }}<br>
-          <br>
-        </div>
-      </div>
-
-      <div class="col-6 company-from-logo" >
-        <img src="assets/images/logos/matswelapele.png" alt="">
-        <div class="banking-details m-t-32">
-          <h3>Banking Details</h3>
-          <p><b>Bank name: </b>{{ currentCompany.bankDetails.bankName }}</p>
-          <p><b>Account No: </b>{{ currentCompany.bankDetails.accountNumber }}</p>
-          <p><b>Branch Code: </b>{{ currentCompany.bankDetails.branchCode }}</p>
-          <p><b>Reference: </b>{{activeInvoice.invoiceNo}}</p>
-        </div>
-      </div> 
-    </div>
-    <hr>
-    <!-- Bill To -->
-    <h1>Invoice</h1>
-    <h3 class="m-0">Bill to:</h3>
-    <div class="row m-b-12">
-      <div class="col-6 company-to">
-        <h2 class="name">
-          {{activeInvoice.customer.name}}
-        </h2>
-        
-        <div class="address" *ngIf="activeInvoice?.customer?.billingAddress">
-          <p *ngFor='let address of formatAddress(activeInvoice.customer.billingAddress)'>
-            {{address}}
-          </p>
-        </div>
-        <h4 class="vat-no">VAT No. {{currentCompany.VATNumber}}</h4>
-      </div>
-
-      <div class="col-6 qoute-info" >
-         <p><b>Invoice No: </b>{{activeInvoice.invoiceNo}}</p>
-         <p><b>Date created: </b>{{formatDate(activeInvoice.invoiceDate)}} </p>
-         <p><b>Terms: </b>{{activeInvoice.invoiceTerm}} days</p>
-         <p><b>Due date: </b>{{formatDate(activeInvoice.invoiceDueDate)}}</p>
-      </div> 
-    </div>
-
-    <!-- table  -->
-
-    <div class="row">
-      <div class="col-12">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col" class="col-3">Stock Code</th>
-              <th scope="col" class="col-3">Description</th>
-              <th scope="col" class="col-1">Qty</th>
-              <th scope="col">Unit Price</th>
-              <th scope="col">VAT</th>
-              <th scope="col">Total Price Excl</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of activeInvoice?.items"> 
-              <td class="col-3">{{item.stockCode}}</td> 
-              <td class="col-3">{{item.description}}</td> 
-              <td class="col-1">{{item.quantity}}</td> 
-              <td>{{item.sellingPrice | currency:'R'}}</td> 
-              <td>{{item.VAT}}</td> 
-              <td>{{ +item.sellingPrice * +item.quantity | currency:'R'}}</td> 
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="clear-white-space"></div>
-
-    <div class="row">
-      <div class="col-6"></div>
-      <div class="col-6">
-        <table> 
-          <tbody class="align-end">
-            <tr > 
-              <td scope="col" class="col-12">Total Price Exclusive</td>
-              <td scope="col" class="col-12">{{activeInvoice.totalPriceExclusive | currency:'R'}}</td>
-            </tr>
-            <tr>
-              <td scope="col" class="col-12">Total VAT</td>
-               <td scope="col" class="col-12">{{activeInvoice.totalVAT | currency:'R'}}</td>
-            </tr>
-            <tr>
-              <td scope="col" class="col-12">Total Price Discount</td>
-               <td scope="col" class="col-12">{{activeInvoice.totalPriceDiscount | currency:'R'}}</td>
-            </tr>
-            <tr>
-              <td scope="col" class="col-12"><b>Total Price Inclusive</b></td>
-               <td scope="col" class="col-12"><b>{{activeInvoice.totalPriceInclusive | currency:'R'}}</b></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <hr>
-
-        
-      </div>
-      <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos optio quo accusamus ex, qui nostrum delectus iure in quibusdam eligendi molestias modi quaerat odio temporibus, ducimus, dicta cum quidem ea!</p>
-    </div>
-  </div>
-  <!-- PDF Document  -->
-</mat-card>
-
-<mat-card class="cardWithShadow invoice-page">
+<mat-card *ngIf="!editInvoiceMode" class="cardWithShadow invoice-page">
   <mat-card-content class="p-24 align-center p-t-32 p-b-32" *ngIf="invoices.length < 1">
     <div class="big-icon m-b-32">
       <img src="assets/images/icons/invoices.png" alt="">
     </div>
     <mat-card-title class="m-b-0">No invoices available</mat-card-title>  
-    <p class="m-0">You can generate an invoice from the Quote tab</p>
+    <p class="m-0">You can generate an invoice from the invoice tab</p>
   </mat-card-content>
   <mat-card-content class="p-24" *ngIf="invoices.length > 0">
     <mat-card-title class="m-b-0">Invoices</mat-card-title>    
@@ -162,16 +38,16 @@
 
         <!-- invoiceDate Column -->
         <ng-container matColumnDef="invoiceDate">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          class="f-w-600 mat-subtitle-1 f-s-14"
-        >
-        Invoice Date
-        </th>
-        <td mat-cell *matCellDef="let element">
-            {{formatDate(element.invoiceDate)}}
-        </td>
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Invoice Date
+          </th>
+          <td mat-cell *matCellDef="let element">
+              {{formatDate(element.invoiceDate)}}
+          </td>
         </ng-container>
 
         <!-- quoteNo Column -->
@@ -181,10 +57,10 @@
             *matHeaderCellDef
             class="f-w-600 mat-subtitle-1 f-s-14"
             >
-            Invoice Date
+            Create By
           </th>
           <td mat-cell *matCellDef="let element">
-              {{formatDate(element.quoteNo)}}
+              {{element.createdBy.firstName}} {{element.createdBy.lastName}}
           </td>
         </ng-container>
 
@@ -199,6 +75,35 @@
           </th>
           <td mat-cell *matCellDef="let element">
              {{element.totalPriceInclusive | currency:'R'}}
+          </td>
+        </ng-container>
+
+         <!-- Invoiced Column -->
+         <ng-container matColumnDef="salesOrder">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Sales Order
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <ng-template [ngIf]="element.hasSalesOrder">
+            <div
+              class="has-sales-order"
+            >
+              Has Sales Order
+            </div>
+            </ng-template> 
+
+            <ng-template [ngIf]="!element.hasSalesOrder">
+              <div
+                class="no-sales-order"
+              >
+              No Sales Order
+              </div>
+            </ng-template>
+
           </td>
         </ng-container>
 
@@ -237,4 +142,163 @@
       </table>
     </div>
   </mat-card-content>
+</mat-card>
+
+
+<mat-card *ngIf="editInvoiceMode" class="process-invoice">
+  <mat-card-title class="p-24 b-b-1">
+    <div class="row">
+        <section class="col-9">
+          <div class="invoice-action-menu">
+            <a [href]="mailToString" target="_top"
+              mat-button color="primary">
+              <mat-icon>mail</mat-icon>
+              Send via Email
+            </a>
+            <button mat-button color="primary" (click)="downloadAsPDF()">
+              <mat-icon>picture_as_pdf</mat-icon>
+              Download as PDF
+            </button>  
+
+            <button mat-button color="primary" *ngIf="!activeInvoice.hasSalesOrder" (click)="generateSalesOrder()">
+              <mat-icon>request_quote</mat-icon>
+              Generate Sales Order
+            </button> 
+          </div>
+        </section>
+        <div class="col-3 align-btn-right">
+          <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+        </div>
+    </div>
+  </mat-card-title>
+</mat-card>
+
+<div *ngIf="editInvoiceMode && activeInvoice.hasSalesOrder" class="invoiced-badge">Has Sales Order</div>
+
+<mat-card *ngIf="activeInvoice">
+
+    <!-- PDF Document  -->
+    <div id="invoiceDocument" *ngIf="currentCompany" class="cardWithShadow invoice-document-preview" [ngClass]="{'hide-document': !editInvoiceMode}">
+      <div class="row">
+        <div class="col-6 company-from">
+          <h2 class="name">
+            {{ currentCompany.name }}
+          </h2>
+  
+          <div class="address">
+            <p *ngFor='let address of formatAddress(currentCompany.billingAddress)'>
+              {{address}}
+            </p>
+             
+            <br>
+            <b>Phone:</b>{{ currentCompany.phoneNumber }}<br>
+            <b>Email:</b>{{ currentCompany.emailAddress }}<br>
+            <b>Website:</b>{{ currentCompany.website }} <br>
+            <b>VAT Registration No:</b>{{ currentCompany.VATNumber }}<br>
+            <b>Business ID No:</b>{{ currentCompany.registrationNumber }}<br>
+            <br>
+          </div>
+        </div>
+  
+        <div class="col-6 company-from-logo" >
+          <img src="assets/images/logos/matswelapele.png" alt="">
+          <div class="banking-details m-t-32">
+            <h3>Banking Details</h3>
+            <p><b>Bank name: </b>{{ currentCompany.bankDetails.bankName }}</p>
+            <p><b>Account No: </b>{{ currentCompany.bankDetails.accountNumber }}</p>
+            <p><b>Branch Code: </b>{{ currentCompany.bankDetails.branchCode }}</p>
+            <p><b>Reference: </b>{{ activeInvoice.invoiceNo }}</p>
+          </div>
+        </div> 
+      </div>
+  
+      <hr>
+      <!-- Bill To -->
+      <h1>Invoice</h1>
+      <h3 class="m-0">Bill to:</h3>
+      <div class="row">
+        <div class="col-6 company-to">
+          <h2 class="name">
+            {{activeInvoice.customer.name}}
+          </h2>
+          
+          <div class="address" *ngIf="activeInvoice?.customer?.billingAddress">
+            <p *ngFor='let address of formatAddress(activeInvoice.customer.billingAddress)'>
+              {{address}}
+            </p>
+          </div>
+          <h4 class="vat-no">VAT No. {{currentCompany.VATNumber}}</h4>
+        </div>
+  
+        <div class="col-6 qoute-info" >
+           <p><b>Invoice No: </b>{{activeInvoice.invoiceNo}}</p>
+           <p><b>Date created: </b>{{formatDate(activeInvoice.invoiceDate)}} </p>
+           <p><b>Terms: </b>{{activeInvoice.invoiceTerm}}</p>
+           <p><b>Due date: </b>{{formatDate(activeInvoice.invoiceDueDate)}}</p>
+        </div> 
+      </div>
+  
+      <!-- table  -->
+  
+      <div class="row">
+        <div class="col-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="col-3">Name</th>
+                <th scope="col" class="col-3">Stock Code</th>
+                <th scope="col" class="col-3">Description</th>
+                <th scope="col" class="col-1">Qty</th>
+                <th scope="col">Unit Price</th>
+                <th scope="col">VAT</th>
+                <th scope="col">Total Price Excl</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of activeInvoice?.quote?.items"> 
+                <td class="col-3">{{item.name}}</td> 
+                <td class="col-3">{{item.stockCode}}</td> 
+                <td class="col-3">{{item.description}}</td> 
+                <td class="col-1">{{item.quantity}}</td> 
+                <td>{{item.sellingPrice | currency:'R'}}</td> 
+                <td>{{item.VAT}}</td> 
+                <td>{{ +item.sellingPrice * +item.quantity | currency:'R'}}</td> 
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="clear-white-space"></div>
+      <div class="row">
+        <div class="col-6"></div>
+        <div class="col-6">
+          <table> 
+            <tbody class="align-end">
+              <tr > 
+                <td scope="col" class="col-12">Total Price Exclusive</td>
+                <td scope="col" class="col-12">{{activeInvoice.totalPriceExclusive | currency:'R'}}</td>
+              </tr>
+              <tr>
+                <td scope="col" class="col-12">Total VAT</td>
+                 <td scope="col" class="col-12">{{activeInvoice.totalVAT | currency:'R'}}</td>
+              </tr>
+              <tr>
+                <td scope="col" class="col-12">Total Price Discount</td>
+                 <td scope="col" class="col-12">{{activeInvoice.totalPriceDiscount | currency:'R'}}</td>
+              </tr>
+              <tr>
+                <td scope="col" class="col-12"><b>Total Price Inclusive</b></td>
+                 <td scope="col" class="col-12"><b>{{activeInvoice.totalPriceInclusive | currency:'R'}}</b></td>
+              </tr>
+            </tbody>
+          </table>
+  
+          <hr>
+  
+          
+        </div>
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos optio quo accusamus ex, qui nostrum delectus iure in quibusdam eligendi molestias modi quaerat odio temporibus, ducimus, dicta cum quidem ea!</p>
+      </div>
+    </div>
+  <!-- PDF Document  -->
 </mat-card>
