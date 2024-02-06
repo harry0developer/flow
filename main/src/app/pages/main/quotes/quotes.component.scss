@@ -35,12 +35,9 @@
 .company-document-preview {
     padding: 60px;
     width: 21cm;
-    height: 29.7cm; 
-
-
+    height: 29.7cm;  
     position: absolute;
     background-color: #fff;
- 
     .company-from-logo {
 
         text-align: right;
@@ -143,7 +140,25 @@
     }
 }
 
- 
+
+.not-invoiced {
+    border:1px solid #ffae1f;
+    border-radius: 4px;
+}
+
+.invoiced {
+    border:1px solid #44b7f7;
+    border-radius: 4px;
+}
+
+.invoiced , .not-invoiced {
+    // color: #FFF;
+    padding: 10px;
+    text-align: center;
+    width: 140px;
+}
+
+
 .address {
     line-height: 1.2;
     p{
@@ -190,3 +205,16 @@
     }
 }
  
+.invoiced-badge {
+    background-color: #10b0fa;
+    color: #FFF;
+    width: 21cm;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    z-index: 99999;
+}
+
+.align-btn-right {
+    text-align: right;
+}

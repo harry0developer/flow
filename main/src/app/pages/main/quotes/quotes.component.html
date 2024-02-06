@@ -10,15 +10,15 @@
 
 <mat-card *ngIf="!editMode" class="cardWithShadow theme-card">
    
-    <mat-card-title class="p-24 b-b-1">
-      <div class="row">
-        <div class="col-md-9 col-sm-6">  
-        </div>
-        <div class="col-md-3 col-sm-6 align-end">
-          <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="createQuote()">Create New Quote</button>
-        </div>
+  <mat-card-title class="p-24 b-b-1">
+    <div class="row">
+      <div class="col-md-9 col-sm-6">  
       </div>
-    </mat-card-title>
+      <div class="col-md-3 col-sm-6 align-end">
+        <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="createQuote()">Create New Quote</button>
+      </div>
+    </div>
+  </mat-card-title>
 
   <!-- PDF Document  -->
   <div id="contentToConvert" *ngIf="currentCompany" class="company-document">
@@ -53,8 +53,6 @@
           <p><b>Reference: </b>{{selectedQuote.quoteNo}}</p>
         </div>
       </div> 
-
-      
     </div>
 
     <hr>
@@ -111,7 +109,9 @@
         </table>
       </div>
     </div>
+
     <div class="clear-white-space"></div>
+
     <div class="row">
       <div class="col-6"></div>
       <div class="col-6">
@@ -136,9 +136,7 @@
           </tbody>
         </table>
 
-        <hr>
-
-        
+        <hr> 
       </div>
       <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos optio quo accusamus ex, qui nostrum delectus iure in quibusdam eligendi molestias modi quaerat odio temporibus, ducimus, dicta cum quidem ea!</p>
     </div>
@@ -183,34 +181,6 @@
              {{formatDate(element.quoteDate)}}
           </td>
         </ng-container>
-
-         <!-- name Column -->
-         <ng-container matColumnDef="name">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            class="f-w-600 mat-subtitle-1 f-s-14"
-          >
-          Company Name
-          </th>
-          <td mat-cell *matCellDef="let element">
-             {{element.customer?.name}}
-          </td>
-        </ng-container>
-
-        <!-- contactPerson Column -->
-        <ng-container matColumnDef="contactPerson">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            class="f-w-600 mat-subtitle-1 f-s-14"
-          >
-          Contact Person
-          </th>
-          <td mat-cell *matCellDef="let element">
-             {{element.customer?.contactPerson.title}} {{element.customer?.contactPerson.firstName}} {{element.customer?.contactPerson.lastName}}
-          </td>
-        </ng-container>
  
         <!-- totalPriceInclusive Column -->
         <ng-container matColumnDef="totalPriceInclusive">
@@ -219,10 +189,39 @@
             *matHeaderCellDef
             class="f-w-600 mat-subtitle-1 f-s-14"
           >
-          Total Price Inclusive
+          Total Price
           </th>
           <td mat-cell *matCellDef="let element">
              {{element.totalPriceInclusive | currency:'R'}}
+          </td>
+        </ng-container>
+
+        <!-- Invoiced Column -->
+        <ng-container matColumnDef="invoiced">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+          Invoiced
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <ng-template [ngIf]="element.invoiced">
+            <div
+              class="invoiced"
+            >
+              Invoiced
+            </div>
+            </ng-template> 
+
+            <ng-template [ngIf]="!element.invoiced">
+              <div
+                class="not-invoiced"
+              >
+              Not Invoiced
+              </div>
+            </ng-template>
+
           </td>
         </ng-container>
 
@@ -235,7 +234,7 @@
           > </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
             <button color="primary" (click)="processQuote(element)" mat-mini-fab>
-              <mat-icon>request_quote</mat-icon>
+              <mat-icon>edit_document</mat-icon>
             </button>
             
           </td>
@@ -422,36 +421,36 @@
 <mat-card *ngIf="editMode && processQuoteMode" class="process-quote">
   <mat-card-title class="p-24 b-b-1">
     <div class="row">
-      
-        <section>
+        <section class="col-9">
           <div class="quote-action-menu">
-            <button mat-button color="primary" (click)="editQuoteForInvoicing()">
-              <mat-icon>edit</mat-icon>
-              Edit
-            </button>
             <a [href]="mailToString" target="_top"
               mat-button color="primary">
               <mat-icon>mail</mat-icon>
-              Email
+              Send via Email
             </a>
             <button mat-button color="primary" (click)="downloadAsPDF()">
               <mat-icon>picture_as_pdf</mat-icon>
               Download as PDF
             </button> 
 
-            <button mat-button color="primary" (click)="generateInvoiceFromQuote()">
+            <button mat-button color="primary" *ngIf="!selectedQuote.invoiced" (click)="generateInvoiceFromQuote()">
               <mat-icon>receipt_long</mat-icon>
-              Convert To Invoice
+              Generate Invoice
             </button>
-
           </div>
 
         
         </section>
-        <!-- <button mat-raised-button color="primary" class="m-t-12 m-b-12" (click)="generateInvoice()">Generate Invoice</button> -->
+
+        <div class="col-3 align-btn-right">
+          <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+        </div>
     </div>
   </mat-card-title>
 </mat-card>
+
+<div *ngIf="editMode && processQuoteMode && selectedQuote.invoiced" class="invoiced-badge">Invoiced</div>
+
 <mat-card *ngIf="editMode && processQuoteMode">
 
     <!-- PDF Document  -->
@@ -463,7 +462,7 @@
         </h2>
 
         <div class="address">
-          <p *ngFor='let address of currentCompany?.billingAddress?.split("\n")'>
+          <p *ngFor='let address of formatAddress(currentCompany.billingAddress)'>
             {{address}}
           </p>
            
@@ -502,7 +501,7 @@
         </h2>
         
         <div class="address" *ngIf="selectedQuote?.customer?.billingAddress">
-          <p *ngFor='let address of selectedQuote.customer.billingAddress.split(",")'>
+          <p *ngFor='let address of formatAddress(selectedQuote.customer.billingAddress)'>
             {{address}}
           </p>
         </div>

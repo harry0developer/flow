@@ -18,7 +18,7 @@ import { Inventory } from 'src/app/models/inventory';
   styleUrls: ['./inventory.component.scss']
 })
 export class AppInventoryComponent {
-  displayedColumns: string[] = ['photo','name','description', 'stockCode', 'quantity' ,'costPrice','discountPrice', 'totalPrice', 'actionButton'];
+  displayedColumns: string[] = ['photo','name','description', 'stockCode', 'quantity' ,'costPrice','sellingPrice', 'totalPrice', 'actionButton'];
    
   editMode: boolean = false;
   isNewInventoryItem: boolean = false;

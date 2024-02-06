@@ -9,6 +9,7 @@ import { Customer } from '../models/customer';
 import { Quote } from '../models/quote';
 import { Company } from '../models/company';
 import { Auth } from '../models/auth';
+import { Invoice } from '../models/invoice';
 
 
 @Injectable({
@@ -39,36 +40,36 @@ export class DataService {
     return JSON.parse(localStorage.getItem(key) || '{}');
   }
 
-  getAll(collection: string): Observable<User | Inventory | Quote| Company | Customer> {
-    return this.httpClient.get<User | Inventory | Quote| Company | Customer>(this.apiServer + collection)
+  getAll(collection: string): Observable<User | Inventory | Quote| Company | Customer | Invoice> {
+    return this.httpClient.get<User | Inventory | Quote| Company | Customer | Invoice>(this.apiServer + collection)
     .pipe(
       catchError(this.errorHandler)
     );
   }
 
-  getById(collection: string, item: User | Inventory | Quote| Company | Customer): Observable<User | Inventory | Quote| Company | Customer> {
-    return this.httpClient.get<User | Inventory | Quote| Company | Customer>(this.apiServer + collection + "/"+ item._id)
+  getById(collection: string, item: User | Inventory | Quote| Company | Customer | Invoice): Observable<User | Inventory | Quote| Company | Customer | Invoice> {
+    return this.httpClient.get<User | Inventory | Quote| Company | Customer | Invoice>(this.apiServer + collection + "/"+ item._id)
     .pipe(
       catchError(this.errorHandler)
     );
   }
 
-  delete(collection: string, item: User | Inventory | Quote| Company | Customer): Observable<User | Inventory | Quote| Company | Customer> {
-    return this.httpClient.delete<User | Inventory | Quote| Company | Customer>(this.apiServer + collection + "/"+ item._id)
+  delete(collection: string, item: User | Inventory | Quote| Company | Customer | Invoice): Observable<User | Inventory | Quote| Company | Customer | Invoice> {
+    return this.httpClient.delete<User | Inventory | Quote| Company | Customer | Invoice>(this.apiServer + collection + "/"+ item._id)
     .pipe(
       catchError(this.errorHandler)
     );
   }
 
-  addItem(item: User | Inventory | Quote| Company | Customer, collection: string): Observable<User | Inventory | Quote| Company | Customer> {
-    return this.httpClient.post<User | Inventory | Quote| Company | Customer>(this.apiServer + collection , item, this.httpOptions)
+  addItem(item: User | Inventory | Quote| Company | Customer | Invoice, collection: string): Observable<User | Inventory | Quote| Company | Customer | Invoice> {
+    return this.httpClient.post<User | Inventory | Quote| Company | Customer | Invoice>(this.apiServer + collection , item, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )
   }   
 
-  updateItem(item: User | Inventory | Quote| Company | Customer, collection: string): Observable<User | Inventory | Quote| Company | Customer> {
-    return this.httpClient.put<User | Inventory | Quote| Company | Customer>(this.apiServer + collection, item, this.httpOptions)
+  updateItem(item: User | Inventory | Quote| Company | Customer | Invoice, collection: string): Observable<User | Inventory | Quote| Company | Customer | Invoice> {
+    return this.httpClient.put<User | Inventory | Quote| Company | Customer | Invoice>(this.apiServer + collection, item, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )

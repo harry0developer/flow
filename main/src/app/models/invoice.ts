@@ -2,13 +2,12 @@ import { Company } from "./company";
 import { Customer } from "./customer";
 import { Inventory } from "./inventory";
 
-export interface Quote {
+export interface Invoice {
   _id?: string;
-  quoteNo: string;
-  quoteDate: Date;
-  quoteStartDate: Date;
-  quoteDueDate: Date;
-  quoteTerm: number;
+  invoiceNo: string;
+  invoiceDate: Date;
+  invoiceDueDate: Date;
+  invoiceTerm: string | number;
   customer: Customer;
   company: Company;
   items: Inventory[],
@@ -16,7 +15,7 @@ export interface Quote {
   totalVAT: number;
   totalPriceDiscount: number;
   totalPriceInclusive: number;
-  invoiced: boolean;
+  quote: string | undefined;
   createdOn?: Date;
   createdBy?: string; 
   updatedOn?: Date;
