@@ -15,6 +15,10 @@ import {
   ApexMarkers,
   ApexResponsive,
 } from 'ng-apexcharts';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { COLLECTION } from 'src/app/const/util';
+import { Customer } from 'src/app/models/customer';
+import { DataService } from 'src/app/services/data.service';
 
 interface month {
   value: string;
@@ -137,8 +141,8 @@ export class AppDashboardComponent {
   public yearlyChart!: Partial<yearlyChart> | any;
   public monthlyChart!: Partial<monthlyChart> | any;
 
-  displayedColumns: string[] = ['assigned', 'name', 'priority', 'budget'];
-  dataSource = ELEMENT_DATA;
+  displayedColumns: string[] = ['contactPerson', 'companyName', 'quotes', 'invoices'];
+  customers: Customer[] = [];
 
   months: month[] = [
     { value: 'mar', viewValue: 'March 2023' },
@@ -221,7 +225,10 @@ export class AppDashboardComponent {
     },
   ];
 
-  constructor() {
+  constructor(
+    private dataService: DataService,
+    private spinner: NgxSpinnerService,
+    ) {
     // sales overview chart
     this.salesOverviewChart = {
       series: [
@@ -401,4 +408,20 @@ export class AppDashboardComponent {
       },
     };
   }
+
+  ngOnInit(): void {
+    this.getCustomers();
+  }
+
+  getCustomers() {
+    this.spinner.show();
+    this.dataService.getAll(COLLECTION.CUSTOMERS).subscribe((customers: any) => {
+      console.log("customers ", customers);
+      this.customers = customers;
+      this.spinner.hide();
+    }, err => {
+      this.spinner.hide()
+    });
+  }
+  
 }

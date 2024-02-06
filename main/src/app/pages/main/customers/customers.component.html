@@ -230,10 +230,13 @@
 </mat-card>
 
 
-<mat-card class="cardWithShadow theme-card" *ngIf="!editMode && customers.length < 1">
+<mat-card class="cardWithShadow theme-card no-customers" *ngIf="!editMode && customers.length < 1">
   <mat-card-content class="p-24">
+    <div class="big-icon m-b-32">
+      <img src="assets/images/icons/customers.png" alt="">
+    </div>
     <mat-card-title class="m-b-0">No customers</mat-card-title>  
-    <p>You have not added customer, please add customers to be able to generate quotations</p>
+    <p>You have not added customers, please add a customer to be able to generate a quote</p>
   </mat-card-content>
 </mat-card>
 

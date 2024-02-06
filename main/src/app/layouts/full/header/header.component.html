@@ -33,12 +33,12 @@
     />
   </button>
   <mat-menu #profilemenu="matMenu" class="topbar-dd cardWithShadow">
-    <button mat-menu-item>
+    <a mat-menu-item [routerLink]="['/main/profile']">
       <mat-icon class="d-flex align-items-center"
         ><i-tabler name="user" class="icon-18 d-flex"></i-tabler></mat-icon
       >My Profile
-    </button>
-    <button mat-menu-item>
+    </a>
+    <!-- <button mat-menu-item>
       <mat-icon class="d-flex align-items-center"
         ><i-tabler name="mail" class="icon-18 d-flex"></i-tabler></mat-icon
       >My Account
@@ -50,7 +50,7 @@
           class="icon-18 d-flex"
         ></i-tabler></mat-icon
       >My Task
-    </button>
+    </button> -->
 
     <div class="p-x-12 m-t-12">
       <button

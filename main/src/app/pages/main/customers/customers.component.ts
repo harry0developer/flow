@@ -166,9 +166,13 @@ export class AppCustomersComponent {
   }
 
   getCustomers() {
-    this.dataService.getAll(COLLECTION.CUSTOMERS).forEach((customers: any) => {
+    this.spinner.show();
+    this.dataService.getAll(COLLECTION.CUSTOMERS).subscribe((customers: any) => {
       console.log("customers ", customers);
       this.customers = customers;
+      this.spinner.hide();
+    }, err => {
+      this.spinner.hide();
     });
   }
   

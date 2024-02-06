@@ -145,7 +145,10 @@
 </mat-card>
 
 <mat-card *ngIf="!editMode" class="cardWithShadow">
-  <mat-card-content class="p-24" *ngIf="quotes.length < 1">
+  <mat-card-content class="p-24 no-quotes" *ngIf="quotes.length < 1">
+    <div class="big-icon m-b-32">
+      <img src="assets/images/icons/invoices.png" alt="">
+    </div>
     <mat-card-title class="m-b-0">No quotations available</mat-card-title>  
     <p>You have not created quotations</p>
   </mat-card-content>

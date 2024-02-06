@@ -18,18 +18,14 @@ const routes: Routes = [
         path: 'dashboard',
         loadChildren: () =>
           import('./pages/pages.module').then((m) => m.PagesModule),
+          canActivate: [AuthGuard]
       },
       {
         path: 'main',
         loadChildren: () =>
           import('./pages/main/main.module').then((m) => m.MainModule),
           canActivate: [AuthGuard]
-      }, 
-      {
-        path: 'extra',
-        loadChildren: () =>
-          import('./pages/extra/extra.module').then((m) => m.ExtraModule),
-      },
+      }
     ],
   },
   {

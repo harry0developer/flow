@@ -24,8 +24,8 @@ import { AppInventoryComponent } from './inventory/inventory.component';
 import { AppQuotesComponent } from './quotes/quotes.component';
 import { AppManageComponent } from './manage/manage.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { AppProfileComponent } from './profile/profile.component';
 import { ShareDialogComponent } from './quotes/share/share.component';
+import { AppProfileComponent } from './profile/profile.component';
 
 @NgModule({
   imports: [

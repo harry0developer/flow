@@ -164,7 +164,10 @@
 
 
 <mat-card class="cardWithShadow theme-card" *ngIf="!editMode && inventoryItems.length < 1">
-  <mat-card-content class="p-24">
+  <mat-card-content class="p-24 no-items">
+    <div class="big-icon m-b-32">
+      <img src="assets/images/icons/inventory.png" alt="">
+    </div>
     <mat-card-title class="m-b-0">Not items in the inventory</mat-card-title>  
     <p>You have not added items in the inventory</p>
   </mat-card-content>
