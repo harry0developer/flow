@@ -1,7 +1,9 @@
 import { Company } from "./company";
 import { Customer } from "./customer";
 import { Invoice } from "./invoice";
+import { PurchaseOrder } from "./purchase-order";
 import { Quote } from "./quote";
+import { User } from "./user";
 
 export interface SalesOrder {
     _id?: string;
@@ -9,10 +11,10 @@ export interface SalesOrder {
     salesOrderDate: Date;
     customer: Customer;
     company: Company;
-    quote: Quote;
-    invoice: Invoice;
+    quote?: Quote | any;
+    purchaseOrder?: PurchaseOrder | string;
     createdOn?: Date;
-    createdBy?: any;
+    createdBy?: User | any; 
     updatedOn?: Date;
-    updatedBy?: string;
+    updatedBy?: User | any;
 }

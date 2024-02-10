@@ -1,4 +1,12 @@
-<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-atom" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+<ngx-spinner 
+  bdColor="rgba(255, 255, 255, 0.9)" 
+  size="medium" 
+  color="#018c8c" 
+  type="ball-atom" 
+  class="spinner"
+  [fullScreen]="true">
+    <p style="color: #018c8c"> Loading... </p>
+</ngx-spinner>
 
 <mat-card *ngIf="editMode" class="cardWithShadow">
   <mat-card-content class="p-24">

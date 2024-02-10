@@ -8,7 +8,7 @@
     <p style="color: #018c8c"> Loading... </p>
 </ngx-spinner>
 
-<mat-card *ngIf="!editMode" class="cardWithShadow theme-card">
+<mat-card *ngIf="!isEditQuoteMode && !isPreviewQuoteMode" class="cardWithShadow theme-card">
    
   <mat-card-title class="p-24 b-b-1">
     <div class="row">
@@ -144,7 +144,7 @@
   <!-- PDF Document  -->
 </mat-card>
 
-<mat-card *ngIf="!editMode" class="cardWithShadow">
+<mat-card *ngIf="!isEditQuoteMode && !isPreviewQuoteMode" class="cardWithShadow">
   <mat-card-content class="p-24 no-quotes" *ngIf="quotes.length < 1">
     <div class="big-icon m-b-32">
       <img src="assets/images/icons/invoices.png" alt="">
@@ -167,7 +167,7 @@
           Quote No
           </th>
           <td mat-cell *matCellDef="let element">
-             {{element.quoteNo}}
+             {{element.quoteNo || quoteToProcess.quoteNo}}
           </td>
         </ng-container>
 
@@ -199,7 +199,6 @@
           </td>
         </ng-container>
 
-        
         <!-- totalPriceInclusive Column -->
         <ng-container matColumnDef="totalPriceInclusive">
           <th
@@ -214,60 +213,48 @@
           </td>
         </ng-container>
 
-        <!-- Invoiced Column -->
-        <ng-container matColumnDef="invoiced">
+        <!-- Sale Order Column -->
+        <ng-container matColumnDef="hasSalesOrder">
           <th
             mat-header-cell
             *matHeaderCellDef
             class="f-w-600 mat-subtitle-1 f-s-14"
           >
-          Invoiced
+          Has Sales Order
           </th>
           <td mat-cell *matCellDef="let element">
-            <ng-template [ngIf]="element.invoiced">
+            <ng-template [ngIf]="element.hasSalesOrder">
             <div
-              class="invoiced"
+              class="highlight"
             >
-              Invoiced
+              Has Sales Order
             </div>
             </ng-template> 
 
-            <ng-template [ngIf]="!element.invoiced">
+            <ng-template [ngIf]="!element.hasSalesOrder">
               <div
-                class="not-invoiced"
+                class="lowlight"
               >
-              Not Invoiced
+              No Sales Order
               </div>
             </ng-template>
 
           </td>
         </ng-container>
 
-        <!-- Action Column -->
-        <ng-container matColumnDef="viewButton">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            class="f-w-600 mat-subtitle-1 f-s-14"
-          > </th>
-          <td mat-cell *matCellDef="let element" class="mat-body-1">
-            <button color="primary" (click)="processQuote(element)" mat-mini-fab>
-              <mat-icon>edit_document</mat-icon>
-            </button>
-            
-          </td>
-        </ng-container>
+    
 
         <!-- Action Column -->
-        <ng-container matColumnDef="shareButton">
+        <ng-container matColumnDef="manageAction">
           <th
             mat-header-cell
             *matHeaderCellDef
             class="f-w-600 mat-subtitle-1 f-s-14"
           > </th>
           <td mat-cell *matCellDef="let element" class="mat-body-1">
-            <button color="primary" (click)="generateQouteDocument(element)" mat-mini-fab>
-              <mat-icon>download</mat-icon>
+            <button color="primary" (click)="manageAndShareQuote(element)"  
+              mat-raised-button 
+              color="primary" > Manage
             </button>
             
           </td>
@@ -280,19 +267,27 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="editMode && !processQuoteMode" class="cardWithShadow">
+<!-- Edit Quote Info form  -->
+<mat-card *ngIf="isEditQuoteMode && !isPreviewQuoteMode" class="cardWithShadow">
   <mat-card-content class="p-32">
     <mat-card-title class=" b-b-1">
       <div class="row">
         <div class="col-8 col-md-6 title"> 
-          <h3>Create Quote</h3>
+          <h3 *ngIf="isEditQuoteMode && isNewQuote">Create New Quote</h3>
+          <h3 *ngIf="isEditQuoteMode && !isNewQuote">Edit Quote</h3>
         </div>
         <div class="col-4 col-md-6 align-end btn-group">
             <button mat-raised-button color="primary" 
               class="m-t-12 m-b-12 m-r-3" 
-              [disabled]="!quoteForm?.valid || !customerFormControl.touched || !customerFormControl.value 
-              || !inventoryFormControl.touched || !inventoryFormControl.value"
-              (click)="createNewQuote()">Generate Quote</button>
+              *ngIf="isEditQuoteMode && isNewQuote"
+              [disabled]="!quoteForm?.valid || dynamicArray.length < 1"
+              (click)="addOrUpdateQuote()">Create Quote</button>
+
+            <button mat-raised-button color="primary" 
+              class="m-t-12 m-b-12 m-r-3" 
+              [disabled]="!quoteForm?.valid"
+              *ngIf="isEditQuoteMode && !isNewQuote"
+              (click)="addOrUpdateQuote(false)">Update Quote</button> 
           <button mat-raised-button  color="warn" class="m-t-12 m-b-12" (click)="cancel()">Cancel</button>
         </div>
       </div>
@@ -305,9 +300,9 @@
           <h4 class="w-100">Quote Number</h4>
         </div>
 
-        <!-- <div class="col-md-9">
+        <div class="col-md-9">
            <h3>{{autoGeneratedQuoteNumber}}</h3>
-        </div> -->
+        </div>
       </div>
       
       <div class="row">
@@ -355,7 +350,9 @@
   </mat-card-content>
 </mat-card> 
 
-<mat-card *ngIf="editMode && !processQuoteMode" class="cardWithShadow inventory-form">
+
+<!-- Edit Inventoru form  -->
+<mat-card *ngIf="isEditQuoteMode && !isPreviewQuoteMode" class="cardWithShadow inventory-form">
   <mat-card-content class="p-24">
     <mat-card-title class="m-b-0">Add Items</mat-card-title>    
     <form> 
@@ -371,7 +368,10 @@
         </div> 
 
         <div class="col-md-3">
-          <button mat-raised-button  color="primary" class="add-item-btn" [disabled]="!inventoryFormControl.valid || !inventoryFormControl.touched || !inventoryFormControl.value" (click)="addNewItem()">Add</button>
+          <button mat-raised-button  color="primary" 
+            class="add-item-btn" 
+            [disabled]="!inventoryFormControl.valid || !inventoryFormControl.touched || !inventoryFormControl.value"
+            (click)="addNewItem()">Add</button>
         </div>
       </div>
 
@@ -424,11 +424,17 @@
 </mat-card> 
 
 
-<mat-card *ngIf="editMode && processQuoteMode" class="process-quote">
+<!-- Preview Mode Contro Buttons  -->
+<mat-card *ngIf="!isEditQuoteMode && isPreviewQuoteMode " class="process-quote">
   <mat-card-title class="p-24 b-b-1">
     <div class="row">
         <section class="col-9">
           <div class="quote-action-menu">
+            <button mat-button color="primary" *ngIf="!selectedQuote.hasSalesOrder" (click)="editQuoteToBeProcessed()">
+              <mat-icon>edit</mat-icon>
+              Edit Quote
+            </button>
+
             <a [href]="mailToString" target="_top"
               mat-button color="primary">
               <mat-icon>mail</mat-icon>
@@ -439,9 +445,9 @@
               Download as PDF
             </button> 
 
-            <button mat-button color="primary" *ngIf="!selectedQuote.invoiced" (click)="generateInvoiceFromQuote()">
+            <button mat-button color="primary" *ngIf="!selectedQuote.hasSalesOrder" (click)="generateSalesOrder()">
               <mat-icon>receipt_long</mat-icon>
-              Generate Invoice
+              Generate Sales Order
             </button>
           </div>
 
@@ -455,9 +461,10 @@
   </mat-card-title>
 </mat-card>
 
-<div *ngIf="editMode && processQuoteMode && selectedQuote.invoiced" class="invoiced-badge">Invoiced</div>
+<!-- Preview Mode Action Status  -->
+<div *ngIf="!isEditQuoteMode && isPreviewQuoteMode && selectedQuote.hasSalesOrder" class="status-badge">Has Sales Order</div>
 
-<mat-card *ngIf="editMode && processQuoteMode">
+<mat-card *ngIf="!isEditQuoteMode && isPreviewQuoteMode ">
     <!-- PDF Document  -->
   <div id="qouteDocument" *ngIf="currentCompany" class="cardWithShadow  company-document-preview">
     <div class="row">

@@ -29,14 +29,14 @@ export const navItems: NavItem[] = [
     route: '/main/qoutes',
   },
   {
-    displayName: 'Invoices',
-    iconName: 'file-check',
-    route: '/main/invoices',
-  },
-  {
     displayName: 'Sales Order',
     iconName: 'report-money',
     route: '/main/sales-order',
+  },
+  {
+    displayName: 'Invoices',
+    iconName: 'file-check',
+    route: '/main/invoices',
   },
   {
     displayName: 'Payment Recieved',

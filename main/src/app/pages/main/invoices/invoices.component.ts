@@ -17,7 +17,7 @@ import { User } from 'src/app/models/user';
 import { MatDialog } from '@angular/material/dialog';
 import { Invoice } from 'src/app/models/invoice';
 import { ShareDialogComponent } from '../quotes/share/share.component';
-import { SalesOrder } from 'src/app/models/sale-order';
+import { SalesOrder } from 'src/app/models/sales-order';
 
 @Component({
   selector: 'app-invoices',
@@ -97,8 +97,8 @@ export class AppInvoicesComponent {
       salesOrderDate: new Date(),
       customer: this.activeInvoice.customer,
       company: this.activeInvoice.company,
-      quote: this.activeInvoice.quote,
-      invoice: this.activeInvoice,
+      quote: this.activeInvoice.quote, 
+      purchaseOrder: "",
       createdOn: new Date(),
       createdBy: this.dataService.getStorage(STORAGE.USER)._id,
       updatedOn: new Date(),

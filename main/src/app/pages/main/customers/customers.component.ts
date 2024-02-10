@@ -84,6 +84,7 @@ export class AppCustomersComponent {
     this.dataService.delete(COLLECTION.CUSTOMERS, this.editCustomer,).forEach((res: any) => {
       console.log("Customer updated successfully ", res);
       this.editMode = false;
+      this.getCustomers();
     }); 
   }
   

@@ -43,12 +43,16 @@ export class AppSideRegisterComponent {
     };
 
     console.log(user);
-    this.dataService.signup(user).subscribe(response => {
-      console.log("Signup response ", response);
-      this.dataService.setStorage(STORAGE.TOKEN, response.data.token);
-      this.dataService.setStorage(STORAGE.USER, response.data.user);
-      this.spinner.hide();
-      this.router.navigateByUrl(ROUTES.DASHBOARD);
+    this.dataService.signup(user).subscribe(response => { 
+      this.dataService.login({ email: user.email, password: user.password } ).subscribe(res => {
+        this.spinner.hide();
+         this.dataService.setStorage(STORAGE.TOKEN, res.data.token);
+        this.dataService.setStorage(STORAGE.USER, res.data.user);
+        this.router.navigateByUrl(ROUTES.DASHBOARD);
+      }, err => {
+        console.log("Login failed", err);
+        this.spinner.hide();
+      })
     }, err => {
       console.log(err);
       this.registrationError = err.error;

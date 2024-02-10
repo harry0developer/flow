@@ -1,5 +1,14 @@
+<ngx-spinner 
+  bdColor="rgba(255, 255, 255, 0.9)" 
+  size="medium" 
+  color="#018c8c" 
+  type="ball-atom" 
+  class="spinner"
+  [fullScreen]="true">
+    <p style="color: #018c8c"> Loading... </p>
+</ngx-spinner>
+ 
 <mat-card *ngIf="editMode" class="cardWithShadow">
-  <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-atom" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
   <mat-card-content class="p-32 manage-page">
     <mat-card-title class=" b-b-1">
       <div class="row">
@@ -13,7 +22,7 @@
             color="primary" 
             class="m-t-12 m-b-12 m-r-3" 
             [disabled]="!customerForm?.valid"
-            (click)="updateCustomer()">Update</button>
+            (click)="addCustomer()">Create</button>
             
            
             <button mat-raised-button 
@@ -31,9 +40,7 @@
       </div>
     </mat-card-title>
 
-  
     <form [formGroup]="customerForm"> 
-     
       <mat-card class="b-1 shadow-none">
         <mat-card-header>
           <mat-card-title>Company Details</mat-card-title>
@@ -214,7 +221,6 @@
  
   </mat-card-content>
 </mat-card>
-
 
 
 <mat-card class="cardWithShadow theme-card" *ngIf="!editMode">

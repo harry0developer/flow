@@ -10,7 +10,7 @@ import { Quote } from '../models/quote';
 import { Company } from '../models/company';
 import { Auth } from '../models/auth';
 import { Invoice } from '../models/invoice';
-import { SalesOrder } from '../models/sale-order';
+import { SalesOrder } from '../models/sales-order';
 
 
 
