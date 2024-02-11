@@ -28,7 +28,6 @@ html .mat-drawer-container {
   min-height: calc(100vh - 70px);
   margin: 0 auto;
   max-width: $boxedWidth;
-  background: #fafafa;
 }
 
 .w-100 {
@@ -84,4 +83,8 @@ html .mat-drawer-container {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.mat-drawer-content {
+  background-color: #f8fcff;
 }

@@ -1,0 +1,120 @@
+<div id="qouteDocument" *ngIf="company" class="cardWithShadow  company-document-preview">
+  <div class="row">
+    <div class="col-6 company-from">
+      <h2 class="name">
+        {{ company.name }}
+      </h2>
+
+      <div class="address">
+        <p class="m-0" *ngFor='let address of formatAddress(company.billingAddress)'>
+          {{address}}
+        </p>
+         
+        <br>
+        <b>Phone:</b>{{ company.phoneNumber }}<br>
+        <b>Email:</b>{{ company.emailAddress }}<br>
+        <b>Website:</b>{{ company.website }} <br>
+        <b>VAT Registration No:</b>{{ company.VATNumber }}<br>
+        <b>Business ID No:</b>{{ company.registrationNumber }}<br>
+        <br>
+      </div>
+    </div>
+
+    <div class="col-6 company-from-logo" >
+      <img src="assets/images/logos/matswelapele.png" alt="">
+      <div class="banking-details m-t-32">
+        <h3>Banking Details</h3>
+        <p><b>Bank name: </b>{{ company.bankDetails.bankName }}</p>
+        <p><b>Account No: </b>{{ company.bankDetails.accountNumber }}</p>
+        <p><b>Branch Code: </b>{{ company.bankDetails.branchCode }}</p>
+        <p><b>Reference: </b>{{quote.quoteNo}}</p>
+      </div>
+    </div> 
+  </div>
+
+  <hr>
+  <!-- Bill To -->
+  <h1>Qoute</h1>
+  <h3 class="m-0">Bill to:</h3>
+  <div class="row">
+    <div class="col-6 company-to">
+      <h2 class="name">
+        {{quote.customer.name}}
+      </h2>
+      
+      <div class="address" *ngIf="quote?.customer?.billingAddress">
+        <p class="m-0" *ngFor='let address of formatAddress(quote.customer.billingAddress)'>
+          {{address}}
+        </p>
+      </div>
+      <h4 class="vat-no">VAT No. {{company.VATNumber}}</h4>
+    </div>
+
+    <div class="col-6 qoute-info" >
+       <p><b>Qoute No: </b>{{quote.quoteNo}}</p>
+       <p><b>Date created: </b>{{formatDate(quote.quoteDate)}} </p>
+       <p><b>Terms: </b>{{quote.quoteTerm}} days</p>
+       <p><b>Due date: </b>{{formatDate(quote.quoteDueDate)}}</p>
+    </div> 
+  </div>
+
+  <!-- table  -->
+
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col" class="col-3">Stock Code</th>
+            <th scope="col" class="col-3">Description</th>
+            <th scope="col" class="col-1">Qty</th>
+            <th scope="col">Unit Price</th>
+            <th scope="col">VAT</th>
+            <th scope="col">Total Price Excl</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of quote?.items"> 
+            <td class="col-3">{{item.stockCode}}</td> 
+            <td class="col-3">{{item.description}}</td> 
+            <td class="col-1">{{item.quantity}}</td> 
+            <td>{{item.sellingPrice | currency:'R'}}</td> 
+            <td>{{item.VAT}}</td> 
+            <td>{{ +item.sellingPrice * +item.quantity | currency:'R'}}</td> 
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="clear-white-space"></div>
+  <div class="row">
+    <div class="col-6"></div>
+    <div class="col-6">
+      <table> 
+        <tbody class="align-end">
+          <tr > 
+            <td scope="col" class="col-12">Total Price Exclusive</td>
+            <td scope="col" class="col-12">{{quote.totalPriceExclusive | currency:'R'}}</td>
+          </tr>
+          <tr>
+            <td scope="col" class="col-12">Total VAT</td>
+             <td scope="col" class="col-12">{{quote.totalVAT | currency:'R'}}</td>
+          </tr>
+          <tr>
+            <td scope="col" class="col-12">Total Price Discount</td>
+             <td scope="col" class="col-12">{{quote.totalPriceDiscount | currency:'R'}}</td>
+          </tr>
+          <tr>
+            <td scope="col" class="col-12"><b>Total Price Inclusive</b></td>
+             <td scope="col" class="col-12"><b>{{quote.totalPriceInclusive | currency:'R'}}</b></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr>
+
+      
+    </div>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos optio quo accusamus ex, qui nostrum delectus iure in quibusdam eligendi molestias modi quaerat odio temporibus, ducimus, dicta cum quidem ea!</p>
+  </div>
+</div>

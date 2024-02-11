@@ -26,6 +26,7 @@ import { AppManageComponent } from './manage/manage.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ShareDialogComponent } from './quotes/share/share.component';
 import { AppProfileComponent } from './profile/profile.component';
+import { DocumentPreviewDialogComponent } from './document-preview/document-preview.component';
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import { AppProfileComponent } from './profile/profile.component';
     AppMenuComponent,
     AppTooltipsComponent,
     AppProfileComponent,
-    ShareDialogComponent
+    ShareDialogComponent,
+    DocumentPreviewDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

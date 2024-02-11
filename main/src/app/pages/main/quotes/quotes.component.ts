@@ -16,6 +16,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ShareDialogComponent } from './share/share.component';
 import { Invoice } from 'src/app/models/invoice';
 import { SalesOrder } from 'src/app/models/sales-order';
+import { DocumentPreviewDialogComponent } from '../document-preview/document-preview.component';
+import { Document } from 'src/app/models/document';
 
 @Component({
   selector: 'app-quotes',
@@ -24,6 +26,7 @@ import { SalesOrder } from 'src/app/models/sales-order';
 })
 export class AppQuotesComponent {
   displayedColumns: string[] = ['quoteNo',  'quoteDate','items' ,'totalPriceInclusive', 'hasSalesOrder','manageAction'];
+  quotePreviewColumnDisplay: string[] = ['name', 'stockCode', 'unitPrice', 'quantity', 'totalPrice']
 
   customers: Customer[] = [];
   inventoryItems: Inventory[] = [];
@@ -87,6 +90,9 @@ export class AppQuotesComponent {
   loggedInUser: User;
   mailToString: string;
 
+  isNewLook: boolean = false;
+  activeIndex: number;
+  document: Document;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -113,6 +119,95 @@ export class AppQuotesComponent {
       quoteDueDate: ['', Validators.required],
     });
   } 
+
+  
+  private getQuotes() {
+    this.spinner.show();
+    this.dataService.getAll(COLLECTION.QUOTES).subscribe((quotes: any) => {
+      console.log("quotes ", quotes);
+      this.quotes = quotes;
+      //new look
+      this.selectedQuote = quotes[0]; 
+      this.activeIndex = 0;
+      this.spinner.hide();
+    }, err => {
+      console.log(err);
+      this.spinner.hide();
+    });
+  }
+
+  private getCompany() {
+    this.dataService.getAll(COLLECTION.COMPANIES).forEach((currentCompany: any) => {
+      console.log("currentCompany ", currentCompany);
+      this.currentCompany = currentCompany[0];
+    });
+  }
+
+  private getCustomers() {
+    this.dataService.getAll(COLLECTION.CUSTOMERS).forEach((customers: any) => {
+      console.log("customers ", customers);
+      this.customers = customers;
+    });
+  }
+
+  private getInventoryItems() {
+    this.dataService.getAll(COLLECTION.INVENTORY).forEach((inventoryItems: any) => {
+      console.log("inventoryItems ", inventoryItems);
+      this.inventoryItems = inventoryItems;
+    });
+  }
+
+  private createNewQuote(quote: Quote) {
+    this.spinner.show();
+    this.dataService.addItem(quote, COLLECTION.QUOTES).subscribe(res => {
+      this.getQuotes();
+      this.isEditQuoteMode = false;
+      this.isPreviewQuoteMode = false;
+
+    }, err => {
+      this.spinner.hide();
+    });
+  }
+
+  private updateExistingQuote(quote: Quote) {
+    this.spinner.show();
+    this.dataService.updateItem(quote, COLLECTION.QUOTES).subscribe(res => {
+      this.getQuotes();
+      this.isEditQuoteMode = false;
+      this.isPreviewQuoteMode = false;
+    }, err => {
+      this.spinner.hide();
+    });
+  }
+
+  private _inventoryFilter(name: string): Inventory[] {
+    const filterValue = name.toLowerCase();
+
+    return this.inventoryItems.filter(inv => inv.name.toLowerCase().includes(filterValue));
+  }
+
+  private _customerFilter(name: string): Customer[] {
+    const filterValue = name.toLowerCase();
+
+    return this.customers.filter(cus => cus.name.toLowerCase().includes(filterValue));
+  }
+
+
+  documentAction(action: string) {
+    if(action === 'edit') {
+      console.log('Edit doc');
+      this.editQuoteToBeProcessed();
+    } else if(action === 'download') {
+      console.log('Download doc');
+      this.downloadAsPDF();
+      
+    } else if(action === 'gen-sales-order') {
+      console.log('Generate Sales Order');
+      this.generateSalesOrder();
+      
+    }
+  
+  }
 
   addNewItem() {
     const val: Inventory = this.inventoryFormControl.value as Inventory;
@@ -142,13 +237,6 @@ export class AppQuotesComponent {
     console.log(this.dynamicArray);
   }
   
-  getCustomers() {
-    this.dataService.getAll(COLLECTION.CUSTOMERS).forEach((customers: any) => {
-      console.log("customers ", customers);
-      this.customers = customers;
-    });
-  }
-
   formatDate(date?: Date) {
     return moment(date).format('DD/MM/YYYY');  
   }
@@ -167,14 +255,6 @@ export class AppQuotesComponent {
     }
   }
  
-
-  getCompany() {
-    this.dataService.getAll(COLLECTION.COMPANIES).forEach((currentCompany: any) => {
-      console.log("currentCompany ", currentCompany);
-      this.currentCompany = currentCompany[0];
-    });
-  }
-
   filterCustomers() {
     this.filteredCustomers = this.customerFormControl.valueChanges.pipe(
       startWith(''),
@@ -183,13 +263,6 @@ export class AppQuotesComponent {
         return name ? this._customerFilter(name as string) : this.customers.slice();
       }),
     );
-  }
-
-  getInventoryItems() {
-    this.dataService.getAll(COLLECTION.INVENTORY).forEach((inventoryItems: any) => {
-      console.log("inventoryItems ", inventoryItems);
-      this.inventoryItems = inventoryItems;
-    });
   }
 
   filterInventoryItems() {
@@ -212,17 +285,6 @@ export class AppQuotesComponent {
     return item && item.name && item.stockCode ? item.name + " (" + item.stockCode + ")": '';
   }
 
-  private _inventoryFilter(name: string): Inventory[] {
-    const filterValue = name.toLowerCase();
-
-    return this.inventoryItems.filter(inv => inv.name.toLowerCase().includes(filterValue));
-  }
-
-  private _customerFilter(name: string): Customer[] {
-    const filterValue = name.toLowerCase();
-
-    return this.customers.filter(cus => cus.name.toLowerCase().includes(filterValue));
-  }
 
   addOrUpdateQuote(newQt: boolean = true) {
 
@@ -272,40 +334,8 @@ export class AppQuotesComponent {
     
   }
 
-  private createNewQuote(quote: Quote) {
-    this.spinner.show();
-    this.dataService.addItem(quote, COLLECTION.QUOTES).subscribe(res => {
-      this.getQuotes();
-      this.isEditQuoteMode = false;
-      this.isPreviewQuoteMode = false;
 
-    }, err => {
-      this.spinner.hide();
-    });
-  }
 
-  private updateExistingQuote(quote: Quote) {
-    this.spinner.show();
-    this.dataService.updateItem(quote, COLLECTION.QUOTES).subscribe(res => {
-      this.getQuotes();
-      this.isEditQuoteMode = false;
-      this.isPreviewQuoteMode = false;
-    }, err => {
-      this.spinner.hide();
-    });
-  }
-
-  private getQuotes() {
-    this.spinner.show();
-    this.dataService.getAll(COLLECTION.QUOTES).subscribe((quotes: any) => {
-      console.log("quotes ", quotes);
-      this.quotes = quotes;
-      this.spinner.hide();
-    }, err => {
-      console.log(err);
-      this.spinner.hide();
-    });
-  }
 
   manageAndShareQuote(quote: Quote) {
     console.log(quote);
@@ -339,6 +369,40 @@ export class AppQuotesComponent {
     this.selectedQuote = quote;
     this.openDialog();
   }
+
+
+  // new look 
+  loadDocumentPreview(quote: Quote) {
+    const dialogHandler = this.dialog.open(DocumentPreviewDialogComponent, {
+      // width: '420px',
+      data: {
+        quote
+      },
+      disableClose: true
+    });
+
+     
+    dialogHandler.afterClosed().subscribe((res)=> {
+      console.log(res);
+      // if(res == 'share') {
+      //   this.dataService.convetToPDF('contentToConvert');
+      // } else if(res == 'download') {
+      //   this.dataService.convetToPDF('contentToConvert');
+      // } else {
+      //   console.log("Closed");
+      // }
+      
+    })
+  } 
+
+  activateQuote(quote: Quote, index: number) {
+    this.selectedQuote = quote;
+    this.activeIndex = index; 
+  }
+
+
+
+
 
   openDialog(): void {
     const dialogHandler = this.dialog.open(ShareDialogComponent, {
@@ -374,12 +438,7 @@ export class AppQuotesComponent {
     this.mailToString = `mailto:${this.selectedQuote.customer.emailAddress},${this.selectedQuote.customer.contactPerson.emailAddress}?subject=Quote%20no%20${this.selectedQuote.quoteNo}&amp;body=Please%20find%20the%20requested%20quote%20attached%20`;
   }
 
-  editQuoteToBeProcessed() {
-    // this.selectedQuote = quote;
-    // this.editQuoteMode = true;
-    // this.processQuoteMode = false;
-    // this.isEditQuoteMode = true;
-
+  editQuoteToBeProcessed() { 
     this.isPreviewQuoteMode = false;
     this.isEditQuoteMode = true;
     this.isNewQuote = false;

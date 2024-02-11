@@ -8,7 +8,124 @@
     <p style="color: #018c8c"> Loading... </p>
 </ngx-spinner>
 
-<mat-card *ngIf="!isEditQuoteMode && !isPreviewQuoteMode" class="cardWithShadow theme-card">
+
+<div class="row main-wrapper">
+
+  <!-- side container  -->
+  <div class="side-container col-4">
+    <mat-card class="cardWithShadow theme-card">
+      <mat-card-title class="p-l-16 b-b-1">
+        <h3>Quotes</h3>
+      </mat-card-title>
+
+      <mat-list>
+        <mat-selection-list *ngFor="let quote of quotes; let i = index;">
+          <mat-list-item (click)="activateQuote(quote, i)" [ngClass]="{'active': i == activeIndex}">
+            <p matListItemLine >
+              <span class="title">{{quote.company.name}}</span>
+              <br>
+              <span>{{quote.quoteNo}}</span>
+              <br>
+              <span class="demo-2"> {{formatDate(quote.quoteDate)}}</span>
+            </p>
+          </mat-list-item>
+        </mat-selection-list>
+      </mat-list>
+    </mat-card>
+  </div>
+  
+
+  <!-- main container  -->
+  <div class="main-container col-8">
+    <div class="controls m-b-12">
+      <a (click)="documentAction('edit')" mat-button class="btn" *ngIf="!selectedQuote.hasSalesOrder"> 
+        <mat-icon>edit</mat-icon>
+        Edit Quote
+      </a>
+      <a  [href]="mailToString" mat-button class="btn"> 
+        <mat-icon>mail</mat-icon>
+         Send via Email
+      </a>
+      <a (click)="documentAction('download')" mat-button class="btn"> 
+        <mat-icon>picture_as_pdf</mat-icon>
+         Download as PDF
+      </a>
+      <a (click)="documentAction('gen-sales-order')" mat-button class="btn" *ngIf="!selectedQuote.hasSalesOrder"> 
+        <mat-icon>receipt_long</mat-icon>
+        Generate Sales Order
+      </a>
+    </div>
+
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{selectedQuote.company.name}}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{selectedQuote.quoteNo}}
+          </mat-panel-description>
+          <mat-panel-description>
+            {{formatDate(selectedQuote.createdOn)}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <!-- Quote table Accordion  -->
+        <table mat-table [dataSource]="selectedQuote.items" class="quote-table"> 
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+        
+          <!-- stockCode Column -->
+          <ng-container matColumnDef="stockCode">
+            <th mat-header-cell *matHeaderCellDef> Stock Code </th>
+            <td mat-cell *matCellDef="let element"> {{element.stockCode}} </td>
+          </ng-container>
+        
+          <!-- unitPrice Column -->
+          <ng-container matColumnDef="unitPrice">
+            <th mat-header-cell *matHeaderCellDef> Unit Price </th>
+            <td mat-cell *matCellDef="let element"> {{element.sellingPrice | currency:'R'}} </td>
+          </ng-container>
+
+          <!-- quantity Column -->
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+            <td mat-cell *matCellDef="let element"> {{element.quantity }} </td>
+          </ng-container>
+
+          <!-- totalPrice Column -->
+          <ng-container matColumnDef="totalPrice">
+            <th mat-header-cell *matHeaderCellDef> Total Price </th>
+            <td mat-cell *matCellDef="let element"> {{ +element.sellingPrice * +element.quantity | currency:'R'}} </td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="quotePreviewColumnDisplay"></tr>
+          <tr mat-row *matRowDef="let row; columns: quotePreviewColumnDisplay;"></tr>
+        </table>
+      </mat-expansion-panel>
+    </mat-accordion>
+ 
+
+    <mat-card class="cardWithShadow theme-card m-t-16" *ngIf="selectedQuote">
+      <!-- Documetn preview  -->
+      <div class="ribbon up" *ngIf="selectedQuote.hasSalesOrder" style="--color: #018c8c;">
+        <div class="content">Has Sales Order</div>
+      </div>
+    
+      <app-document-preview [company]="currentCompany" [quote]="selectedQuote"></app-document-preview>
+
+    </mat-card>
+
+
+  </div>
+</div>
+ 
+
+
+<mat-card *ngIf="!isEditQuoteMode && !isPreviewQuoteMode && isNewLook" class="cardWithShadow theme-card">
    
   <mat-card-title class="p-24 b-b-1">
     <div class="row">
@@ -144,7 +261,7 @@
   <!-- PDF Document  -->
 </mat-card>
 
-<mat-card *ngIf="!isEditQuoteMode && !isPreviewQuoteMode" class="cardWithShadow">
+<mat-card *ngIf="!isEditQuoteMode && !isPreviewQuoteMode && isNewLook" class="cardWithShadow">
   <mat-card-content class="p-24 no-quotes" *ngIf="quotes.length < 1">
     <div class="big-icon m-b-32">
       <img src="assets/images/icons/invoices.png" alt="">
@@ -350,7 +467,6 @@
   </mat-card-content>
 </mat-card> 
 
-
 <!-- Edit Inventoru form  -->
 <mat-card *ngIf="isEditQuoteMode && !isPreviewQuoteMode" class="cardWithShadow inventory-form">
   <mat-card-content class="p-24">
@@ -423,9 +539,8 @@
   </mat-card-content>
 </mat-card> 
 
-
 <!-- Preview Mode Contro Buttons  -->
-<mat-card *ngIf="!isEditQuoteMode && isPreviewQuoteMode " class="process-quote">
+<mat-card *ngIf="!isEditQuoteMode && isPreviewQuoteMode" class="process-quote">
   <mat-card-title class="p-24 b-b-1">
     <div class="row">
         <section class="col-9">
