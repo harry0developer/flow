@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'; 
+import { Component, ElementRef, ViewChild } from '@angular/core'; 
 
 import { DataService } from 'src/app/services/data.service';
 import { COLLECTION, STORAGE } from 'src/app/const/util';
@@ -90,9 +90,16 @@ export class AppQuotesComponent {
   loggedInUser: User;
   mailToString: string;
 
-  isNewLook: boolean = false;
+  isNewLook: boolean = true;
   activeIndex: number;
   document: Document;
+
+
+  @ViewChild('searchbar') searchbar: ElementRef;
+  searchText = '';
+
+  toggleSearch: boolean = false;
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -101,6 +108,14 @@ export class AppQuotesComponent {
      private dataService: DataService) {
   }
   
+  openSearch() {
+    this.toggleSearch = true;
+    this.searchbar.nativeElement.focus();
+  }
+  searchClose() {
+    this.searchText = '';
+    this.toggleSearch = false;
+  }
  
   ngOnInit(): void {
     this.getCompany();
@@ -332,10 +347,7 @@ export class AppQuotesComponent {
       this.updateExistingQuote(quote);
     }
     
-  }
-
-
-
+  } 
 
   manageAndShareQuote(quote: Quote) {
     console.log(quote);
@@ -438,10 +450,11 @@ export class AppQuotesComponent {
     this.mailToString = `mailto:${this.selectedQuote.customer.emailAddress},${this.selectedQuote.customer.contactPerson.emailAddress}?subject=Quote%20no%20${this.selectedQuote.quoteNo}&amp;body=Please%20find%20the%20requested%20quote%20attached%20`;
   }
 
-  editQuoteToBeProcessed() { 
+  private editQuoteToBeProcessed() { 
     this.isPreviewQuoteMode = false;
     this.isEditQuoteMode = true;
     this.isNewQuote = false;
+    this.isNewLook = true;
 
     this.quoteForm.controls['quoteDueDate'].setValue(this.selectedQuote.quoteDueDate);
     this.quoteForm.controls['quoteStartDate'].setValue(this.selectedQuote.quoteStartDate);

@@ -27,6 +27,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ShareDialogComponent } from './quotes/share/share.component';
 import { AppProfileComponent } from './profile/profile.component';
 import { DocumentPreviewDialogComponent } from './document-preview/document-preview.component';
+import { FilterPipe } from './pipes/filter.pipe';
 
 @NgModule({
   imports: [
@@ -53,8 +54,11 @@ import { DocumentPreviewDialogComponent } from './document-preview/document-prev
     AppTooltipsComponent,
     AppProfileComponent,
     ShareDialogComponent,
-    DocumentPreviewDialogComponent
+    DocumentPreviewDialogComponent,
+    FilterPipe
   ],
+  providers: [FilterPipe],
+
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MainModule {}
