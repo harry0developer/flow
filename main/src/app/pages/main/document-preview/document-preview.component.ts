@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import { Company } from 'src/app/models/company';
 import { Quote } from 'src/app/models/quote';
 import * as moment from 'moment'
+import { DocumentData } from 'src/app/models/document';
 
 
 @Component({
@@ -12,9 +13,7 @@ import * as moment from 'moment'
 export class DocumentPreviewDialogComponent {
 
   @Input() company: Company;
-  @Input()quote: Quote;
-  
-
+  @Input() data: DocumentData;
 
   formatAddress(address: string): string[] {
     const addNewLine = address.split('\n');
@@ -30,7 +29,7 @@ export class DocumentPreviewDialogComponent {
     }
   }
   
-  formatDate(date?: Date) {
+  formatDate(date?: any) {
     return moment(date).format('DD/MM/YYYY');  
   }
  

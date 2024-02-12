@@ -12,12 +12,8 @@ import {Observable} from 'rxjs';
 import * as moment from 'moment'
 import { Company } from 'src/app/models/company';
 import { User } from 'src/app/models/user';
-import { MatDialog } from '@angular/material/dialog';
-import { ShareDialogComponent } from './share/share.component';
-import { Invoice } from 'src/app/models/invoice';
 import { SalesOrder } from 'src/app/models/sales-order';
-import { DocumentPreviewDialogComponent } from '../document-preview/document-preview.component';
-import { Document } from 'src/app/models/document';
+import { Document, DocumentData } from 'src/app/models/document';
 
 @Component({
   selector: 'app-quotes',
@@ -77,7 +73,6 @@ export class AppQuotesComponent {
   isPreviewQuoteMode: boolean = false;
   isNewQuote: boolean = false;
 
-  quoteToProcess: Quote;
   updatedQuote: Quote;
   quoteForm: any;
   quotes: Quote[] = [];
@@ -97,25 +92,16 @@ export class AppQuotesComponent {
 
   @ViewChild('searchbar') searchbar: ElementRef;
   searchText = '';
-
   toggleSearch: boolean = false;
-
+ 
+  documentData: DocumentData;
 
   constructor(
     private formBuilder: FormBuilder,
-     private spinner: NgxSpinnerService,
-     public dialog: MatDialog,
-     private dataService: DataService) {
+    private spinner: NgxSpinnerService,
+    private dataService: DataService) {
   }
   
-  openSearch() {
-    this.toggleSearch = true;
-    this.searchbar.nativeElement.focus();
-  }
-  searchClose() {
-    this.searchText = '';
-    this.toggleSearch = false;
-  }
  
   ngOnInit(): void {
     this.getCompany();
@@ -178,7 +164,7 @@ export class AppQuotesComponent {
       this.getQuotes();
       this.isEditQuoteMode = false;
       this.isPreviewQuoteMode = false;
-
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }, err => {
       this.spinner.hide();
     });
@@ -190,6 +176,7 @@ export class AppQuotesComponent {
       this.getQuotes();
       this.isEditQuoteMode = false;
       this.isPreviewQuoteMode = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }, err => {
       this.spinner.hide();
     });
@@ -207,6 +194,20 @@ export class AppQuotesComponent {
     return this.customers.filter(cus => cus.name.toLowerCase().includes(filterValue));
   }
 
+  // Search quotes 
+  
+  openSearch() {
+    this.toggleSearch = true;
+    this.searchbar.nativeElement.focus();
+  }
+  searchClose() {
+    this.searchText = '';
+    this.toggleSearch = false;
+  }
+
+  clearFilter() {
+    this.searchText = ''
+  }
 
   documentAction(action: string) {
     if(action === 'edit') {
@@ -302,8 +303,6 @@ export class AppQuotesComponent {
 
 
   addOrUpdateQuote(newQt: boolean = true) {
-
-    console.log("new quote ? ", newQt);
     
     const dates = this.quoteForm.value;
     let start_Date = moment(dates.quoteDate);
@@ -360,6 +359,8 @@ export class AppQuotesComponent {
   cancel() {
     this.isEditQuoteMode = false;
     this.isPreviewQuoteMode = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
   }
 
   createQuote() {
@@ -376,76 +377,32 @@ export class AppQuotesComponent {
     return +item.costPrice * +item.quantity;
   }
   
-
-  generateQouteDocument(quote: Quote) {
-    this.selectedQuote = quote;
-    this.openDialog();
-  }
-
-
-  // new look 
-  loadDocumentPreview(quote: Quote) {
-    const dialogHandler = this.dialog.open(DocumentPreviewDialogComponent, {
-      // width: '420px',
-      data: {
-        quote
-      },
-      disableClose: true
-    });
-
-     
-    dialogHandler.afterClosed().subscribe((res)=> {
-      console.log(res);
-      // if(res == 'share') {
-      //   this.dataService.convetToPDF('contentToConvert');
-      // } else if(res == 'download') {
-      //   this.dataService.convetToPDF('contentToConvert');
-      // } else {
-      //   console.log("Closed");
-      // }
-      
-    })
-  } 
-
   activateQuote(quote: Quote, index: number) {
     this.selectedQuote = quote;
     this.activeIndex = index; 
+
+    this.documentData = {
+      title: "Quote",
+      reference: this.selectedQuote.quoteNo,
+      customerName: this.selectedQuote.customer.name,
+      address: this.currentCompany.billingAddress,
+      no: this.selectedQuote.quoteNo,
+      startDate: this.selectedQuote.quoteStartDate,
+      term: null,
+      dueDate: null,
+      items: this.selectedQuote.items,
+      totalPriceExclusive: this.selectedQuote.totalPriceExclusive,
+      totalVAT: this.selectedQuote.totalVAT,
+      totalPriceDiscount: this.selectedQuote.totalPriceDiscount,
+      totalPriceInclusive: this.selectedQuote.totalPriceInclusive
+    }
+    window.scrollTo({ top: 1000, behavior: 'smooth' });
   }
 
-
-
-
-
-  openDialog(): void {
-    const dialogHandler = this.dialog.open(ShareDialogComponent, {
-      width: '420px',
-      data: {
-        title: "Generate Quote",
-        subHeader: "Your qoute has been generated as a (PDF) document. You can: "
-      },
-      disableClose: true
-    });
-
-     
-    dialogHandler.afterClosed().subscribe((res)=> {
-      console.log(res);
-      if(res == 'share') {
-        this.dataService.convetToPDF('contentToConvert');
-      } else if(res == 'download') {
-        this.dataService.convetToPDF('contentToConvert');
-      } else {
-        console.log("Closed");
-      }
-      
-    })
-  } 
-  /// INVOICE - PROCESS QUOTE
-
-  
+ 
   processQuote(quote: Quote) {
     this.isEditQuoteMode = false;
     this.isPreviewQuoteMode = true;
-    this.quoteToProcess  = quote;
     this.selectedQuote = quote; 
     this.mailToString = `mailto:${this.selectedQuote.customer.emailAddress},${this.selectedQuote.customer.contactPerson.emailAddress}?subject=Quote%20no%20${this.selectedQuote.quoteNo}&amp;body=Please%20find%20the%20requested%20quote%20attached%20`;
   }
@@ -467,25 +424,24 @@ export class AppQuotesComponent {
     this.dynamicArray = this.selectedQuote.items;
   
     this.inventoryFormControl.patchValue('');
-     
     
   }
 
   generateSalesOrder() {
-    console.log(this.quoteToProcess);
-    console.log(this.currentCompany);
-
     let newSalesOrder: SalesOrder = {
       salesOrderNo: this.dataService.generateRandomCodeNumber("SLO-"),
       salesOrderDate: new Date(),
       customer: this.selectedQuote.customer,
       company: this.selectedQuote.company, 
-      quote: this.quoteToProcess._id, 
+      quote: this.selectedQuote._id, 
       createdOn: new Date(),
       createdBy: this.dataService.getStorage(STORAGE.USER)._id,
       updatedOn: new Date(),
       updatedBy: this.dataService.getStorage(STORAGE.USER)._id,
     }
+    
+
+    console.log("Sales order ", newSalesOrder);
     
     this.spinner.show();
     this.dataService.addItem(newSalesOrder, COLLECTION.SALES_ORDER).subscribe((res) => {

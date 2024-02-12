@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ViewChild } from '@angular/core'; 
+import { Component, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core'; 
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Router } from '@angular/router';
@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Invoice } from 'src/app/models/invoice';
 import { ShareDialogComponent } from '../quotes/share/share.component';
 import { SalesOrder } from 'src/app/models/sales-order';
+import { DocumentData } from 'src/app/models/document';
 
 @Component({
   selector: 'app-sales-order',
@@ -25,48 +26,84 @@ import { SalesOrder } from 'src/app/models/sales-order';
   styleUrls: ['./sales-order.component.scss']
 })
 export class AppSalesOrderComponent { 
-  currentCompany: Company;
-  activeSalesOrder: SalesOrder;
-  processQuoteMode: boolean = false;
-  mailToString: string;
-  // invoices: Invoice[] = [];
+   
+  
+  @ViewChild('searchbar') searchbar: ElementRef;
+  searchText = '';
+  toggleSearch: boolean = false;
+  activeIndex: number;
   salesOrders: SalesOrder[] = [];
-  editSalesOrderMode: boolean = false;
+  selectedSalesOrder: SalesOrder;
+  currentCompany: Company;
+  salesOrderPreviewColumnDisplay: string[] = ['name', 'stockCode', 'unitPrice', 'quantity', 'totalPrice'];
+  mailToString: string;
 
-  displayedColumns: string[] = ['salesOrderNo',  'salesOrderDate', 'createdBy', 'viewButton', 'shareButton'];
-  documentId: string = 'salesOrderDocument';
+  documentData: DocumentData;
 
   constructor(
      private spinner: NgxSpinnerService,
      public dialog: MatDialog,
      private dataService: DataService) {
   }
+
+
+  
+  // Search quotes 
+  
+  openSearch() {
+    this.toggleSearch = true;
+    this.searchbar.nativeElement.focus();
+  }
+
+  searchClose() {
+    this.searchText = '';
+    this.toggleSearch = false;
+  }
+
+  clearFilter() {
+    this.searchText = ''
+  }
+
+  documentAction(action: string) {
+    this.downloadAsPDF();
+ }
+
   
   ngOnInit(): void {
-    // this.getInvoices();
     this.getCompany();
     this.getSalesOrders();
   }
+ 
 
-  // getInvoices() {
-  //   this.spinner.show();
-  //   this.dataService.getAll(COLLECTION.INVOICES).subscribe((invoices: any) => {
-  //     this.invoices = invoices;
-  //     this.activeSalesOrder = invoices[0];
-  //     console.log("Invoice ", invoices);
-      
-  //     this.spinner.hide();
-  //   }, err => {
-  //     this.spinner.hide();
-  //     console.log(err);
-  //   });
-  // }
+  setSelectedSalesOrder(so: SalesOrder, index: number) {
+    this.selectedSalesOrder = so;
+    this.activeIndex = index; 
+    this.mailToString = `mailto:${this.selectedSalesOrder.customer.emailAddress},${this.selectedSalesOrder.customer.contactPerson.emailAddress}?subject=Sales%20Order%20No%20${this.selectedSalesOrder.salesOrderNo}&amp;body=Please%20find%20the%20requested%20quote%20attached%20`;
+
+    this.documentData = {
+      title: "Sales Order",
+      reference: this.selectedSalesOrder.salesOrderNo,
+      customerName: this.selectedSalesOrder.customer.name,
+      address: this.currentCompany.billingAddress,
+      no: this.selectedSalesOrder.salesOrderNo,
+      startDate: this.selectedSalesOrder.salesOrderDate,
+      term: null,
+      dueDate: null,
+      items: this.selectedSalesOrder.quote.items,
+      totalPriceExclusive: this.selectedSalesOrder.quote.totalPriceExclusive,
+      totalVAT: this.selectedSalesOrder.quote.totalVAT,
+      totalPriceDiscount: this.selectedSalesOrder.quote.totalPriceDiscount,
+      totalPriceInclusive: this.selectedSalesOrder.quote.totalPriceInclusive
+    }
+    window.scrollTo({ top: 1000, behavior: 'smooth' });
+ 
+  }
 
   getSalesOrders() {
     this.spinner.show();
     this.dataService.getAll(COLLECTION.SALES_ORDER).subscribe((salesOrders: any) => {
       this.salesOrders = salesOrders;
-      this.activeSalesOrder = salesOrders[0];
+      this.selectedSalesOrder = salesOrders[0];
       console.log("Sales orders ", salesOrders);
       this.spinner.hide();
     }, err => {
@@ -84,10 +121,8 @@ export class AppSalesOrderComponent {
   }
 
   manageSalesOrder(salesOrder: SalesOrder) {
-    this.editSalesOrderMode = true;
-    this.activeSalesOrder = salesOrder;
+    this.selectedSalesOrder = salesOrder;
     console.log("Active salesOrder ", salesOrder);
-    
   }
 
   formatAddress(address: string): string[] {
@@ -105,52 +140,19 @@ export class AppSalesOrderComponent {
   }
  
   generateSalesOrderDocument(salesOrder: SalesOrder) {
-    this.activeSalesOrder = salesOrder;
-    this.openDialog(salesOrder);
+    this.selectedSalesOrder = salesOrder;
+    this.downloadAsPDF();
   }
-
-  openDialog(salesOrder: SalesOrder) {
-    const dialogHandler = this.dialog.open(ShareDialogComponent, {
-      width: '420px',
-      data: {
-        title: "Generate Sales Order",
-        subHeader: "Your sales order has been generated as a (PDF) document. You can: "
-      },
-      disableClose: true
-    });
-
-     
-    dialogHandler.afterClosed().subscribe((res)=> {
-      console.log(res);
-      if(res == 'share') {
-        this.dataService.convetToPDF(this.documentId);
-      } else if(res == 'download') {
-        this.dataService.convetToPDF(this.documentId);
-      } else {
-        console.log("Closed");
-
-      }
-      
-    })
-  }
-
-  
-  processQuote(salesOrder: SalesOrder) {
-    this.processQuoteMode = true;
-    this.activeSalesOrder = salesOrder; 
-    this.mailToString = `mailto:${this.activeSalesOrder.customer.emailAddress},${this.activeSalesOrder.customer.contactPerson.emailAddress}?subject=Quote%20no%20${this.activeSalesOrder.salesOrderNo}&amp;body=Please%20find%20the%20requested%20quote%20attached%20`;
-  }
-
+ 
+   
   formatDate(date?: Date) {
     return moment(date).format('DD/MM/YYYY');  
   }
 
   downloadAsPDF() {
-    this.dataService.convetToPDF(this.documentId)
+    this.dataService.convetToPDF('qouteDocument')
   }
   
-  cancel() {
-    this.editSalesOrderMode = false;
-  }
+ 
  
 }

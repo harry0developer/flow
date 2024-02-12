@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NotifierService } from 'angular-notifier';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ROUTES, STORAGE } from 'src/app/const/util';
 import { DataService } from 'src/app/services/data.service';
@@ -19,14 +18,14 @@ export class AppSideLoginComponent {
     password: new FormControl('', [Validators.required]),
   });
   
-  private readonly notifier: NotifierService;
 
   constructor(
     private formBuilder: FormBuilder,
     private spinner: NgxSpinnerService,
     private router: Router,
-    private notifierService: NotifierService,
-    private dataService: DataService) { this.notifier = this.notifierService;  }
+    private dataService: DataService) {
+      
+     }
 
 
   login() {

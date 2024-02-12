@@ -27,34 +27,34 @@
         <p><b>Bank name: </b>{{ company.bankDetails.bankName }}</p>
         <p><b>Account No: </b>{{ company.bankDetails.accountNumber }}</p>
         <p><b>Branch Code: </b>{{ company.bankDetails.branchCode }}</p>
-        <p><b>Reference: </b>{{quote.quoteNo}}</p>
+        <p><b>Reference: </b>{{data?.reference}}</p>
       </div>
     </div> 
   </div>
 
   <hr>
   <!-- Bill To -->
-  <h1>Qoute</h1>
+  <h1>{{data?.title}}</h1> 
   <h3 class="m-0">Bill to:</h3>
   <div class="row">
     <div class="col-6 company-to">
-      <h2 class="name">
-        {{quote.customer.name}}
+      <h2 class="name" *ng>
+        {{data?.customerName}}
       </h2>
       
-      <div class="address" *ngIf="quote?.customer?.billingAddress">
-        <p class="m-0" *ngFor='let address of formatAddress(quote.customer.billingAddress)'>
+      <div class="address" *ngIf="data?.address">
+        <p class="m-0" *ngFor='let address of formatAddress(data.address)'>
           {{address}}
         </p>
       </div>
-      <h4 class="vat-no">VAT No. {{company.VATNumber}}</h4>
+      <h4 class="vat-no">VAT No. {{company?.VATNumber}}</h4>
     </div>
 
     <div class="col-6 qoute-info" >
-       <p><b>Qoute No: </b>{{quote.quoteNo}}</p>
-       <p><b>Date created: </b>{{formatDate(quote.quoteDate)}} </p>
-       <p><b>Terms: </b>{{quote.quoteTerm}} days</p>
-       <p><b>Due date: </b>{{formatDate(quote.quoteDueDate)}}</p>
+       <p><b>Qoute No: </b>{{data?.no}}</p>
+       <p *ngIf="data?.startDate"><b>Date created: </b>{{formatDate(data.startDate)}} </p>
+       <p *ngIf="data?.term"><b>Terms: </b>{{data?.term}} days</p>
+       <p *ngIf="data?.dueDate"><b>Due date: </b>{{formatDate(data.dueDate)}}</p>
     </div> 
   </div>
 
@@ -74,7 +74,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of quote?.items"> 
+          <tr *ngFor="let item of data?.items"> 
             <td class="col-3">{{item.stockCode}}</td> 
             <td class="col-3">{{item.description}}</td> 
             <td class="col-1">{{item.quantity}}</td> 
@@ -94,19 +94,19 @@
         <tbody class="align-end">
           <tr > 
             <td scope="col" class="col-12">Total Price Exclusive</td>
-            <td scope="col" class="col-12">{{quote.totalPriceExclusive | currency:'R'}}</td>
+            <td scope="col" class="col-12">{{data?.totalPriceExclusive | currency:'R'}}</td>
           </tr>
           <tr>
             <td scope="col" class="col-12">Total VAT</td>
-             <td scope="col" class="col-12">{{quote.totalVAT | currency:'R'}}</td>
+             <td scope="col" class="col-12">{{data?.totalVAT | currency:'R'}}</td>
           </tr>
           <tr>
             <td scope="col" class="col-12">Total Price Discount</td>
-             <td scope="col" class="col-12">{{quote.totalPriceDiscount | currency:'R'}}</td>
+             <td scope="col" class="col-12">{{data?.totalPriceDiscount | currency:'R'}}</td>
           </tr>
           <tr>
             <td scope="col" class="col-12"><b>Total Price Inclusive</b></td>
-             <td scope="col" class="col-12"><b>{{quote.totalPriceInclusive | currency:'R'}}</b></td>
+             <td scope="col" class="col-12"><b>{{data?.totalPriceInclusive | currency:'R'}}</b></td>
           </tr>
         </tbody>
       </table>

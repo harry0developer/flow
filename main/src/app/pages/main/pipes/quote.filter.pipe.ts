@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Quote } from 'src/app/models/quote';
 @Pipe({
-  name: 'filter'
+  name: 'quoteFilter'
 })
-export class FilterPipe implements PipeTransform {
+export class QuoteFilterPipe implements PipeTransform {
   transform(quotes: Quote[], searchText: string): Quote[] {
     if(!quotes) return [];
     if(!searchText) return quotes;

@@ -8,6 +8,19 @@
     }
 }
 
+.invoice-action-menu {
+    .action-btn {
+        color: #fff;
+        background: #018c8c;
+        padding: 10px;
+        margin: 0 3px;
+    }
+    
+    .action-btn:hover {
+        color: #ddd;
+    }
+}
+
 .invoice-document-preview {
     padding: 60px;
     width: 21cm;

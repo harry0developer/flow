@@ -27,7 +27,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ShareDialogComponent } from './quotes/share/share.component';
 import { AppProfileComponent } from './profile/profile.component';
 import { DocumentPreviewDialogComponent } from './document-preview/document-preview.component';
-import { FilterPipe } from './pipes/filter.pipe';
+import { QuoteFilterPipe } from './pipes/quote.filter.pipe';
+import { SalesOrderFilterPipe } from './pipes/sales-order.filter.pipe copy';
 
 @NgModule({
   imports: [
@@ -39,7 +40,7 @@ import { FilterPipe } from './pipes/filter.pipe';
     TablerIconsModule.pick(TablerIcons),
     MatNativeDateModule,
     NgxSpinnerModule,
-    AsyncPipe
+    AsyncPipe,
   ],
   declarations: [
     AppCustomersComponent,
@@ -55,9 +56,10 @@ import { FilterPipe } from './pipes/filter.pipe';
     AppProfileComponent,
     ShareDialogComponent,
     DocumentPreviewDialogComponent,
-    FilterPipe
+    QuoteFilterPipe,
+    SalesOrderFilterPipe
   ],
-  providers: [FilterPipe],
+  providers: [QuoteFilterPipe, SalesOrderFilterPipe],
 
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

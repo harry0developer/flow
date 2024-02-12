@@ -198,7 +198,6 @@
             width: 95%;
             margin: 0 auto;
         }
-        
         .no-results {
             text-align: center;
             height: 160px;
@@ -209,7 +208,7 @@
                 height: 45px;
             }
         }
-
+        
         mat-card {
             height: 100%;
         }
@@ -219,6 +218,7 @@
             .title {
                 font-size: 14px;
                 font-weight: 600;
+                color: #000;
             }
            
             span {
@@ -227,27 +227,42 @@
             &.active {
                 background-color: #f3f3f3;
                 border-left: 4px solid #018c8c;
+                mat-icon {
+                    color: #018c8c;
+                    margin-right: 16px;
+                }
             }
         }
     }
 
     .main-container {
         .controls {
-            height: 45px;
+            height: 46px;
             background-color: #f3f3f3;
             .btn {
-                min-width: 160px;
+                min-width: 100px;
                 background-color:#fff;
                 color: #018c8c;
                 font-weight: 600;
                 font-size: 12px;
-                height: 35px;
-                margin: 4px 2px 0 0;
-                border-radius: 0;
+                height: 36px;
+                margin: 4px 4px 0 0;
+                border-radius: 4px;
             }
             .btn:first-child {
                 margin-left: 5px;
+            } 
+
+
+            .create-quote-btn {
+                text-align: right;
+                .btn {
+                    background-color:#018c8c;
+                    color: #fff;
+                    border-radius: 4px;
+                }
             }
+        
         }
        
     }
