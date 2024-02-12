@@ -3,11 +3,12 @@ import { AppUsersComponent } from './users/users.component';
 import { AppCustomersComponent } from './customers/customers.component';
 import { AppInvoicesComponent } from './invoices/invoices.component';
 import { AppSalesOrderComponent } from './sales-order/sales-order.component';
-import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved.component';
 import { AppInventoryComponent } from './inventory/inventory.component';
 import { AppQuotesComponent } from './quotes/quotes.component';
 import { AppManageComponent } from './manage/manage.component';
 import { AppProfileComponent } from './profile/profile.component';
+import { AppPurchaseOrderComponent } from './purchase-order/purchase-order.component';
+import { AppPaymentComponent } from './payment/payment.component';
 
 export const MainRoutes: Routes = [
   {
@@ -34,8 +35,12 @@ export const MainRoutes: Routes = [
         component: AppSalesOrderComponent,
       },
       {
-        path: 'payment-recieved',
-        component: AppPaymentRecievedComponent,
+        path: 'purchase-order',
+        component: AppPurchaseOrderComponent,
+      },
+      {
+        path: 'payment',
+        component: AppPaymentComponent,
       },
       {
         path: 'users',

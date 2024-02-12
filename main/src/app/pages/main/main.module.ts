@@ -18,7 +18,6 @@ import { AppUsersComponent } from './users/users.component';
 import { AppCustomersComponent } from './customers/customers.component';
 import { AppInvoicesComponent } from './invoices/invoices.component';
 import { AppSalesOrderComponent } from './sales-order/sales-order.component';
-import { AppPaymentRecievedComponent } from './payment-recieved/payment-recieved.component';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { AppInventoryComponent } from './inventory/inventory.component';
 import { AppQuotesComponent } from './quotes/quotes.component';
@@ -28,7 +27,11 @@ import { ShareDialogComponent } from './quotes/share/share.component';
 import { AppProfileComponent } from './profile/profile.component';
 import { DocumentPreviewDialogComponent } from './document-preview/document-preview.component';
 import { QuoteFilterPipe } from './pipes/quote.filter.pipe';
-import { SalesOrderFilterPipe } from './pipes/sales-order.filter.pipe copy';
+import { AppPurchaseOrderComponent } from './purchase-order/purchase-order.component';
+import { SalesOrderFilterPipe } from './pipes/sales-order.filter.pipe';
+import { PurchaseOrderFilterPipe } from './pipes/purchase-order.filter.pipe';
+import { InvoiceFilterPipe } from './pipes/invoice.filter.pipe';
+import { AppPaymentComponent } from './payment/payment.component';
 
 @NgModule({
   imports: [
@@ -49,17 +52,26 @@ import { SalesOrderFilterPipe } from './pipes/sales-order.filter.pipe copy';
     AppQuotesComponent,
     AppManageComponent,
     AppSalesOrderComponent,
-    AppPaymentRecievedComponent,
+    AppPurchaseOrderComponent,
     AppUsersComponent,
+    AppPaymentComponent,
     AppMenuComponent,
     AppTooltipsComponent,
     AppProfileComponent,
     ShareDialogComponent,
     DocumentPreviewDialogComponent,
     QuoteFilterPipe,
-    SalesOrderFilterPipe
+    SalesOrderFilterPipe,
+    PurchaseOrderFilterPipe,
+    InvoiceFilterPipe
   ],
-  providers: [QuoteFilterPipe, SalesOrderFilterPipe],
+  providers: [
+    QuoteFilterPipe, 
+    SalesOrderFilterPipe, 
+    PurchaseOrderFilterPipe,
+    InvoiceFilterPipe
+
+],
 
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

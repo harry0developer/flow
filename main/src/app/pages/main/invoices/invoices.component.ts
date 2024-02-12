@@ -1,23 +1,11 @@
-import { Component, ViewEncapsulation, ViewChild } from '@angular/core'; 
-import jspdf from 'jspdf';
-import html2canvas from 'html2canvas';
-import { Router } from '@angular/router';
+import { Component, ViewChild, ElementRef } from '@angular/core'; 
 import { DataService } from 'src/app/services/data.service';
-import { COLLECTION, STORAGE } from 'src/app/const/util';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { NgxSpinnerService } from "ngx-spinner";
-import { Quote } from 'src/app/models/quote';
-import { Inventory } from 'src/app/models/inventory';
-import { Customer } from 'src/app/models/customer';
-import {map, startWith} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import { COLLECTION, STORAGE } from 'src/app/const/util'; 
+import { NgxSpinnerService } from "ngx-spinner"; 
 import * as moment from 'moment'
-import { Company } from 'src/app/models/company';
-import { User } from 'src/app/models/user';
-import { MatDialog } from '@angular/material/dialog';
-import { Invoice } from 'src/app/models/invoice';
-import { ShareDialogComponent } from '../quotes/share/share.component';
-import { SalesOrder } from 'src/app/models/sales-order';
+import { Company } from 'src/app/models/company'; 
+import { Invoice } from 'src/app/models/invoice'; 
+import { DocumentData } from 'src/app/models/document';
 
 @Component({
   selector: 'app-invoices',
@@ -25,55 +13,149 @@ import { SalesOrder } from 'src/app/models/sales-order';
   styleUrls: ['./invoices.component.scss']
 })
 export class AppInvoicesComponent { 
-  currentCompany: Company;
-  activeInvoice: Invoice;
-  processQuoteMode: boolean = false;
-  mailToString: string;
+  @ViewChild('searchbar') searchbar: ElementRef;
+  searchText = '';
+  toggleSearch: boolean = false;
+  activeIndex: number;
   invoices: Invoice[] = [];
-  editInvoiceMode: boolean = false;
-  documentId = 'invoiceDocument';
-
-  displayedColumns: string[] = ['invoiceNo',  'invoiceDate', 'quoteNo', 'totalPriceInclusive', 'salesOrder', 'viewButton', 'shareButton'];
+  selectedInvoice: Invoice;
+  currentCompany: Company;
+  invoicePreviewColumnDisplay: string[] = ['name', 'stockCode', 'unitPrice', 'quantity', 'totalPrice'];
+  mailToString: string;
+  documentData: DocumentData;
 
   constructor(
      private spinner: NgxSpinnerService,
-     public dialog: MatDialog,
      private dataService: DataService) {
   }
-  
-  ngOnInit(): void {
-    this.getInvoices();
-    this.getCompany();
-  }
 
-  getInvoices() {
+  ngOnInit(): void {
+    this.getCompany();
+    this.geInvoices();
+  }
+ 
+  
+  private geInvoices() {
     this.spinner.show();
     this.dataService.getAll(COLLECTION.INVOICES).subscribe((invoices: any) => {
       this.invoices = invoices;
-      this.activeInvoice = invoices[0];
-      console.log("Invoice ", invoices);
-      
+      console.log("Invoices  ", invoices);
+      this.setSelectedInvoice(invoices[0], 0);
       this.spinner.hide();
     }, err => {
       this.spinner.hide();
       console.log(err);
     });
   }
+  // Search quotes 
+  openSearch() {
+    this.toggleSearch = true;
+    this.searchbar.nativeElement.focus();
+  }
+
+  searchClose() {
+    this.searchText = '';
+    this.toggleSearch = false;
+  }
+
+  clearFilter() {
+    this.searchText = ''
+  }
+
+  documentAction(action: string) {
+    if(action === 'download') {
+      console.log('Download doc');
+      this.downloadAsPDF();
+      
+    } else if(action === 'gen-delivery-note') {
+      console.log('Generate Invoice');
+      this.generateDeliveryNote();
+    }
+  }
+
+  private _getTerm(startDate: Date, endDate: any): number {
+    let start_Date = moment(startDate);
+    let end_Date = moment(endDate);
+    return end_Date.diff(start_Date, 'days');
+  }
+
+  private generateDeliveryNote() {
+ 
+    const nextMonth = moment('02/28/2018', "MM/DD/YYYY").add(1, 'M');
+
+    let invoice: Invoice = {
+      invoiceNo: this.dataService.generateRandomCodeNumber("INV-"),
+      invoiceDate: new Date(),
+      customer: this.selectedInvoice.customer,
+      company: this.selectedInvoice.company, 
+      purchaseOrder: this.selectedInvoice._id as string, 
+      quote: this.selectedInvoice.quote, 
+      salesOrder: this.selectedInvoice.salesOrder,
+      paid: false,
+      createdOn: new Date(),
+      createdBy: this.dataService.getStorage(STORAGE.USER)._id,
+      updatedOn: new Date(),
+      updatedBy: this.dataService.getStorage(STORAGE.USER)._id,
+    }
+    
+    console.log("New Invoice ", invoice);
+    
+    this.spinner.show();
+    this.dataService.addItem(invoice, COLLECTION.INVOICES).subscribe((res) => {
+      console.log(res); 
+      this.dataService.updateItem(this.selectedInvoice, COLLECTION.PURCHASE_ORDER).subscribe(res => {
+        this.spinner.hide();
+      }, err => {
+        console.log(err);
+        this.spinner.hide();
+      })
+    }, err => {
+      console.log(err);
+      this.spinner.hide();
+    })
+
+  }
+
+
+  setSelectedInvoice(invoice: Invoice, index: number) {
+
+    this.selectedInvoice = invoice;
+    this.activeIndex = index; 
+    this.mailToString = `mailto:${this.selectedInvoice?.customer?.emailAddress},${this.selectedInvoice?.customer?.contactPerson?.emailAddress}?subject=Invoice%20No%20${this.selectedInvoice?.invoiceNo}&amp;body=Please%20find%20the%20requested%20quote%20attached%20`;
+
+    this.documentData = {
+      title: "Invoice",
+      reference: this.selectedInvoice?.invoiceNo,
+      customerName: this.selectedInvoice?.customer.name,
+      address: this.selectedInvoice?.customer.billingAddress,
+      no: this.selectedInvoice?.invoiceNo,
+      startDate: this.selectedInvoice?.invoiceDate,
+      VATNumber: this.selectedInvoice?.customer.VATNumber,
+      term: null,
+      dueDate: null,
+      items: this.selectedInvoice?.quote.items,
+      totalPriceExclusive: this.selectedInvoice?.quote.totalPriceExclusive,
+      totalVAT: this.selectedInvoice?.quote.totalVAT,
+      totalPriceDiscount: this.selectedInvoice?.quote.totalPriceDiscount,
+      totalPriceInclusive: this.selectedInvoice?.quote.totalPriceInclusive
+    }
+    window.scrollTo({ top: 1000, behavior: 'smooth' });
+ 
+  }
+
+ 
 
   getCompany() {
     this.spinner.show();
     this.dataService.getAll(COLLECTION.COMPANIES).forEach((currentCompany: any) => {
       this.currentCompany = currentCompany[0];
       this.spinner.hide();
-
     });
   }
 
-  manageInvoice(invoice: Invoice) {
-    this.editInvoiceMode = true;
-    this.activeInvoice = invoice;
+  manageSalesOrder(invoice: Invoice) {
+    this.selectedInvoice = invoice;
     console.log("Active invoice ", invoice);
-    
   }
 
   formatAddress(address: string): string[] {
@@ -89,90 +171,21 @@ export class AppInvoicesComponent {
       return [address]; 
     }
   }
-
-  generateSalesOrder() {
-    console.log('invoice ', this.activeInvoice);
-    const salesOrder: SalesOrder = {
-      salesOrderNo: this.dataService.generateRandomCodeNumber("SON-"),
-      salesOrderDate: new Date(),
-      customer: this.activeInvoice.customer,
-      company: this.activeInvoice.company,
-      quote: this.activeInvoice.quote, 
-      purchaseOrder: "",
-      createdOn: new Date(),
-      createdBy: this.dataService.getStorage(STORAGE.USER)._id,
-      updatedOn: new Date(),
-      updatedBy: this.dataService.getStorage(STORAGE.USER)._id,
-    }
  
-    this.spinner.show();
-    this.dataService.addItem(salesOrder, COLLECTION.SALES_ORDER).subscribe((res) => {
-      console.log(res);
-      this.editInvoiceMode = false;
-      this.processQuoteMode = false;
-      this.activeInvoice.hasSalesOrder = true;
-      this.activeInvoice.salesOrder = res._id;
-      
-      this.dataService.updateItem(this.activeInvoice, COLLECTION.INVOICES).subscribe(res => {
-        console.log("Invoice Updated", res);
-        this.spinner.hide();
-      }, err => {
-        console.log(err);
-        this.spinner.hide();
-      })
-    }, err => {
-      console.log(err);
-      this.spinner.hide();
-    })
-    
+  generateSalesOrderDocument(invoice: Invoice) {
+    this.selectedInvoice = invoice;
+    this.downloadAsPDF();
   }
-
  
-  generateInvoiceDocument(invoice: Invoice) {
-    this.activeInvoice = invoice;
-    this.openDialog();
-  }
-
-  openDialog(): void {
-    const dialogHandler = this.dialog.open(ShareDialogComponent, {
-      width: '420px',
-      data: {
-        title: "Generate Quote",
-        subHeader: "Your qoute has been generated as a (PDF) document. You can: "
-      },
-      disableClose: true
-    });
-
-     
-    dialogHandler.afterClosed().subscribe((res)=> {
-      console.log(res);
-      if(res == 'share') {
-        this.dataService.convetToPDF(this.documentId);
-      } else if(res == 'download') {
-        this.dataService.convetToPDF(this.documentId);
-      } else {
-        console.log("Closed");
-      }
-      
-    })
-  }
-
-  
-  processQuote(invoice: Invoice) {
-    this.processQuoteMode = true;
-    this.activeInvoice = invoice; 
-    this.mailToString = `mailto:${this.activeInvoice.customer.emailAddress},${this.activeInvoice.customer.contactPerson.emailAddress}?subject=Quote%20no%20${this.activeInvoice.invoiceNo}&amp;body=Please%20find%20the%20requested%20quote%20attached%20`;
-  }
-
+   
   formatDate(date?: Date) {
     return moment(date).format('DD/MM/YYYY');  
   }
 
   downloadAsPDF() {
-    this.dataService.convetToPDF(this.documentId)
+    this.dataService.convetToPDF('qouteDocument')
   }
   
-  cancel() {
-    this.editInvoiceMode = false;
-  }
+ 
+ 
 }

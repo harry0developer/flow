@@ -1,0 +1,90 @@
+.invoice-page {
+    .align-center {
+        text-align: center;
+    }
+    .big-icon img {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+.invoice-action-menu {
+    .action-btn {
+        color: #fff;
+        background: #018c8c;
+        padding: 10px;
+        margin: 0 3px;
+    }
+    
+    .action-btn:hover {
+        color: #ddd;
+    }
+}
+
+.invoice-document-preview {
+    padding: 60px;
+    width: 21cm;
+    height: 29.7cm;  
+    position: absolute;
+    background-color: #fff;
+    &.hide-document {
+        top: -10000px; //hide from page
+    }
+    .company-from-logo {
+
+        text-align: right;
+        img {
+            width: 200px;
+        }
+ 
+        .banking-details {
+            line-height: 1.6;
+            p {
+                margin: 0;
+                padding: 0;
+
+            }
+        }
+    }
+
+    .clear-white-space {
+        height: 260px;
+    }
+
+    .qoute-info {
+        margin-top: 40px;
+        line-height: 1.6;
+        text-align: right;
+        p {
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    .address {
+        line-height: 1.2;
+        p{
+            margin: 0;
+        }
+    }
+ 
+    .table {
+        width: 100%;
+        text-align: left;
+        thead {
+            background-color: #ddd;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            height: 30px;
+        }
+
+        th {
+            text-align: left;
+        }  
+    }
+}
+
+.align-btn-right {
+    text-align: right;
+}
+

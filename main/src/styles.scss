@@ -21,13 +21,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; height: 100
     padding: 0;
 }
 
-.mat-icon {
-    // vertical-align: bottom;
-}
+ 
+.no-results {
+    text-align: center;
+    padding: 120px 0;
 
-.big-icon {
-    mat-icon {
-        font-size: 55px;
+    .big-icon img {
+        width: 100px;
+        height: 100px;
+    }
+    p {
+        margin: 0;
+        margin-bottom: 40px;
     }
 }
 
@@ -174,13 +179,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; height: 100
     }
 }
  
-.search-bar {
-    .search-item {
-       
-
-    }
-}
-
+ 
 //   Badge ribbon 
 .samples {
     display: flex;

@@ -9,12 +9,12 @@
 </ngx-spinner>
 
 
-<div class="row main-wrapper" *ngIf="salesOrders.length > 0">
+<div class="row main-wrapper" *ngIf="purchaseOrders.length > 0">
   <!-- side container  -->
   <div class="side-container col-3">
     <mat-card class="cardWithShadow theme-card">
       <mat-card-title class="p-l-16 b-b-1">
-        <h3>Sales Orders</h3>
+        <h3>Purchase Orders</h3>
       </mat-card-title>
       <mat-form-field class="search-control m-t-4" appearance="outline">
         <input type="text"
@@ -27,19 +27,19 @@
       </mat-form-field>
       <mat-list class="search-bar"> 
         <mat-list>
-          <mat-selection-list class="m-b-4 p-0" *ngFor="let so of salesOrders | salesOrderFilter: searchText; let i = index;">
-            <mat-list-item class="p-t-12" (click)="setSelectedSalesOrder(so, i)" [ngClass]="{'active': i == activeIndex}">
+          <mat-selection-list class="m-b-4 p-0" *ngFor="let po of purchaseOrders | purchaseOrderFilter: searchText; let i = index;">
+            <mat-list-item class="p-t-12" (click)="setSelectedPurchaseOrder(po, i)" [ngClass]="{'active': i == activeIndex}">
               <mat-icon matListItemIcon>folder</mat-icon>
               <p matListItemLine >
-                <span class="title">{{so.customer.name}}</span>
+                <span class="title">{{po.customer.name}}</span>
                 <br>
-                <span>{{so.salesOrderNo}}</span>
+                <span>{{po.purchaseOrderNo}}</span>
               </p>
             </mat-list-item>
           </mat-selection-list>
         </mat-list>
 
-        <mat-list-item class="no-results" *ngIf="(salesOrders | salesOrderFilter: searchText).length === 0">
+        <mat-list-item class="no-results" *ngIf="(purchaseOrders | purchaseOrderFilter: searchText).length === 0">
           <mat-icon mat-list-avatar>error</mat-icon>
           <h3 class="m-0">0 results</h3>
           <div mat-line>No matching sales order</div>
@@ -63,9 +63,9 @@
             <mat-icon>picture_as_pdf</mat-icon>
             Download as PDF
           </a>
-          <a (click)="documentAction('gen-purchase-order')" mat-button color="primary" class="btn" *ngIf="!selectedSalesOrder.hasPurchaseOrder"> 
+          <a (click)="documentAction('gen-invoice')" mat-button color="primary" class="btn" *ngIf="!selectedPurchaseOrder.hasInvoice"> 
             <mat-icon>receipt_long</mat-icon>
-            Generate Purchase Order
+            Generate Invoice
           </a>
         </div>
         
@@ -77,18 +77,18 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{selectedSalesOrder?.customer?.name}}
+            {{selectedPurchaseOrder?.customer?.name}}
           </mat-panel-title>
           <mat-panel-description>
-            {{selectedSalesOrder?.salesOrderNo}}
+            {{selectedPurchaseOrder?.purchaseOrderNo}}
           </mat-panel-description>
           <mat-panel-description>
-            {{formatDate(selectedSalesOrder?.createdOn)}}
+            {{formatDate(selectedPurchaseOrder?.createdOn)}}
           </mat-panel-description>
         </mat-expansion-panel-header>
 
         <!-- Quote table Accordion  -->
-        <table mat-table [dataSource]="selectedSalesOrder?.quote?.items" class="quote-table"> 
+        <table mat-table [dataSource]="selectedPurchaseOrder.quote.items" class="quote-table"> 
           <!-- Name Column -->
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -119,17 +119,17 @@
             <td mat-cell *matCellDef="let element"> {{ +element.sellingPrice * +element.quantity | currency:'R'}} </td>
           </ng-container>
         
-          <tr mat-header-row *matHeaderRowDef="salesOrderPreviewColumnDisplay"></tr>
-          <tr mat-row *matRowDef="let row; columns: salesOrderPreviewColumnDisplay;"></tr>
+          <tr mat-header-row *matHeaderRowDef="purchaseOrderPreviewColumnDisplay"></tr>
+          <tr mat-row *matRowDef="let row; columns: purchaseOrderPreviewColumnDisplay;"></tr>
         </table>
       </mat-expansion-panel>
     </mat-accordion>
  
 
-    <mat-card class="cardWithShadow theme-card m-t-16" *ngIf="selectedSalesOrder">
+    <mat-card class="cardWithShadow theme-card m-t-16" *ngIf="selectedPurchaseOrder">
       <!-- Documetn preview  -->
-      <div class="ribbon up" *ngIf="selectedSalesOrder.hasPurchaseOrder" style="--color: #ffae1fcc;">
-        <div class="content">Has Purchase Order</div>
+      <div class="ribbon up" *ngIf="selectedPurchaseOrder.hasInvoice" style="--color: #ffae1fcc;">
+        <div class="content">Has Been Invoiced</div>
       </div>
       <app-document-preview [company]="currentCompany" [data]="documentData"></app-document-preview>
     </mat-card>
@@ -137,13 +137,13 @@
   </div>
 </div>  
 
-<mat-card *ngIf="salesOrders.length < 1" class="no-results">
+<mat-card *ngIf="purchaseOrders.length < 1" class="no-results">
   <div class="big-icon m-b-32">
     <img src="assets/images/icons/invoices.png" alt="">
   </div>
   <mat-card-content class="p-24" >
-    <mat-card-title class="m-b-0">No sales orders available</mat-card-title>  
-    <p>Generate a sales order from quotes</p>
+    <mat-card-title class="m-b-0">No purchase orders available</mat-card-title>  
+    <p>Generate a purchase order from sales order</p>
   </mat-card-content>
 </mat-card>
  

@@ -16,6 +16,7 @@ import { SalesOrder } from '../models/sales-order';
 
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
+import { PurchaseOrder } from '../models/purchase-order';
 
 @Injectable({
   providedIn: 'root'
@@ -72,36 +73,36 @@ export class DataService {
     return JSON.parse(localStorage.getItem(key) || '{}');
   }
 
-  getAll(collection: string): Observable<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder> {
-    return this.httpClient.get<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder>(this.apiServer + collection)
+  getAll(collection: string): Observable<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder> {
+    return this.httpClient.get<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder>(this.apiServer + collection)
     .pipe(
       catchError(this.errorHandler)
     );
   }
 
-  getById(collection: string, item: User | Inventory | Quote| Company | Customer | Invoice | SalesOrder): Observable<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder> {
-    return this.httpClient.get<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder>(this.apiServer + collection + "/"+ item._id)
+  getById(collection: string, item: User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder): Observable<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder> {
+    return this.httpClient.get<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder>(this.apiServer + collection + "/"+ item._id)
     .pipe(
       catchError(this.errorHandler)
     );
   }
 
-  delete(collection: string, item: User | Inventory | Quote| Company | Customer | Invoice | SalesOrder): Observable<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder> {
-    return this.httpClient.delete<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder>(this.apiServer + collection + "/"+ item._id)
+  delete(collection: string, item: User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder): Observable<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder> {
+    return this.httpClient.delete<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder>(this.apiServer + collection + "/"+ item._id)
     .pipe(
       catchError(this.errorHandler)
     );
   }
 
-  addItem(item: User | Inventory | Quote| Company | Customer | Invoice | SalesOrder, collection: string): Observable<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder> {
-    return this.httpClient.post<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder>(this.apiServer + collection , item, this.httpOptions)
+  addItem(item: User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder, collection: string): Observable<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder> {
+    return this.httpClient.post<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder>(this.apiServer + collection , item, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )
   }   
 
-  updateItem(item: User | Inventory | Quote| Company | Customer | Invoice | SalesOrder, collection: string): Observable<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder> {
-    return this.httpClient.put<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder>(this.apiServer + collection, item, this.httpOptions)
+  updateItem(item: User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder, collection: string): Observable<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder> {
+    return this.httpClient.put<User | Inventory | Quote| Company | Customer | Invoice | SalesOrder | PurchaseOrder>(this.apiServer + collection, item, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )

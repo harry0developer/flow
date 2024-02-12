@@ -13,6 +13,7 @@ export interface DocumentData {
     customerName: string;
     address: string;
     no: string;
+    VATNumber: string;
     startDate: Date;
     term: string | null;
     dueDate: Date | null;

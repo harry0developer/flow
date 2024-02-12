@@ -13,6 +13,7 @@ export interface SalesOrder {
     company: Company;
     quote?: Quote | any;
     purchaseOrder?: PurchaseOrder | string;
+    hasPurchaseOrder: boolean;
     createdOn?: Date;
     createdBy?: User | any; 
     updatedOn?: Date;

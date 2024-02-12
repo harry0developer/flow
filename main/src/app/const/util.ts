@@ -6,6 +6,7 @@ export const COLLECTION = {
     INVOICES: 'invoices',
     COMPANIES: 'companies',
     SALES_ORDER: 'sales-order',
+    PURCHASE_ORDER: 'purchase-order'
 };
 
 export const TITLE = {
@@ -48,4 +49,6 @@ export const ROUTES = {
     INVENTORY: '/main/inventory',
     QUOTES: '/main/quotes',
     INVOICES: '/main/invoices',
+    SALES_ORDER: '/main/sales-order',
+    PURCHASE_ORDER: '/main/purchase-order',
 }

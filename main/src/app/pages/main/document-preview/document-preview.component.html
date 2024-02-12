@@ -47,11 +47,11 @@
           {{address}}
         </p>
       </div>
-      <h4 class="vat-no">VAT No. {{company?.VATNumber}}</h4>
+      <h4 class="vat-no">VAT No. {{data?.VATNumber}}</h4>
     </div>
 
     <div class="col-6 qoute-info" >
-       <p><b>Qoute No: </b>{{data?.no}}</p>
+       <p><b>{{data?.title}} No: </b>{{data?.no}}</p>
        <p *ngIf="data?.startDate"><b>Date created: </b>{{formatDate(data.startDate)}} </p>
        <p *ngIf="data?.term"><b>Terms: </b>{{data?.term}} days</p>
        <p *ngIf="data?.dueDate"><b>Due date: </b>{{formatDate(data.dueDate)}}</p>

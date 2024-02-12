@@ -85,7 +85,6 @@ export class AppQuotesComponent {
   loggedInUser: User;
   mailToString: string;
 
-  isNewLook: boolean = true;
   activeIndex: number;
   document: Document;
 
@@ -127,9 +126,7 @@ export class AppQuotesComponent {
     this.dataService.getAll(COLLECTION.QUOTES).subscribe((quotes: any) => {
       console.log("quotes ", quotes);
       this.quotes = quotes;
-      //new look
-      this.selectedQuote = quotes[0]; 
-      this.activeIndex = 0;
+      this.activateQuote(quotes[0], 0);
       this.spinner.hide();
     }, err => {
       console.log(err);
@@ -200,6 +197,7 @@ export class AppQuotesComponent {
     this.toggleSearch = true;
     this.searchbar.nativeElement.focus();
   }
+
   searchClose() {
     this.searchText = '';
     this.toggleSearch = false;
@@ -381,15 +379,18 @@ export class AppQuotesComponent {
     this.selectedQuote = quote;
     this.activeIndex = index; 
 
+    console.log("Selected quote doc", this.selectedQuote);
+    
     this.documentData = {
       title: "Quote",
       reference: this.selectedQuote.quoteNo,
-      customerName: this.selectedQuote.customer.name,
-      address: this.currentCompany.billingAddress,
+      customerName: this.selectedQuote?.customer?.name,
+      address: this.selectedQuote?.company?.billingAddress,
       no: this.selectedQuote.quoteNo,
       startDate: this.selectedQuote.quoteStartDate,
       term: null,
       dueDate: null,
+      VATNumber: this.selectedQuote.customer.VATNumber,
       items: this.selectedQuote.items,
       totalPriceExclusive: this.selectedQuote.totalPriceExclusive,
       totalVAT: this.selectedQuote.totalVAT,
@@ -411,7 +412,6 @@ export class AppQuotesComponent {
     this.isPreviewQuoteMode = false;
     this.isEditQuoteMode = true;
     this.isNewQuote = false;
-    this.isNewLook = true;
 
     this.quoteForm.controls['quoteDueDate'].setValue(this.selectedQuote.quoteDueDate);
     this.quoteForm.controls['quoteStartDate'].setValue(this.selectedQuote.quoteStartDate);
@@ -434,6 +434,7 @@ export class AppQuotesComponent {
       customer: this.selectedQuote.customer,
       company: this.selectedQuote.company, 
       quote: this.selectedQuote._id, 
+      hasPurchaseOrder: false,
       createdOn: new Date(),
       createdBy: this.dataService.getStorage(STORAGE.USER)._id,
       updatedOn: new Date(),
@@ -446,9 +447,6 @@ export class AppQuotesComponent {
     this.spinner.show();
     this.dataService.addItem(newSalesOrder, COLLECTION.SALES_ORDER).subscribe((res) => {
       console.log(res);
-      this.isPreviewQuoteMode = false;
-      this.isEditQuoteMode = false;
-      
       this.selectedQuote.hasSalesOrder = true;
       this.selectedQuote.salesOrder = res._id;
       this.dataService.updateItem(this.selectedQuote, COLLECTION.QUOTES).subscribe(res => {

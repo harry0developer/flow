@@ -7,18 +7,13 @@ import { SalesOrder } from "./sales-order";
 export interface PurchaseOrder {
     _id?: string;
     purchaseOrderNo: string;
-    purchaseOrderDate: string;
+    purchaseOrderDate: Date;
     customer: Customer;
     company: Company;
-    quote?: Quote | string;
-    salesOrder?: SalesOrder | string;
-    Invoice?: Invoice | String;
-
-    totalPriceExclusive: number;
-    totalVAT: number;
-    totalPriceDiscount: number;
-    totalPriceInclusive: number;
-
+    quote: Quote;
+    salesOrder: SalesOrder | string;
+    hasInvoice: boolean;
+    invoice?: Invoice | String; 
     
     createdOn?: Date;
     createdBy?: string; 

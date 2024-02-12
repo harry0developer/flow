@@ -9,8 +9,7 @@
 </ngx-spinner>
 
 
-<div class="row main-wrapper" *ngIf="!isEditQuoteMode && isNewLook">
-
+<div class="row main-wrapper" *ngIf="quotes.length > 0 && !isEditQuoteMode">
   <!-- side container  -->
   <div class="side-container col-3">
     <mat-card class="cardWithShadow theme-card">
@@ -86,7 +85,7 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{selectedQuote.company.name}}
+            {{selectedQuote?.company?.name}}
           </mat-panel-title>
           <mat-panel-description>
             {{selectedQuote.quoteNo}}
@@ -135,7 +134,7 @@
     </mat-accordion>
  
 
-    <mat-card class="cardWithShadow theme-card m-t-16" *ngIf="selectedQuote && isNewLook">
+    <mat-card class="cardWithShadow theme-card m-t-16" *ngIf="selectedQuote">
       <!-- Documetn preview  -->
       <div class="ribbon up" *ngIf="selectedQuote.hasSalesOrder" style="--color: #ffae1fcc;">
         <div class="content">Has Sales Order</div>
@@ -148,25 +147,25 @@
 </div>
 
 <!-- Edit Quote New Look -->
-<mat-card *ngIf="isEditQuoteMode && isNewLook" class="cardWithShadow">
+<mat-card *ngIf="isEditQuoteMode" class="cardWithShadow">
   <mat-card-content class="p-32">
     <mat-card-title class=" b-b-1">
       <div class="row">
         <div class="col-8 col-md-6 title"> 
-          <h3 *ngIf="isEditQuoteMode && isNewLook && isNewQuote">Create New Quote</h3>
-          <h3 *ngIf="isEditQuoteMode && isNewLook && !isNewQuote">Edit Quote</h3>
+          <h3 *ngIf="isEditQuoteMode && isNewQuote">Create New Quote</h3>
+          <h3 *ngIf="isEditQuoteMode && !isNewQuote">Edit Quote</h3>
         </div>
         <div class="col-4 col-md-6 align-end btn-group">
             <button mat-raised-button color="primary" 
               class="m-t-12 m-b-12 m-r-3" 
-              *ngIf="isEditQuoteMode && isNewLook && isNewQuote"
+              *ngIf="isEditQuoteMode && isNewQuote"
               [disabled]="!quoteForm?.valid || dynamicArray.length < 1"
               (click)="addOrUpdateQuote()">Create Quote</button>
 
             <button mat-raised-button color="primary" 
               class="m-t-12 m-b-12 m-r-3" 
               [disabled]="!quoteForm?.valid"
-              *ngIf="isEditQuoteMode && isNewLook && !isNewQuote"
+              *ngIf="isEditQuoteMode && !isNewQuote"
               (click)="addOrUpdateQuote(false)">Update Quote</button> 
           <button mat-raised-button  color="warn" class="m-t-12 m-b-12" (click)="cancel()">Cancel</button>
         </div>
@@ -231,7 +230,7 @@
 </mat-card> 
  
 <!-- Edit Inventory form New Look -->
-<mat-card *ngIf="isEditQuoteMode && !isPreviewQuoteMode  && isNewLook" class="cardWithShadow inventory-form">
+<mat-card *ngIf="isEditQuoteMode && !isPreviewQuoteMode" class="cardWithShadow inventory-form">
   <mat-card-content class="p-24">
     <mat-card-title class="m-b-0">Add Items</mat-card-title>    
     <form> 
@@ -339,5 +338,24 @@
     </div>
   </mat-card-title>
 </mat-card>
+
+
+<!-- No results  -->
+<mat-card *ngIf="quotes.length < 1 && !isPreviewQuoteMode && !isEditQuoteMode" class="no-results">
+  <div class="big-icon m-b-32">
+    <img src="assets/images/icons/invoices.png" alt="">
+  </div>
+  <mat-card-content class="p-24" >
+    <mat-card-title class="m-b-0">No quotes available</mat-card-title>  
+    <p>Create a new quotes</p>
+
+    <div class="new-quotes">
+      <a (click)="createQuote()" mat-raised-button color="primary" class="btn"> 
+        Create New Quote
+      </a>
+    </div>
+  </mat-card-content>
+</mat-card>
+ 
 
  
